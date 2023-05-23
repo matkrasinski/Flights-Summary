@@ -1,0 +1,181 @@
+{
+  "linguisticVariables": [
+    {
+      "attributeName": "departure_day_of_year",
+      "variableName": "year season",
+      "universeType": "dense",
+      "range": [1, 366],
+      "labels": [
+        {
+          "label": "spring",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 117.5,
+            "s": 20
+          }
+        },
+        {
+          "label": "summer",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 211.5,
+            "s": 25
+          }
+        },
+        {
+          "label": "fall",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 289,
+            "s": 25
+          }
+        },
+        {
+          "label": "winter",
+          "function": "ComplexGaussian",
+          "parameters": {
+            "m1": 2.5,
+            "s1": 30,
+            "m2": 365,
+            "s2": 30
+          }
+        }
+      ]
+    },
+    {
+      "attributeName": "departure_daytime",
+      "variableName": "time of the day",
+      "universeType": "dense",
+      "range": [0, 1440],
+      "labels": [
+        {
+          "label": "morning",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 240,
+            "b": 360,
+            "c": 480,
+            "d": 600
+          }
+        },
+        {
+          "label": "forenoon",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 480,
+            "b": 600,
+            "c": 680,
+            "d": 720
+          }
+        },
+        {
+          "label": "noon",
+          "function": "TriangleFunction",
+          "parameters": {
+            "a": 660,
+            "b": 720,
+            "c": 780
+          }
+        },
+        {
+          "label": "afternoon",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 720,
+            "b": 780,
+            "c": 1020,
+            "d": 1080
+          }
+        },
+        {
+          "label": "evening",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 960,
+            "b": 1080,
+            "c": 1260,
+            "d": 1380
+          }
+        },
+        {
+          "label": "midnight",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 1380,
+            "b": 1440,
+            "c": 0,
+            "d": 60
+          }
+        },
+        {
+          "label": "night",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 1260,
+            "b": 1380,
+            "c": 240,
+            "d": 360
+          }
+        }
+      ]
+    },
+    {
+      "attributeName": "dep_delay",
+      "variableName": "flight start",
+      "universeType": "dense",
+      "range": [-20, 1260],
+      "labels": [
+        {
+          "label": "early",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": -20,
+            "b": -20,
+            "c": -5,
+            "d": 0
+          }
+        },
+        {
+          "label": "normal",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": -5,
+            "b": -0,
+            "c": 5,
+            "d": 15
+          }
+        },
+        {
+          "label": "minor delays",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 5,
+            "b": 15,
+            "c": 25,
+            "d": 45
+          }
+        },
+        {
+          "label": "major delays",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 16,
+            "b": 45,
+            "c": 180,
+            "d": 250
+          }
+        },
+        {
+          "label": "postpones",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 180,
+            "b": 250,
+            "c": 1260,
+            "d": 2000
+          }
+        }
+      ]
+    }
+  ]
+}

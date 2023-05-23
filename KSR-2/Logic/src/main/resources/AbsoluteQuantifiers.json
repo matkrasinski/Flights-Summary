@@ -1,0 +1,66 @@
+{
+  "absoluteQuantifiers": [
+    {
+      "quantifierLabel": "less than 100",
+      "function": "TrapezoidFunction",
+      "parameters": {
+        "a": -100,
+        "b": 0,
+        "c": 99,
+        "d": 200
+      }
+    },
+    {
+      "quantifierLabel": "about 300",
+      "function": "TrapezoidFunction",
+      "parameters": {
+        "a": 150,
+        "b": 250,
+        "c": 350,
+        "d": 500
+      }
+    },
+    {
+      "quantifierLabel": "about 500",
+      "function": "TrapezoidFunction",
+      "parameters": {
+        "a": 300,
+        "b": 400,
+        "c": 600,
+        "d": 750
+      }
+    },
+    {
+      "quantifierLabel": "about 1000",
+      "function": "TrapezoidFunction",
+      "parameters": {
+        "a": 600,
+        "b": 900,
+        "c": 1100,
+        "d": 1400
+      }
+    },
+    {
+      "quantifierLabel": "about 1500",
+      "function": "TrapezoidFunction",
+      "parameters": {
+        "a": 1100,
+        "b": 1400,
+        "c": 1600,
+        "d": 2000
+      }
+    },
+    {
+      "quantifierLabel": "more than 2000",
+      "function": "TrapezoidFunction",
+      "parameters": {
+        "a": 1900,
+        "b": 2000,
+        "c": 15354,
+        "d": 15355
+      }
+    }
+  ],
+  "range": [0, 15354],
+  "universeType": "discrete"
+}

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="526.0" prefWidth="737.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.ksr.view.AdvancedController">
+   <children>
+      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="1012.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <menus>
+            <Menu fx:id="menu" mnemonicParsing="false" onAction="#switchToMainView" text="Switch">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="start" />
+               </items></Menu>
+         </menus>
+      </MenuBar>
+      <Text fx:id="pointA" layoutX="380.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Point A: ">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <ComboBox fx:id="objectToAdd" layoutX="103.0" layoutY="117.0" prefWidth="150.0" promptText="choose object" />
+      <Text layoutX="421.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New label's name:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <TextField fx:id="pointBField" layoutX="467.0" layoutY="322.0" />
+      <Text layoutX="117.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Linguistic variable:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <ComboBox fx:id="linguisticVariableField" layoutX="103.0" layoutY="222.0" prefWidth="150.0" />
+      <ComboBox layoutX="406.0" layoutY="222.0" prefWidth="150.0" promptText="Trapezoid" />
+      <Text layoutX="421.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Function type:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <Text fx:id="pointD" layoutX="382.0" layoutY="430.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Point D:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <Text fx:id="pointC" layoutX="381.0" layoutY="386.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Point C:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <Text fx:id="pointB" layoutX="381.0" layoutY="340.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Point B:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <TextField fx:id="pointCField" layoutX="467.0" layoutY="368.0" />
+      <TextField fx:id="pointDField" layoutX="467.0" layoutY="412.0" />
+      <TextField fx:id="pointAField" layoutX="467.0" layoutY="282.0" />
+      <TextField layoutX="407.0" layoutY="117.0" />
+      <Text layoutX="103.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select object to add label:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <Text fx:id="averageM" layoutX="368.0" layoutY="322.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Average m: ">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <TextField fx:id="averageMField" layoutX="469.0" layoutY="304.0" />
+      <Text fx:id="standardDeviation" layoutX="333.0" layoutY="365.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Standard diviation: ">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <TextField fx:id="standardDeviationField" layoutX="469.0" layoutY="347.0" />
+      <Button fx:id="submitButton" layoutX="220.0" layoutY="471.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="249.0" text="Submit" />
+   </children>
+</AnchorPane>
