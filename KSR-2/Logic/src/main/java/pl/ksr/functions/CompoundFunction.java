@@ -41,24 +41,28 @@ public class CompoundFunction extends MembershipFunction {
 
     @Override
     public double calculateMembershipDegree(double x) {
-        System.out.println(intersection);
         if (this.intersection)
             return functions.stream().mapToDouble(e -> e.calculateMembershipDegree(x)).min().orElse(0d);
         return functions.stream().mapToDouble(e -> e.calculateMembershipDegree(x)).max().orElse(0d);
     }
 
-    public void addGaussianFunction(MembershipFunction membershipFunction) {
+    public void addFunction(MembershipFunction membershipFunction) {
         Universe newUniverse;
-        if (this.getUniverseOfDiscourse().getType() == UniverseType.DENSE && membershipFunction.getUniverseOfDiscourse().getType() == UniverseType.DENSE) {
-            double start = Math.max(universeOfDiscourse.getRange().get(0), membershipFunction.getUniverseOfDiscourse().getRange().get(0));
-            double end = Math.min(universeOfDiscourse.getRange().get(1), membershipFunction.getUniverseOfDiscourse().getRange().get(1));
+        if (this.getUniverseOfDiscourse().getType() == UniverseType.DENSE &&
+                membershipFunction.getUniverseOfDiscourse().getType() == UniverseType.DENSE) {
+
+            double start = Math.max(universeOfDiscourse.getRange().get(0).get(0),
+                    membershipFunction.getUniverseOfDiscourse().getRange().get(0).get(0));
+
+            double end = Math.min(universeOfDiscourse.getRange().get(0).get(1),
+                    membershipFunction.getUniverseOfDiscourse().getRange().get(0).get(1));
 
             newUniverse = new DenseUniverse(start, end);
         } else {
             Set<Double> values = new HashSet<>();
-            for (double x : universeOfDiscourse.getRange()) {
+            for (double x : universeOfDiscourse.getRange().get(0)) {
                 for (MembershipFunction function : functions) {
-                    if (membershipFunction.getUniverseOfDiscourse().isIn(x) && function.getUniverseOfDiscourse().isIn(x)) {
+                    if (membershipFunction.getUniverseOfDiscourse().isIn(x) || function.getUniverseOfDiscourse().isIn(x)) {
                         values.add(x);
                         break;
                     }

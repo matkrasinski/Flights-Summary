@@ -1,5 +1,6 @@
 package pl.ksr.sets;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DiscreteUniverse implements Universe {
@@ -22,8 +23,9 @@ public class DiscreteUniverse implements Universe {
         return UniverseType.DISCRETE;
     }
     @Override
-    public List<Double> getRange() {
-        return X;
+    public List<List<Double>> getRange() {
+        return List.of(X);
     }
+
 
 }

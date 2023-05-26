@@ -6,13 +6,10 @@ import pl.ksr.sets.Universe;
 public class TriangleFunction extends MembershipFunction {
     //Start range
     private final double a;
-
     // Center of range
     private final double b;
-
     // End range
     private final double c;
-
 
     public TriangleFunction(double a, double b, double c, Universe universeOfDiscourse) {
         this.a = a;

@@ -36,7 +36,7 @@ public class VariableManager {
                 Map<String, FuzzySet> labelsFuzzSet = new HashMap<>();
 
                 for (int j = 0; j < labels.size(); j++) {
-                    String label = labels.get(i).get("label").asText();
+                    String label = labels.get(j).get("label").asText();
                     MembershipFunction function;
                     JsonNode parameters = labels.get(j).get("parameters");
                     if (Objects.equals(labels.get(j).get("function").asText(), TrapezoidFunction.class.getSimpleName())) {

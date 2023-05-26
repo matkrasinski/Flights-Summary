@@ -5,7 +5,6 @@ import pl.ksr.lingustic.LinguisticVariable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class SummaryGenerator {
     private final List<LinguisticVariable> summarizers;
@@ -43,12 +42,15 @@ public class SummaryGenerator {
             for (LinguisticVariable summarizer : summarizers) {
                 for (var summarizerLabel : summarizer.getLabels().entrySet()) {
                     for (LinguisticVariable qualifier : qualifiers) {
-                        for (var qualifierLabel : qualifier.getLabels().entrySet()) {
-                            var intersection = summarizerLabel.getValue().getIntersection(qualifierLabel.getValue());
-                            if (!qualifierLabel.getValue().isEmpty() && !summarizerLabel.getValue().isEmpty() && intersection.isEmpty()) {
-                                summary = quantifier.getLabel() + " flights that were " + qualifierLabel.getKey() + " has/are " + summarizerLabel.getKey();
-                                System.out.println("summary : " +summary);
-                                summaries.add(new Summary(summary));
+                        if (summarizer != qualifier) {
+                            for (var qualifierLabel : qualifier.getLabels().entrySet()) {
+                                var intersection = summarizerLabel.getValue().intersection(qualifierLabel.getValue());
+                                if (!qualifierLabel.getValue().isEmpty() && !summarizerLabel.getValue().isEmpty()
+                                        && intersection.isEmpty()) {
+                                    summary = quantifier.getLabel() + " flights that were " + qualifierLabel.getKey()
+                                            + " has/are " + summarizerLabel.getKey();
+                                    summaries.add(new Summary(summary));
+                                }
                             }
                         }
                     }

@@ -1,20 +1,29 @@
 package pl.ksr.sets;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DenseUniverse implements Universe {
 
-    private final double min;
-    private final double max;
+    private final List<List<Double>> ranges;
 
     public DenseUniverse(double min, double max) {
-        this.min = min;
-        this.max = max;
+        this.ranges = new ArrayList<>();
+        this.ranges.add(List.of(min, max));
+    }
+
+    public DenseUniverse(List<List<Double>> ranges) {
+        this.ranges = ranges;
     }
 
     @Override
     public boolean isIn(double x) {
-        return x >= min && x <= max;
+        for (List<Double> range : ranges) {
+            if (x >= range.get(0) && x <= range.get(1)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -23,17 +32,17 @@ public class DenseUniverse implements Universe {
     }
 
     @Override
-    public List<Double> getRange() {
-        return List.of(min, max);
+    public List<List<Double>> getRange() {
+        return ranges;
     }
 
-    public double getMin() {
-        return min;
+    public List<Double> discretizeUniverse() {
+        List<Double> discretized = new ArrayList<>();
+        for (List<Double> range : getRange()) {
+            for (double i = range.get(0); i <= range.get(1); i += 0.1) {
+                discretized.add(i);
+            }
+        }
+        return discretized;
     }
-
-    public double getMax() {
-        return max;
-    }
-
-
 }

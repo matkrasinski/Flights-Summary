@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface Universe {
     boolean isIn(double x);
-    List<Double> getRange();
+    List<List<Double>> getRange();
     UniverseType getType();
 }

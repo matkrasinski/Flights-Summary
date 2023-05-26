@@ -176,6 +176,538 @@
           }
         }
       ]
+    },
+    {
+      "attributeName": "air_time",
+      "variableName": "flight time",
+      "universeType": "dense",
+      "range": [25, 430],
+      "labels": [
+        {
+          "label": "short-haul",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 25,
+            "b": 25,
+            "c": 120,
+            "d": 150
+          }
+        },
+        {
+          "label": "medium-haul",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 120,
+            "b": 150,
+            "c": 240,
+            "d": 300
+          }
+        },
+        {
+          "label": "long-haul",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 240,
+            "b": 300,
+            "c": 360,
+            "d": 400
+          }
+        },
+        {
+          "label": "ultra-long-haul",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 360,
+            "b": 400,
+            "c": 430,
+            "d": 500
+          }
+        }
+      ]
+    },
+    {
+      "attributeName": "distance",
+      "variableName": "flight distance",
+      "universeType": "dense",
+      "range": [180, 2600],
+      "labels": [
+        {
+          "label": "short-haul",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 180,
+            "b": 180,
+            "c": 300,
+            "d": 800
+          }
+        },
+        {
+          "label": "medium-haul",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 700,
+            "b": 800,
+            "c": 1000,
+            "d": 1500
+          }
+        },
+        {
+          "label": "long-haul",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 1000,
+            "b": 1500,
+            "c": 2000,
+            "d": 2400
+          }
+        },
+        {
+          "label": "ultra-long-haul",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 2000,
+            "b": 2400,
+            "c": 2600,
+            "d": 2600
+          }
+        }
+      ]
+    },
+    {
+      "attributeName": "year_of_manufacture",
+      "variableName": "aircraft generation",
+      "universeType": "dense",
+      "range": [
+        25,
+        430
+      ],
+      "labels": [
+        {
+          "label": "4th",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 1990,
+            "b": 1990,
+            "c": 1995,
+            "d": 1999
+          }
+        },
+        {
+          "label": "4.5th",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 1995,
+            "b": 1998,
+            "c": 2000,
+            "d": 2005
+          }
+        },
+        {
+          "label": "5th",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 2000,
+            "b": 2005,
+            "c": 2018,
+            "d": 2020
+          }
+        },
+        {
+          "label": "6th",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 2015,
+            "b": 2020,
+            "c": 2022,
+            "d": 2022
+          }
+        }
+      ]
+    },
+    {
+      "attributeName": "wind_spd",
+      "variableName": "wind force level",
+      "universeType": "dense",
+      "range": [0, 40],
+      "labels": [
+        {
+          "label": "calm wind",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 0.1,
+            "s": 1.25
+          }
+        },
+        {
+          "label": "light wind",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 5,
+            "s": 2
+          }
+        },
+        {
+          "label": "gentle breeze",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 12,
+            "s": 2
+          }
+        },
+        {
+          "label": "fresh breeze",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 18,
+            "s": 2
+          }
+        },
+        {
+          "label": "strong breeze",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 24,
+            "s": 3
+          }
+        },
+        {
+          "label": "moderate gale",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 30,
+            "s": 3
+          }
+        },
+        {
+          "label": "fresh breeze",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 41,
+            "s": 3
+          }
+        }
+      ]
+    },
+    {
+      "attributeName": "wind_dir",
+      "variableName": "wind direction",
+      "universeType": "dense",
+      "range": [0, 360],
+      "labels": [
+        {
+          "label": "north",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 337.5,
+            "b": 360,
+            "c": 0,
+            "d": 22.5
+          }
+        },
+        {
+          "label": "east",
+          "function": "TriangleFunction",
+          "parameters": {
+            "a": 67.5,
+            "b": 90,
+            "c": 112.5
+          }
+        },
+        {
+          "label": "south",
+          "function": "TriangleFunction",
+          "parameters": {
+            "a": 157.5,
+            "b": 180,
+            "c": 202.5
+          }
+        },
+        {
+          "label": "west",
+          "function": "TriangleFunction",
+          "parameters": {
+            "a": 247.5,
+            "b": 270,
+            "c": 292.5
+          }
+        },
+        {
+          "label": "northeast",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 0,
+            "b": 22.5,
+            "c": 67.5,
+            "d": 90
+          }
+        },
+        {
+          "label": "southeast",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 90,
+            "b": 112.5,
+            "c": 157.5,
+            "d": 180
+          }
+        },
+        {
+          "label": "southwest",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 180,
+            "b": 202.5,
+            "c": 247.5,
+            "d": 270
+          }
+        },
+        {
+          "label": "northwest",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 270,
+            "b": 292.5,
+            "c": 337.5,
+            "d": 360
+          }
+        }
+      ]
+    },
+    {
+      "attributeName": "wind_gust",
+      "variableName": "gust warning issued",
+      "universeType": "dense",
+      "range": [0, 70],
+      "labels": [
+        {
+          "label": "no",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 0,
+            "b": 0,
+            "c": 34,
+            "d": 36
+          }
+        },
+        {
+          "label": "strong wind",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 34,
+            "b": 36,
+            "c": 45,
+            "d": 46
+          }
+        },
+        {
+          "label": "gale force",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 45,
+            "b": 46,
+            "c": 60,
+            "d": 67
+          }
+        },
+        {
+          "label": "storm force",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 60,
+            "b": 67,
+            "c": 70,
+            "d": 70
+          }
+        }
+      ]
+    },
+    {
+      "attributeName": "temperature",
+      "variableName": "temperature",
+      "universeType": "dense",
+      "range": [0, 100],
+      "labels": [
+        {
+          "label": "frigid",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 0.1,
+            "s": 10
+          }
+        },
+        {
+          "label": "freezing",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 20,
+            "s": 7.5
+          }
+        },
+        {
+          "label": "very cold",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 40,
+            "s": 4
+          }
+        },
+        {
+          "label": "cold",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 50,
+            "s": 4
+          }
+        },
+        {
+          "label": "cool",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 60,
+            "s": 4
+          }
+        },
+        {
+          "label": "comfortable",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 70,
+            "s": 3
+          }
+        },
+        {
+          "label": "warm",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 80,
+            "s": 3
+          }
+        },
+        {
+          "label": "hot",
+          "function": "GaussianFunction",
+          "parameters": {
+            "m": 90,
+            "s": 3
+          }
+        }
+      ]
+    },
+    {
+      "attributeName": "rel_humidity",
+      "variableName": "humidity comfort level",
+      "universeType": "dense",
+      "range": [0, 100],
+      "labels": [
+        {
+          "label": "dry",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 0,
+            "b": 0,
+            "c": 5,
+            "d": 10
+          }
+        },
+        {
+          "label": "comfortable",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 5,
+            "b": 10,
+            "c": 20,
+            "d": 25
+          }
+        },
+        {
+          "label": "humid",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 20,
+            "b": 25,
+            "c": 40,
+            "d": 45
+          }
+        },
+        {
+          "label": "muggy",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 40,
+            "b": 45,
+            "c": 65,
+            "d": 70
+          }
+        },
+        {
+          "label": "oppressive",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 65,
+            "b": 70,
+            "c": 80,
+            "d": 85
+          }
+        },
+        {
+          "label": "miserable",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 80,
+            "b": 85,
+            "c": 100,
+            "d": 100
+          }
+        }
+      ]
+    },
+    {
+      "attributeName": "lowest_cloud_layer",
+      "variableName": "clouds level",
+      "universeType": "dense",
+      "range": [0, 30000],
+      "labels": [
+        {
+          "label": "very low",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 0,
+            "b": 0,
+            "c": 750,
+            "d": 1000
+          }
+        },
+        {
+          "label": "low",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 750,
+            "b": 1500,
+            "c": 3500,
+            "d": 6000
+          }
+        },
+        {
+          "label": "middle",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 5000,
+            "b": 8000,
+            "c": 15000,
+            "d": 18000
+          }
+        },
+        {
+          "label": "high",
+          "function": "TrapezoidFunction",
+          "parameters": {
+            "a": 15000,
+            "b": 18000,
+            "c": 30000,
+            "d": 30000
+          }
+        }
+      ]
     }
   ]
 }
