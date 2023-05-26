@@ -20,11 +20,11 @@ public class TriangleFunction extends MembershipFunction {
 
     @Override
     public double calculateMembershipDegree(double x) {
-        if (a <= x && x <= b) {
+        if (a <= x && x <= b)
             return (x - a) / (b - a);
-        } else if (b <= x && x <= c) {
+        else if (b <= x && x <= c)
             return (c - x) / (c - b);
-        } else
+        else
             return 0;
     }
 

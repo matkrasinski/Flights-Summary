@@ -1,5 +1,6 @@
 package pl.ksr.sets;
 
+import java.rmi.server.UID;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,54 +26,80 @@ public class CrispSet {
         this.universeOfDiscourse = universeOfDiscourse;
     }
 
-//    public static CrispSet sum(CrispSet set1, CrispSet set2) {
-//        Set<Double> unique = Stream.concat(
-//                set1.getElements().stream(),
-//                set2.getElements().stream())
-//                .collect(Collectors.toSet());
-//
-//        Universe newUniverse;
-//        if (set1.universeOfDiscourse instanceof DenseUniverse && set2.universeOfDiscourse instanceof DenseUniverse) {
-//            newUniverse = new DenseUniverse(
-//                    Math.min(((DenseUniverse) set1.universeOfDiscourse).getMin(),
-//                            ((DenseUniverse) set2.universeOfDiscourse).getMin()),
-//                    Math.max(((DenseUniverse) set1.universeOfDiscourse).getMax(),
-//                            ((DenseUniverse) set2.universeOfDiscourse).getMax())
-//            );
-//        } else {
-//            assert set1.universeOfDiscourse instanceof DiscreteUniverse;
-//            newUniverse = new DiscreteUniverse(Stream.concat(
-//                    set1.universeOfDiscourse.getRange().stream(),
-//                    set2.universeOfDiscourse.getRange().stream())
-//                    .collect(Collectors.toList()));
-//        }
-//        return new CrispSet(unique.stream().toList(), newUniverse);
-//    }
+    public CrispSet complement() {
+        if (universeOfDiscourse.getType() == UniverseType.DENSE) {
+            List<List<Double>> ranges = universeOfDiscourse.getRange();
+            List<List<Double>> complement = new ArrayList<>();
+
+            double start = Double.NEGATIVE_INFINITY;
+            for (List<Double> range : ranges) {
+                double end = range.get(0) - 0.001;
+                if (start <= end)
+                    complement.add(List.of(start, end));
+
+                start = range.get(1) + 0.001;
+            }
+            if (start != Double.POSITIVE_INFINITY) {
+                complement.add(List.of(start, Double.POSITIVE_INFINITY));
+            }
+            return new CrispSet(new DenseUniverse(complement));
+        }
+        List<Double> newX = universeOfDiscourse.getRange().get(0);
+        newX.removeAll(elements);
+        Universe newUniverse = new DiscreteUniverse(newX);
+        return new CrispSet(newUniverse);
+    }
+
+    public CrispSet union(CrispSet set) {
+        Set<Double> unique = Stream.concat(
+                        this.getElements().stream(),
+                        set.getElements().stream())
+                .collect(Collectors.toSet());
+        if (universeOfDiscourse.getType() == UniverseType.DENSE) {
+            unique.removeIf(x -> !this.universeOfDiscourse.isIn(x) && !set.universeOfDiscourse.isIn(x));
+            Universe universe = new DenseUniverse(
+                    Stream.concat(this.getUniverseOfDiscourse().getRange().stream(),
+                            set.universeOfDiscourse.getRange().stream()).toList()
+            );
+            return new CrispSet(unique.stream().toList(), universe);
+        }
+
+        Universe universe = new DiscreteUniverse(
+                Stream.concat(
+                        this.universeOfDiscourse.getRange().get(0).stream(),
+                        set.universeOfDiscourse.getRange().get(0).stream()
+                ).toList()
+        );
+        unique.removeIf(x -> !universe.isIn(x));
+
+        return new CrispSet(unique.stream().toList(), universe);
+    }
 
 
-//    public static CrispSet product(CrispSet set1, CrispSet set2) {
-//        Set<Double> intersection = new HashSet<>(set1.elements);
-//        intersection.retainAll(set2.elements);
-//        Universe newUniverse;
-//        if (set1.universeOfDiscourse instanceof DenseUniverse && set2.universeOfDiscourse instanceof DenseUniverse) {
-//            double start = Math.max(((DenseUniverse) set1.universeOfDiscourse).getMin(),
-//                    ((DenseUniverse) set2.universeOfDiscourse).getMin());
-//            double end = Math.min(((DenseUniverse) set1.universeOfDiscourse).getMax(),
-//                    ((DenseUniverse) set2.universeOfDiscourse).getMax());
-//
-//            newUniverse = new DenseUniverse(start, end);
-//        } else {
-//            Set<Double> unique = new HashSet<>();
-//            assert set1.universeOfDiscourse instanceof DiscreteUniverse && set2.universeOfDiscourse instanceof DiscreteUniverse;
-//            for (double x : set1.universeOfDiscourse.getRange()) {
-//                if (set2.universeOfDiscourse.getRange().contains(x))
-//                    unique.add(x);
-//            }
-//
-//            newUniverse = new DiscreteUniverse(unique.stream().toList());
-//        }
-//        return new CrispSet(intersection.stream().toList(), newUniverse);
-//    }
+    public CrispSet intersection(CrispSet set) {
+        Set<Double> unique = Stream.concat(
+                        this.getElements().stream(),
+                        set.getElements().stream())
+                .collect(Collectors.toSet());
+        if (universeOfDiscourse.getType() == UniverseType.DENSE) {
+            List<List<Double>> ranges = Stream.concat(
+                    this.universeOfDiscourse.getRange().stream(),
+                    set.universeOfDiscourse.getRange().stream()
+            ).toList();
+            double[] intersection = ranges.get(0).stream().mapToDouble(e -> e).toArray(); // Start with the first range
+
+            for (int i = 1; i < ranges.size(); i++) {
+                double[] currentRange = ranges.get(i).stream().mapToDouble(e -> e).toArray();
+                intersection[0] = Math.max(intersection[0], currentRange[0]);
+                intersection[1] = Math.min(intersection[1], currentRange[1]);
+            }
+            Universe newUniverse = new DenseUniverse(intersection[0], intersection[1]);
+            unique.removeIf(x -> !newUniverse.isIn(x));
+            return new CrispSet(unique.stream().toList(), newUniverse);
+        }
+
+        return new CrispSet(unique.stream().toList(), null);
+    }
 
 
     public List<Double> getElements() {
