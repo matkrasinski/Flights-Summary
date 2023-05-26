@@ -1,20 +1,24 @@
 package pl.ksr.functions;
 
 
-public class TriangleFunction implements MembershipFunction {
+import pl.ksr.sets.Universe;
+
+public class TriangleFunction extends MembershipFunction {
     //Start range
-    double a;
+    private final double a;
 
     // Center of range
-    double b;
+    private final double b;
 
     // End range
-    double c;
+    private final double c;
 
-    public TriangleFunction(double a, double b, double c) {
+
+    public TriangleFunction(double a, double b, double c, Universe universeOfDiscourse) {
         this.a = a;
         this.b = b;
         this.c = c;
+        this.universeOfDiscourse = universeOfDiscourse;
     }
 
     @Override
@@ -26,4 +30,5 @@ public class TriangleFunction implements MembershipFunction {
         } else
             return 0;
     }
+
 }

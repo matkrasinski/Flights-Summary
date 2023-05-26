@@ -21,7 +21,7 @@
       }
     },
     {
-      "label": "little less than half",
+      "label": "little less than half of",
       "function": "TrapezoidFunction",
       "parameters": {
         "a": 0.25,
@@ -31,7 +31,7 @@
       }
     },
     {
-      "label": "about half",
+      "label": "about half of",
       "function": "TrapezoidFunction",
       "parameters": {
         "a": 0.4,
@@ -41,7 +41,7 @@
       }
     },
     {
-      "label": "majority",
+      "label": "majority of",
       "function": "TrapezoidFunction",
       "parameters": {
         "a": 0.5,

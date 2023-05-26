@@ -1,29 +1,31 @@
 package pl.ksr.functions;
 
-public class TrapezoidFunction implements MembershipFunction {
+import pl.ksr.sets.Universe;
 
-    double a;
-    double b;
-    double c;
-    double d;
+public class TrapezoidFunction extends MembershipFunction {
+    private final double a;
+    private final double b;
+    private final double c;
+    private final double d;
 
-    public TrapezoidFunction(double a, double b, double c, double d) {
+    public TrapezoidFunction(double a, double b, double c, double d, Universe universeOfDiscourse) {
         this.a = a;
         this.b = b;
         this.c = c;
         this.d = d;
+        this.universeOfDiscourse = universeOfDiscourse;
     }
 
     @Override
     public double calculateMembershipDegree(double x) {
-        if (a <= x && x <= b) {
+        if (a <= x && x <= b)
             return (x - a) / (b - a);
-        } else if (b <= x && x <= c) {
+         else if (b <= x && x <= c)
             return 1;
-        } else if (c <= x && x <= d) {
+         else if (c <= x && x <= d)
             return (d - x) / (d - c);
-        } else {
+         else
             return 0;
-        }
     }
+
 }

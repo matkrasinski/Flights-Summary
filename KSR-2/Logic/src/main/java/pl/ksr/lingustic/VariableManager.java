@@ -18,7 +18,7 @@ public class VariableManager {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File file = new File(String.valueOf(QuantifierManager.class.getResource("/Variables.json")).substring("file:/".length()));
+            File file = new File(Objects.requireNonNull(VariableManager.class.getResource("/Variables.json")).getPath());
 
             JsonNode jsonNode = mapper.readTree(file);
             JsonNode linguisticVariables = jsonNode.get("linguisticVariables");
@@ -40,18 +40,37 @@ public class VariableManager {
                     MembershipFunction function;
                     JsonNode parameters = labels.get(j).get("parameters");
                     if (Objects.equals(labels.get(j).get("function").asText(), TrapezoidFunction.class.getSimpleName())) {
-                        function = new TrapezoidFunction(parameters.get("a").asDouble(), parameters.get("b").asDouble(),
-                                parameters.get("c").asDouble(), parameters.get("d").asDouble());
+                        function = new TrapezoidFunction(
+                                parameters.get("a").asDouble(),
+                                parameters.get("b").asDouble(),
+                                parameters.get("c").asDouble(),
+                                parameters.get("d").asDouble(),
+                                new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
                     } else if (Objects.equals(labels.get(j).get("function").asText(), TriangleFunction.class.getSimpleName())) {
-                        function = new TriangleFunction(parameters.get("a").asDouble(), parameters.get("b").asDouble(),
-                                parameters.get("c").asDouble());
+                        function = new TriangleFunction(
+                                parameters.get("a").asDouble(),
+                                parameters.get("b").asDouble(),
+                                parameters.get("c").asDouble(),
+                                new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
                     } else if (Objects.equals(labels.get(j).get("function").asText(), GaussianFunction.class.getSimpleName())) {
-                        function = new GaussianFunction(parameters.get("m").asDouble(), parameters.get("s").asDouble());
+                        function = new GaussianFunction(
+                                parameters.get("m").asDouble(),
+                                parameters.get("s").asDouble(),
+                                new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
                     } else {
-                        function = new CompoundGaussian(parameters.get("m1").asDouble(), parameters.get("s1").asDouble(),
-                                parameters.get("m2").asDouble(), parameters.get("s2").asDouble());
+                        function = new CompoundFunction(
+                                List.of(
+                                        new GaussianFunction(
+                                                parameters.get("m1").asDouble(),
+                                                parameters.get("s1").asDouble(),
+                                                new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble())),
+                                        new GaussianFunction(
+                                                parameters.get("m2").asDouble(),
+                                                parameters.get("s2").asDouble(),
+                                                new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble())
+                                        )), new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
                     }
-                    labelsFuzzSet.put(label, new FuzzySet(new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()), function));
+                    labelsFuzzSet.put(label, new FuzzySet(function));
                 }
 
                 newVariable = new LinguisticVariable(attributeName, variableName, labelsFuzzSet,

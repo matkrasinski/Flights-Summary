@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import pl.ksr.functions.*;
 import pl.ksr.sets.DenseUniverse;
 import pl.ksr.sets.FuzzySet;
+import pl.ksr.sets.Universe;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class QuantifierManager {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File file = new File(String.valueOf(QuantifierManager.class.getResource("/RelativeQuantifiers.json")).substring("file:/".length()));
+            File file = new File(Objects.requireNonNull(QuantifierManager.class.getResource("/RelativeQuantifiers.json")).getPath());
 
             JsonNode jsonNode = mapper.readTree(file);
             JsonNode relativeQuantifiers = jsonNode.get("relativeQuantifiers");
@@ -34,35 +35,47 @@ public class QuantifierManager {
                     MembershipFunction function = new TrapezoidFunction(parameters.get("a").asDouble(),
                             parameters.get("b").asDouble(),
                             parameters.get("c").asDouble(),
-                            parameters.get("d").asDouble());
+                            parameters.get("d").asDouble(),
+                            new DenseUniverse(parameters.get("a").asDouble(), parameters.get("b").asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(true,
                             current.get("label").asText(),
-                            new FuzzySet(new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()), function));
+                            new FuzzySet(function));
                 } else if (Objects.equals(current.get("function").asText(), TriangleFunction.class.getSimpleName())) {
                     MembershipFunction function = new TriangleFunction(parameters.get("a").asDouble(),
                             parameters.get("b").asDouble(),
-                            parameters.get("c").asDouble());
+                            parameters.get("c").asDouble(),
+                            new DenseUniverse(parameters.get("a").asDouble(), parameters.get("b").asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(true,
                             current.get("label").asText(),
-                            new FuzzySet(new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()), function));
+                            new FuzzySet(function));
                 } else if (Objects.equals(current.get("function").asText(), GaussianFunction.class.getSimpleName())) {
-                    MembershipFunction function = new GaussianFunction(parameters.get("m").asDouble(),
-                            parameters.get("s").asDouble());
+                    MembershipFunction function = new GaussianFunction(
+                            parameters.get("m").asDouble(),
+                            parameters.get("s").asDouble(),
+                            new DenseUniverse(Double.MIN_VALUE, Double.MAX_VALUE));
 
                     newQuantifier = new LinguisticQuantifier(true,
                             current.get("label").asText(),
-                            new FuzzySet(new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()), function));
+                            new FuzzySet(function));
                 } else {
-                    MembershipFunction function = new CompoundGaussian(parameters.get("m1").asDouble(),
-                            parameters.get("s1").asDouble(),
-                            parameters.get("m2").asDouble(),
-                            parameters.get("s2").asDouble());
+                    Universe universe = new DenseUniverse(Double.MIN_VALUE, Double.MAX_VALUE);
+                    MembershipFunction function = new CompoundFunction(List.of(
+                            new GaussianFunction(
+                                parameters.get("m1").asDouble(),
+                                parameters.get("s1").asDouble(),
+                                universe),
+                            new GaussianFunction(
+                                parameters.get("m2").asDouble(),
+                                parameters.get("s2").asDouble(),
+                                    universe
+                            )), universe);
+
 
                     newQuantifier = new LinguisticQuantifier(true,
                             current.get("label").asText(),
-                            new FuzzySet(new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()), function));
+                            new FuzzySet(function));
                 }
                 quantifiers.add(newQuantifier);
             }
@@ -79,7 +92,7 @@ public class QuantifierManager {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File file = new File(String.valueOf(QuantifierManager.class.getResource("/AbsoluteQuantifiers.json")).substring("file:/".length()));
+            File file = new File(Objects.requireNonNull(QuantifierManager.class.getResource("/AbsoluteQuantifiers.json")).getFile());
 
             JsonNode jsonNode = mapper.readTree(file);
             JsonNode relativeQuantifiers = jsonNode.get("absoluteQuantifiers");
@@ -94,35 +107,46 @@ public class QuantifierManager {
                     MembershipFunction function = new TrapezoidFunction(parameters.get("a").asDouble(),
                             parameters.get("b").asDouble(),
                             parameters.get("c").asDouble(),
-                            parameters.get("d").asDouble());
+                            parameters.get("d").asDouble(),
+                            new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(true,
                             current.get("quantifierLabel").asText(),
-                            new FuzzySet(new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()), function));
+                            new FuzzySet(function));
                 } else if (Objects.equals(current.get("function").asText(), TriangleFunction.class.getSimpleName())) {
                     MembershipFunction function = new TriangleFunction(parameters.get("a").asDouble(),
                             parameters.get("b").asDouble(),
-                            parameters.get("c").asDouble());
+                            parameters.get("c").asDouble(),
+                            new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(true,
                             current.get("quantifierLabel").asText(),
-                            new FuzzySet(new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()), function));
+                            new FuzzySet(function));
                 } else if (Objects.equals(current.get("function").asText(), GaussianFunction.class.getSimpleName())) {
-                    MembershipFunction function = new GaussianFunction(parameters.get("m").asDouble(),
-                            parameters.get("s").asDouble());
+                    MembershipFunction function = new GaussianFunction(
+                            parameters.get("m").asDouble(),
+                            parameters.get("s").asDouble(),
+                            new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(true,
                             current.get("label").asText(),
-                            new FuzzySet(new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()), function));
+                            new FuzzySet(function));
                 } else {
-                    MembershipFunction function = new CompoundGaussian(parameters.get("m1").asDouble(),
-                            parameters.get("s1").asDouble(),
-                            parameters.get("m2").asDouble(),
-                            parameters.get("s2").asDouble());
+                    Universe universe = new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble());
+                    MembershipFunction function = new CompoundFunction(List.of(
+                            new GaussianFunction(
+                                    parameters.get("m1").asDouble(),
+                                    parameters.get("s1").asDouble(),
+                                    universe),
+                            new GaussianFunction(
+                                    parameters.get("m2").asDouble(),
+                                    parameters.get("s2").asDouble(),
+                                    universe
+                            )), universe);
 
                     newQuantifier = new LinguisticQuantifier(true,
                             current.get("quantifierLabel").asText(),
-                            new FuzzySet(new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()), function));
+                            new FuzzySet(function));
                 }
                 quantifiers.add(newQuantifier);
             }

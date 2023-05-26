@@ -18,8 +18,8 @@ public class DenseUniverse implements Universe {
     }
 
     @Override
-    public String getType() {
-        return this.getClass().getSimpleName();
+    public UniverseType getType() {
+        return UniverseType.DENSE;
     }
 
     @Override

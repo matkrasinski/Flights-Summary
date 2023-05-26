@@ -1,6 +1,6 @@
 package pl.ksr;
 
-import pl.ksr.lingustic.VariableManager;
+//import pl.ksr.lingustic.VariableManager;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,7 +15,7 @@ public class Main {
 //        System.out.println(mem2.calculateMembershipDegree(100));
 //        System.out.println(mem2.calculateMembershipDegree(350));
 
-        System.out.println(VariableManager.loadVariables().get(0).getLabels());
+//        System.out.println(VariableManager.loadVariables().get(0).getLabels());
 
     }
 }

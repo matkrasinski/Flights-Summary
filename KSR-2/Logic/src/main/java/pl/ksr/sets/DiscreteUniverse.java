@@ -18,8 +18,8 @@ public class DiscreteUniverse implements Universe {
         return X.contains(x);
     }
     @Override
-    public String getType() {
-        return this.getClass().getSimpleName();
+    public UniverseType getType() {
+        return UniverseType.DISCRETE;
     }
     @Override
     public List<Double> getRange() {

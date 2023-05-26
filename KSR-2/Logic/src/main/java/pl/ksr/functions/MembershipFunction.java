@@ -1,7 +1,13 @@
 package pl.ksr.functions;
 
-public interface MembershipFunction {
+import pl.ksr.sets.Universe;
 
-    double calculateMembershipDegree(double x);
+public abstract class MembershipFunction {
+    public Universe universeOfDiscourse;
+    public abstract double calculateMembershipDegree(double x);
+
+    public Universe getUniverseOfDiscourse() {
+        return universeOfDiscourse;
+    }
 
 }
