@@ -7,7 +7,7 @@
       "range": [1, 366],
       "labels": [
         {
-          "label": "spring",
+          "label": "in the spring",
           "function": "GaussianFunction",
           "parameters": {
             "m": 117.5,
@@ -15,7 +15,7 @@
           }
         },
         {
-          "label": "summer",
+          "label": "in the summer",
           "function": "GaussianFunction",
           "parameters": {
             "m": 211.5,
@@ -23,16 +23,16 @@
           }
         },
         {
-          "label": "fall",
+          "label": "in the fall",
           "function": "GaussianFunction",
           "parameters": {
-            "m": 289,
-            "s": 25
+            "m": 289.0,
+            "s": 25.0
           }
         },
         {
-          "label": "winter",
-          "function": "ComplexGaussian",
+          "label": "in the winter",
+          "function": "CompoundFunction",
           "parameters": {
             "m1": 2.5,
             "s1": 30,
@@ -49,7 +49,7 @@
       "range": [0, 1440],
       "labels": [
         {
-          "label": "morning",
+          "label": "departure at morning",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 240,
@@ -59,7 +59,7 @@
           }
         },
         {
-          "label": "forenoon",
+          "label": "departure at forenoon",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 480,
@@ -69,7 +69,7 @@
           }
         },
         {
-          "label": "noon",
+          "label": "departure at noon",
           "function": "TriangleFunction",
           "parameters": {
             "a": 660,
@@ -78,7 +78,7 @@
           }
         },
         {
-          "label": "afternoon",
+          "label": "departure at afternoon",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 720,
@@ -88,7 +88,7 @@
           }
         },
         {
-          "label": "evening",
+          "label": "departure at evening",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 960,
@@ -98,7 +98,7 @@
           }
         },
         {
-          "label": "midnight",
+          "label": "departure at midnight",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 1380,
@@ -108,7 +108,7 @@
           }
         },
         {
-          "label": "night",
+          "label": "departure at night",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 1260,
@@ -126,7 +126,7 @@
       "range": [-20, 1260],
       "labels": [
         {
-          "label": "early",
+          "label": "early departure",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": -20,
@@ -136,7 +136,7 @@
           }
         },
         {
-          "label": "normal",
+          "label": "normal departure",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": -5,
@@ -146,7 +146,7 @@
           }
         },
         {
-          "label": "minor delays",
+          "label": "departure with minor delays",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 5,
@@ -156,7 +156,7 @@
           }
         },
         {
-          "label": "major delays",
+          "label": "departure with major delays",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 16,
@@ -166,7 +166,7 @@
           }
         },
         {
-          "label": "postpones",
+          "label": "departure postponed",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 180,
@@ -184,17 +184,17 @@
       "range": [25, 430],
       "labels": [
         {
-          "label": "short-haul",
+          "label": "short-haul flight time",
           "function": "TrapezoidFunction",
           "parameters": {
-            "a": 25,
+            "a": 20,
             "b": 25,
             "c": 120,
             "d": 150
           }
         },
         {
-          "label": "medium-haul",
+          "label": "medium-haul flight time",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 120,
@@ -204,7 +204,7 @@
           }
         },
         {
-          "label": "long-haul",
+          "label": "long-haul flight time",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 240,
@@ -214,7 +214,7 @@
           }
         },
         {
-          "label": "ultra-long-haul",
+          "label": "ultra-long-haul flight time",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 360,
@@ -232,7 +232,7 @@
       "range": [180, 2600],
       "labels": [
         {
-          "label": "short-haul",
+          "label": "short-haul flight distance",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 180,
@@ -242,7 +242,7 @@
           }
         },
         {
-          "label": "medium-haul",
+          "label": "medium-haul flight distance",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 700,
@@ -252,7 +252,7 @@
           }
         },
         {
-          "label": "long-haul",
+          "label": "long-haul flight distance",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 1000,
@@ -262,7 +262,7 @@
           }
         },
         {
-          "label": "ultra-long-haul",
+          "label": "ultra-long-haul flight distance",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 2000,
@@ -277,23 +277,20 @@
       "attributeName": "year_of_manufacture",
       "variableName": "aircraft generation",
       "universeType": "dense",
-      "range": [
-        25,
-        430
-      ],
+      "range": [1990, 2022],
       "labels": [
         {
-          "label": "4th",
+          "label": "4th aircraft generation",
           "function": "TrapezoidFunction",
           "parameters": {
-            "a": 1990,
+            "a": 1980,
             "b": 1990,
             "c": 1995,
             "d": 1999
           }
         },
         {
-          "label": "4.5th",
+          "label": "4.5th aircraft generation",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 1995,
@@ -303,7 +300,7 @@
           }
         },
         {
-          "label": "5th",
+          "label": "5th aircraft generation",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 2000,
@@ -313,7 +310,7 @@
           }
         },
         {
-          "label": "6th",
+          "label": "6th aircraft generation",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 2015,
@@ -395,7 +392,7 @@
       "range": [0, 360],
       "labels": [
         {
-          "label": "north",
+          "label": "wind from north",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 337.5,
@@ -405,7 +402,7 @@
           }
         },
         {
-          "label": "east",
+          "label": "wind from east",
           "function": "TriangleFunction",
           "parameters": {
             "a": 67.5,
@@ -414,7 +411,7 @@
           }
         },
         {
-          "label": "south",
+          "label": "wind from south",
           "function": "TriangleFunction",
           "parameters": {
             "a": 157.5,
@@ -423,7 +420,7 @@
           }
         },
         {
-          "label": "west",
+          "label": "wind from west",
           "function": "TriangleFunction",
           "parameters": {
             "a": 247.5,
@@ -432,7 +429,7 @@
           }
         },
         {
-          "label": "northeast",
+          "label": "wind from northeast",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 0,
@@ -442,7 +439,7 @@
           }
         },
         {
-          "label": "southeast",
+          "label": "wind from southeast",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 90,
@@ -452,7 +449,7 @@
           }
         },
         {
-          "label": "southwest",
+          "label": "wind from southwest",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 180,
@@ -462,7 +459,7 @@
           }
         },
         {
-          "label": "northwest",
+          "label": "wind from northwest",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 270,
@@ -480,17 +477,17 @@
       "range": [0, 70],
       "labels": [
         {
-          "label": "no",
+          "label": "no wind gust warning",
           "function": "TrapezoidFunction",
           "parameters": {
-            "a": 0,
+            "a": -1,
             "b": 0,
             "c": 34,
             "d": 36
           }
         },
         {
-          "label": "strong wind",
+          "label": "strong wind warning",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 34,
@@ -500,7 +497,7 @@
           }
         },
         {
-          "label": "gale force",
+          "label": "gale force warning",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 45,
@@ -510,7 +507,7 @@
           }
         },
         {
-          "label": "storm force",
+          "label": "storm force warning",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 60,
@@ -528,7 +525,7 @@
       "range": [0, 100],
       "labels": [
         {
-          "label": "frigid",
+          "label": "frigid temperature",
           "function": "GaussianFunction",
           "parameters": {
             "m": 0.1,
@@ -536,7 +533,7 @@
           }
         },
         {
-          "label": "freezing",
+          "label": "freezing temperature",
           "function": "GaussianFunction",
           "parameters": {
             "m": 20,
@@ -544,7 +541,7 @@
           }
         },
         {
-          "label": "very cold",
+          "label": "very cold temperature",
           "function": "GaussianFunction",
           "parameters": {
             "m": 40,
@@ -552,7 +549,7 @@
           }
         },
         {
-          "label": "cold",
+          "label": "cold temperature",
           "function": "GaussianFunction",
           "parameters": {
             "m": 50,
@@ -560,7 +557,7 @@
           }
         },
         {
-          "label": "cool",
+          "label": "cool temperature",
           "function": "GaussianFunction",
           "parameters": {
             "m": 60,
@@ -568,7 +565,7 @@
           }
         },
         {
-          "label": "comfortable",
+          "label": "comfortable temperature",
           "function": "GaussianFunction",
           "parameters": {
             "m": 70,
@@ -576,7 +573,7 @@
           }
         },
         {
-          "label": "warm",
+          "label": "warm temperature",
           "function": "GaussianFunction",
           "parameters": {
             "m": 80,
@@ -584,7 +581,7 @@
           }
         },
         {
-          "label": "hot",
+          "label": "hot temperature",
           "function": "GaussianFunction",
           "parameters": {
             "m": 90,
@@ -600,17 +597,17 @@
       "range": [0, 100],
       "labels": [
         {
-          "label": "dry",
+          "label": "dry comfort level",
           "function": "TrapezoidFunction",
           "parameters": {
-            "a": 0,
+            "a": -1,
             "b": 0,
             "c": 5,
             "d": 10
           }
         },
         {
-          "label": "comfortable",
+          "label": "comfortable comfort level",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 5,
@@ -620,7 +617,7 @@
           }
         },
         {
-          "label": "humid",
+          "label": "humid comfort level",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 20,
@@ -630,7 +627,7 @@
           }
         },
         {
-          "label": "muggy",
+          "label": "muggy comfort level",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 40,
@@ -640,7 +637,7 @@
           }
         },
         {
-          "label": "oppressive",
+          "label": "oppressive comfort level",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 65,
@@ -650,7 +647,7 @@
           }
         },
         {
-          "label": "miserable",
+          "label": "miserable comfort level",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 80,
@@ -668,17 +665,17 @@
       "range": [0, 30000],
       "labels": [
         {
-          "label": "very low",
+          "label": "very low clouds",
           "function": "TrapezoidFunction",
           "parameters": {
-            "a": 0,
+            "a": -1,
             "b": 0,
             "c": 750,
             "d": 1000
           }
         },
         {
-          "label": "low",
+          "label": "low clouds",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 750,
@@ -688,7 +685,7 @@
           }
         },
         {
-          "label": "middle",
+          "label": "middle clouds",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 5000,
@@ -698,13 +695,13 @@
           }
         },
         {
-          "label": "high",
+          "label": "high clouds",
           "function": "TrapezoidFunction",
           "parameters": {
             "a": 15000,
             "b": 18000,
             "c": 30000,
-            "d": 30000
+            "d": 30001
           }
         }
       ]

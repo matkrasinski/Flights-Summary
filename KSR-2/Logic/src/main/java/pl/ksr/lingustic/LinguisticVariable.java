@@ -7,28 +7,24 @@ import java.util.List;
 import java.util.Map;
 
 public class LinguisticVariable {
-    private final String attributeName;
+
     private final String variableName;
-    private final Map<String, FuzzySet> labels;
+    private final List<Label> labels;
     private final Universe universeOfDiscourse;
 
-    public LinguisticVariable(String attributeName, String variableName,
-                              Map<String, FuzzySet> labels, Universe universeOfDiscourse) {
-        this.attributeName = attributeName;
+    public LinguisticVariable(String variableName, List<Label> labels, Universe universeOfDiscourse) {
         this.variableName = variableName;
         this.labels = labels;
         this.universeOfDiscourse = universeOfDiscourse;
     }
 
-    public Map<String, FuzzySet> getLabels() {
+    public List<Label> getLabels() {
         return labels;
     }
     public List<String> getLabelsNames() {
-        return labels.keySet().stream().toList();
+        return labels.stream().map(Label::getLabelName).toList();
     }
-    public String getAttributeName() {
-        return attributeName;
-    }
+
     public Universe getUniverseOfDiscourse() {
         return universeOfDiscourse;
     }

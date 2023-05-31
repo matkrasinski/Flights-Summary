@@ -1,56 +1,171 @@
 package pl.ksr.summary;
 
+import pl.ksr.database.Flight;
+import pl.ksr.database.FlightsRepository;
+import pl.ksr.lingustic.Label;
 import pl.ksr.lingustic.LinguisticQuantifier;
 import pl.ksr.lingustic.LinguisticVariable;
 import pl.ksr.sets.FuzzySet;
 
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class QualityMeasures {
 
+public class QualityMeasures {
     private double T_1;
     private double T_2;
     private double T_3;
     private double T_4;
     private double T_5;
-
-    private double T_6;
+    private final double T_6;
     private double T_7;
-    private double T_8;
-    private double T_9;
+    private final double T_8;
+    private final double T_9;
     private double T_10;
+    private double T_11;
+    private final Summary summary;
 
+    public QualityMeasures(Summary summary) {
+        this.summary = summary;
+        this.T_1 = calculateT_1(summary.getQuantifier(), summary.getSummarizers());
+        this.T_2 = calculateT_2(summary.getSummarizers());
+        if (summary.getQualifiers() != null && !summary.getQualifiers().isEmpty()) {
+            this.T_3 = calculateT_3(summary.getSummarizers(), summary.getQualifiers().get(0));
+            this.T_4 = calculateT_4(summary.getSummarizers(), summary.getQualifiers().get(0));
+        } else {
+            this.T_3 = calculateT_3(summary.getSummarizers(), null);
+            this.T_4 = calculateT_4(summary.getSummarizers(), null);
+        }
+        this.T_5 = calculateT_5(summary.getSummarizers());
+        this.T_6 = calculateT_6(summary.getQuantifier());
+        this.T_7 = calculateT_7(summary.getQuantifier());
+        this.T_8 = calculateT_8(summary.getSummarizers());
+        this.T_9 = calculateT_9(summary.getQualifiers());
+        this.T_10 = calculateT_10(summary.getQualifiers());
+        this.T_11 = calculateT_11(summary.getQualifiers());
+    }
 
     // Degree of truth
-    public QualityMeasures calculateT_1(List<LinguisticVariable> summarizers,
-                                        List<LinguisticVariable> qualifiers,
-                                        List<LinguisticQuantifier> quantifiers) {
-        this.T_1 = 0;
-        return this;
+    public double calculateT_1(LinguisticQuantifier quantifier, List<Label> summarizers) {
+        double degreeOfTruth = 0;
+        if (summarizers.size() == 1) {
+            List<Double> xs = FlightsRepository.findAllByName(summarizers.get(0).getAttributeName());
+            double sum = 0;
+            for (double x : xs)
+                sum += summarizers.get(0).getFuzzySet().calculateMembership(x);
+            System.out.println("sum :" + sum);
+            if (quantifier.isRelative()) {
+                sum = sum / summary.getSubjects().get(0).getObjects().size();
+            }
+            System.out.println("sum after division :" + sum);
+
+            degreeOfTruth = quantifier.getLabel().getFuzzySet().calculateMembership(sum);
+        } else if (summarizers.size() > 1) {
+            List<List<Double>> objects = new ArrayList<>();
+            for (Label label : summarizers)
+                objects.add(FlightsRepository.findAllByName(label.getAttributeName()));
+
+
+//            System.out.println("summarizer :" + );
+            List<Double> sum1 = FuzzySet.calculateMembershipAnd(objects,
+                     summarizers.stream().map(Label::getFuzzySet).toList());
+
+            double sum = sum1.stream().mapToDouble(e -> e).sum();
+            System.out.println("sum :" + sum);
+
+            double delimiter = objects.get(objects.size() - 1).stream()
+                    .mapToDouble(e -> summarizers.get(summarizers.size() - 1).getFuzzySet().calculateMembership(e))
+                    .sum();
+//            double delimiter = x2.stream().mapToDouble(e -> qualifier.getFuzzySet().calculateMembership(e)).sum();
+
+            if (quantifier.isRelative())
+                sum = sum / delimiter;
+            System.out.println("sum after division :" + sum);
+            if (Double.isNaN(sum))
+                sum = 0;
+            degreeOfTruth = quantifier.getLabel().getFuzzySet().calculateMembership(sum);
+
+        } else if (summary.getSummaryType() == SummaryType.MultiIForm) {
+            // TODO
+        } else if (summary.getSummaryType() == SummaryType.MultiIIForm) {
+            // TODO
+        } else if (summary.getSummaryType() == SummaryType.MultiIIIForm) {
+            // TODO
+        } else if (summary.getSummaryType() == SummaryType.MultiIVForm) {
+            // TODO
+        }
+        T_1 = degreeOfTruth;
+        return T_1;
     }
 
     // Degree of imprecision
-    public QualityMeasures calculateT_2(List<LinguisticVariable> summarizers) {
-        this.T_2 = 0;
-        return this;
+    public double calculateT_2(List<Label> summarizers)  {
+        double degreeOfImprecision = 1;
+
+        for (var summarizer : summarizers)
+            degreeOfImprecision *= summarizer.getFuzzySet().getDegreeOfFuzziness();
+
+        T_2 =  1 - Math.pow(degreeOfImprecision, 1d / summarizers.size());
+        return T_2;
     }
 
     // Degree of covering
-    public QualityMeasures calculateT_3(List<LinguisticVariable> summarizers, List<LinguisticVariable> qualifiers) {
-        this.T_3 = 0;
-        return this;
+    public double calculateT_3(List<Label> summarizers, Label qualifier) {
+        double t = 0;
+        double h = 0;
+        List<List<Double>> objects = new ArrayList<>();
+        for (var summarizer : summarizers)
+            objects.add(FlightsRepository.findAllByName(summarizer.getAttributeName()));
+        int numPositions = objects.get(0).size();
+
+        var summarizerSupp = summarizers.get(0).getFuzzySet().getSupp();
+
+        if (qualifier != null) {
+            List<Double> x2 = FlightsRepository.findAllByName(qualifier.getAttributeName());
+            var qualifierSupp = qualifier.getFuzzySet().getSupp();
+
+            for (int i = 0; i < numPositions; i++)
+                if (summarizerSupp.getUniverseOfDiscourse().isIn(objects.get(0).get(i))
+                        && qualifierSupp.getUniverseOfDiscourse().isIn(x2.get(i)))
+                    t++;
+            for (Double di : x2)
+                if (qualifierSupp.getUniverseOfDiscourse().isIn(di))
+                    h++;
+            T_3 = t / h;
+            return T_3;
+        }
+        for (int i = 0; i < numPositions; i++)
+            if (summarizerSupp.getUniverseOfDiscourse().isIn(objects.get(0).get(i)))
+                t++;
+        T_3 = t / numPositions;
+        return T_3;
+
     }
 
     // Degree of appropriateness
-    public QualityMeasures calculateT_4(List<LinguisticVariable> summarizers) {
-        this.T_4 = 0;
-        return this;
+    public double calculateT_4(List<Label> summarizers, Label qualifier) {
+        double product = 1;
+        double degreeOfCovering = calculateT_3(summarizers, qualifier);
+
+        for (Label summarizer : summarizers) {
+            double r = 0;
+            List<Double> objects  = FlightsRepository.findAllByName(summarizer.getAttributeName());
+            for (double di : objects) {
+                if (summarizer.getFuzzySet().calculateMembership(di) > 0)
+                    r++;
+            }
+            product *= r / objects.size();
+        }
+
+        T_4 = Math.abs(product - degreeOfCovering);
+        return T_4;
     }
 
     // Length of summary
-    public QualityMeasures calculateT_5(List<FuzzySet> fuzzySets) {
-        this.T_5 = 2 * Math.pow(0.5, fuzzySets.size());
-        return this;
+    public double calculateT_5(List<Label> summarizers) {
+        this.T_5 = 2 * Math.pow(0.5, summarizers.size());
+        return T_5;
     }
 
     // The optimal summary
@@ -64,33 +179,97 @@ public class QualityMeasures {
     }
 
     // Degree of quantifier imprecision
-    public QualityMeasures calculateT_6(LinguisticQuantifier quantifier) {
-        this.T_6 = 0;
-        return this;
+    public double calculateT_6(LinguisticQuantifier quantifier) {
+        var degreeOfFuzziness = quantifier.getLabel().getFuzzySet().getDegreeOfFuzziness();
+
+//        quantifierImprecision =
+//                Math.abs(supp.getUniverseOfDiscourse().getRange().get(0).get(0)
+//                - supp.getUniverseOfDiscourse().getRange().get(0).get(1));
+
+//        if (!quantifier.isRelative())
+//            quantifierImprecision /= quantifier.getFuzzySet().getUniverseCardinality();
+//                    summary.getSubjects().get(0).getObjects().size();
+
+
+        return 1 - degreeOfFuzziness;
     }
 
     // Degree of quantifier cardinality
-    public QualityMeasures calculateT_7(LinguisticQuantifier quantifier) {
-        this.T_7 = 0;
-        return this;
+    public double calculateT_7(LinguisticQuantifier quantifier) {
+        double quantifierCardinality = 1;
+
+        var range = quantifier.getLabel().getFuzzySet().getUniverseOfDiscourse().getRange().get(0);
+
+        quantifierCardinality *= quantifier.getLabel().getFuzzySet().getCardinality() /
+                Math.abs(range.get(0) - range.get(range.size() - 1));
+
+        T_7 = 1 - quantifierCardinality;
+        return T_7;
     }
 
     // Degree of summarizer cardinality
-    public QualityMeasures calculateT_8(List<LinguisticVariable> summarizers) {
-        this.T_8 = 0;
-        return this;
+    public double calculateT_8(List<Label> summarizers) {
+        double summarizerCardinality = 1;
+        for (Label summarizer : summarizers) {
+            var range = summarizer.getFuzzySet().getUniverseOfDiscourse().getRange();
+            double delimiter = 0;
+            for (List<Double> x : range)
+                delimiter += Math.abs(x.get(0) - x.get(x.size() - 1));
+
+            summarizerCardinality *= summarizer.getFuzzySet().getCardinality() / delimiter;
+        }
+
+        return 1 - Math.pow(summarizerCardinality, 1d / summarizers.size());
     }
 
     // Degree of qualifier imprecision
-    public QualityMeasures calculateT_9(List<LinguisticVariable> qualifiers) {
-        this.T_9 = 0;
-        return this;
+    public double calculateT_9(List<Label> qualifiers) {
+        if (qualifiers == null || qualifiers.size() == 0)
+            return 0;
+        if (qualifiers.size() == 1) {
+            return 1 - qualifiers.get(0).getFuzzySet().getDegreeOfFuzziness();
+        }
+        double product = 1;
+        for (Label qualifier : qualifiers) {
+            product *= qualifier.getFuzzySet().getDegreeOfFuzziness();
+        }
+
+        return 1 - Math.pow(product, 1d / qualifiers.size());
     }
 
     // Degree of qualifier cardinality
-    public QualityMeasures calculateT_10(LinguisticVariable qualifier) {
-        this.T_10 = 0;
-        return this;
+    public double calculateT_10(List<Label> qualifiers) {
+
+        if (qualifiers == null || qualifiers.size() == 0)
+            return 0;
+        if (qualifiers.size() == 1) {
+            var range = qualifiers.get(0).getFuzzySet().getUniverseOfDiscourse().getRange();
+            double delimiter = 0;
+            double qualifierCardinality = 1;
+            for (List<Double> x : range)
+                delimiter += Math.abs(x.get(0) - x.get(x.size() - 1));
+            qualifierCardinality *= (qualifiers.get(0).getFuzzySet().getCardinality() / delimiter);
+
+            return 1 - qualifierCardinality;
+        }
+        double product = 1;
+        for (Label qualifier : qualifiers) {
+            var range = qualifier.getFuzzySet().getUniverseOfDiscourse().getRange().get(0);
+            product *= qualifier.getFuzzySet().getCardinality() /
+                    Math.abs(range.get(0) - range.get(range.size() - 1));
+        }
+
+        T_10 = 1 - Math.pow(product, 1d / qualifiers.size());
+        return T_10;
+    }
+
+    // Length of qualifier
+    public double calculateT_11(List<Label> qualifiers) {
+        double q = 1;
+        if (qualifiers != null && !qualifiers.isEmpty())
+            q = qualifiers.size();
+        T_11 = 2 * Math.pow(0.5, q);
+        return T_11;
     }
 
     // An extended concept of the optimal summary
@@ -103,8 +282,8 @@ public class QualityMeasures {
         return T;
     }
 
-    private List<Double> getAll() {
-        return List.of(T_1, T_2, T_3, T_4, T_5, T_6, T_7, T_8, T_9, T_10);
+    public List<Double> getAll() {
+        return List.of(T_1, T_2, T_3, T_4, T_5, T_6, T_7, T_8, T_9, T_10, T_11);
     }
 
     public double getT_1() {
@@ -145,5 +324,8 @@ public class QualityMeasures {
 
     public double getT_10() {
         return T_10;
+    }
+    public double getT_11() {
+        return T_11;
     }
 }

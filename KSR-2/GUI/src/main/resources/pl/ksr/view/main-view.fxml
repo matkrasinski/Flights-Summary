@@ -13,18 +13,18 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="650.0" prefWidth="1012.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.ksr.view.MainController">
+<AnchorPane prefHeight="650.0" prefWidth="1012.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.ksr.view.MainController">
 <children>
-   <Button fx:id="generateButton" layoutX="450.0" layoutY="313.0" mnemonicParsing="false" onAction="#switchToAdvanced" prefHeight="25.0" prefWidth="167.0" text="Generate summaries" />
+   <Button fx:id="generateButton" layoutX="367.0" layoutY="313.0" mnemonicParsing="false" onAction="#generateSummaries" prefHeight="25.0" prefWidth="167.0" text="Generate summaries" />
    <ListView fx:id="summaries" layoutX="59.0" layoutY="348.0" prefHeight="244.0" prefWidth="873.0" />
-      <Button fx:id="button" layoutX="711.0" layoutY="313.0" mnemonicParsing="false" onAction="#saveSummaries" prefHeight="25.0" prefWidth="195.0" text="Save summaries" />
+      <Button fx:id="button" layoutX="714.0" layoutY="314.0" mnemonicParsing="false" onAction="#saveSummaries" prefHeight="25.0" prefWidth="122.0" text="Save summaries" />
       <RadioButton layoutX="197.0" layoutY="187.0" mnemonicParsing="false" onAction="#getQuantifiersNames" text="Absolute">
          <toggleGroup>
             <ToggleGroup fx:id="quantifiers" />
          </toggleGroup>
       </RadioButton>
       <RadioButton fx:id="quantifierRadio" layoutX="98.0" layoutY="187.0" mnemonicParsing="false" onAction="#getQuantifiersNames" selected="true" text="Relative" toggleGroup="$quantifiers" />
-      <ComboBox fx:id="quantifiersBox" layoutX="98.0" layoutY="229.0" prefHeight="25.0" prefWidth="167.0" promptText="Choose quantifier" />
+      <ComboBox fx:id="quantifiersBox" layoutX="98.0" layoutY="229.0" prefHeight="25.0" prefWidth="185.0" promptText="Choose quantifier" />
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="979.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <menus>
           <Menu fx:id="menu" mnemonicParsing="false" text="Switch">
@@ -33,22 +33,25 @@
                </items></Menu>
         </menus>
       </MenuBar>
-      <ComboBox fx:id="summarizerBox" layoutX="356.0" layoutY="40.0" onAction="#getLabels" prefWidth="150.0" promptText="Choose summarizer" />
-      <ComboBox fx:id="labelsBox1" layoutX="356.0" layoutY="71.0" onAction="#getLabels" prefWidth="150.0" promptText="Choose label" />
-      <ComboBox fx:id="qualifierBox" layoutX="733.0" layoutY="40.0" prefWidth="150.0" promptText="Choose qualifier" />
-      <ComboBox fx:id="labelsBox2" layoutX="733.0" layoutY="71.0" prefWidth="150.0" promptText="Choose label" />
-      <ListView fx:id="summarizersList" layoutX="307.0" layoutY="136.0" prefHeight="136.0" prefWidth="257.0" />
+      <ComboBox fx:id="summarizerBox" layoutX="371.0" layoutY="40.0" onAction="#pickSummarizer" prefHeight="25.0" prefWidth="185.0" promptText="Attribute - summarizer" />
+      <ComboBox fx:id="labelsBox1" layoutX="371.0" layoutY="71.0" prefHeight="25.0" prefWidth="185.0" promptText="Choose label" />
+      <ComboBox fx:id="qualifierBox" layoutX="716.0" layoutY="40.0" onAction="#pickQualifier" prefHeight="25.0" prefWidth="167.0" promptText="Attribute - qualifier" />
+      <ComboBox fx:id="labelsBox2" layoutX="716.0" layoutY="71.0" prefHeight="25.0" prefWidth="167.0" promptText="Choose label" />
+      <ListView fx:id="summarizersList" layoutX="335.0" layoutY="137.0" prefHeight="136.0" prefWidth="257.0" />
       <ListView fx:id="qualifiersList" layoutX="680.0" layoutY="136.0" prefHeight="136.0" prefWidth="257.0" />
-      <ComboBox fx:id="summaryTypes" layoutX="99.0" layoutY="132.0" prefHeight="25.0" prefWidth="167.0" promptText="Choose summary type" />
+      <ComboBox fx:id="summaryTypes" layoutX="99.0" layoutY="132.0" prefHeight="25.0" prefWidth="185.0" promptText="Choose summary type" />
       <Text layoutX="118.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Summary type">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
-      <Button layoutX="385.0" layoutY="108.0" mnemonicParsing="false" onAction="#addToSummarizers" text="+" />
-      <Button layoutX="757.0" layoutY="108.0" mnemonicParsing="false" onAction="#addToQuantifiers" text="+" />
-      <Button layoutX="823.0" layoutY="108.0" mnemonicParsing="false" onAction="#removeFromQuantifiers" prefHeight="25.0" prefWidth="25.0" text="-" />
-      <Button layoutX="450.0" layoutY="108.0" mnemonicParsing="false" onAction="#removeFromSummarizers" prefHeight="25.0" prefWidth="25.0" text="-" />
+      <Button layoutX="413.0" layoutY="109.0" mnemonicParsing="false" onAction="#addToSummarizers" text="+" />
+      <Button layoutX="757.0" layoutY="108.0" mnemonicParsing="false" onAction="#addToQualifiers" text="+" />
+      <Button layoutX="823.0" layoutY="108.0" mnemonicParsing="false" onAction="#removeFromQualifiers" prefHeight="25.0" prefWidth="25.0" text="-" />
+      <Button layoutX="478.0" layoutY="109.0" mnemonicParsing="false" onAction="#removeFromSummarizers" prefHeight="25.0" prefWidth="25.0" text="-" />
       <TextField fx:id="weightsField" layoutX="62.0" layoutY="313.0" prefHeight="25.0" prefWidth="282.0" />
       <Text layoutX="185.0" layoutY="303.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Weights" />
+      <Button layoutX="549.0" layoutY="314.0" mnemonicParsing="false" onAction="#sort" prefHeight="25.0" prefWidth="150.0" text="Sort" />
+      <ComboBox fx:id="measuresBox" layoutX="549.0" layoutY="287.0" prefWidth="150.0" />
+      <Button fx:id="resetButton" layoutX="851.0" layoutY="314.0" mnemonicParsing="false" onAction="#reset" prefHeight="25.0" prefWidth="82.0" text="Reset" />
 </children></AnchorPane>

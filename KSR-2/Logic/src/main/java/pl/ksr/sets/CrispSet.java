@@ -1,8 +1,6 @@
 package pl.ksr.sets;
 
-import java.rmi.server.UID;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,7 +25,7 @@ public class CrispSet {
     }
 
     public CrispSet complement() {
-        if (universeOfDiscourse.getType() == UniverseType.DENSE) {
+        if (universeOfDiscourse.getType() == UniverseType.CONTINUOUS) {
             List<List<Double>> ranges = universeOfDiscourse.getRange();
             List<List<Double>> complement = new ArrayList<>();
 
@@ -42,7 +40,7 @@ public class CrispSet {
             if (start != Double.POSITIVE_INFINITY) {
                 complement.add(List.of(start, Double.POSITIVE_INFINITY));
             }
-            return new CrispSet(new DenseUniverse(complement));
+            return new CrispSet(new ContinuousUniverse(complement));
         }
         List<Double> newX = universeOfDiscourse.getRange().get(0);
         newX.removeAll(elements);
@@ -55,9 +53,9 @@ public class CrispSet {
                         this.getElements().stream(),
                         set.getElements().stream())
                 .collect(Collectors.toSet());
-        if (universeOfDiscourse.getType() == UniverseType.DENSE) {
+        if (universeOfDiscourse.getType() == UniverseType.CONTINUOUS) {
             unique.removeIf(x -> !this.universeOfDiscourse.isIn(x) && !set.universeOfDiscourse.isIn(x));
-            Universe universe = new DenseUniverse(
+            Universe universe = new ContinuousUniverse(
                     Stream.concat(this.getUniverseOfDiscourse().getRange().stream(),
                             set.universeOfDiscourse.getRange().stream()).toList()
             );
@@ -81,7 +79,7 @@ public class CrispSet {
                         this.getElements().stream(),
                         set.getElements().stream())
                 .collect(Collectors.toSet());
-        if (universeOfDiscourse.getType() == UniverseType.DENSE) {
+        if (universeOfDiscourse.getType() == UniverseType.CONTINUOUS) {
             List<List<Double>> ranges = Stream.concat(
                     this.universeOfDiscourse.getRange().stream(),
                     set.universeOfDiscourse.getRange().stream()
@@ -93,7 +91,7 @@ public class CrispSet {
                 intersection[0] = Math.max(intersection[0], currentRange[0]);
                 intersection[1] = Math.min(intersection[1], currentRange[1]);
             }
-            Universe newUniverse = new DenseUniverse(intersection[0], intersection[1]);
+            Universe newUniverse = new ContinuousUniverse(intersection[0], intersection[1]);
             unique.removeIf(x -> !newUniverse.isIn(x));
             return new CrispSet(unique.stream().toList(), newUniverse);
         }

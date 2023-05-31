@@ -4,7 +4,7 @@ package pl.ksr.lingustic;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import pl.ksr.functions.*;
-import pl.ksr.sets.DenseUniverse;
+import pl.ksr.sets.ContinuousUniverse;
 import pl.ksr.sets.FuzzySet;
 
 import java.io.File;
@@ -33,7 +33,7 @@ public class VariableManager {
 
                 JsonNode labels = current.get("labels");
 
-                Map<String, FuzzySet> labelsFuzzSet = new HashMap<>();
+                List<Label> newLabels = new ArrayList<>();
 
                 for (int j = 0; j < labels.size(); j++) {
                     String label = labels.get(j).get("label").asText();
@@ -45,36 +45,36 @@ public class VariableManager {
                                 parameters.get("b").asDouble(),
                                 parameters.get("c").asDouble(),
                                 parameters.get("d").asDouble(),
-                                new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
+                                new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
                     } else if (Objects.equals(labels.get(j).get("function").asText(), TriangleFunction.class.getSimpleName())) {
                         function = new TriangleFunction(
                                 parameters.get("a").asDouble(),
                                 parameters.get("b").asDouble(),
                                 parameters.get("c").asDouble(),
-                                new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
+                                new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
                     } else if (Objects.equals(labels.get(j).get("function").asText(), GaussianFunction.class.getSimpleName())) {
                         function = new GaussianFunction(
                                 parameters.get("m").asDouble(),
                                 parameters.get("s").asDouble(),
-                                new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
+                                new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
                     } else {
                         function = new CompoundFunction(
                                 List.of(
                                         new GaussianFunction(
                                                 parameters.get("m1").asDouble(),
                                                 parameters.get("s1").asDouble(),
-                                                new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble())),
+                                                new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble())),
                                         new GaussianFunction(
                                                 parameters.get("m2").asDouble(),
                                                 parameters.get("s2").asDouble(),
-                                                new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble())
-                                        )), new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
+                                                new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble())
+                                        )), new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()), false);
                     }
-                    labelsFuzzSet.put(label, new FuzzySet(function));
+                    newLabels.add(new Label(attributeName, label, new FuzzySet(function)));
                 }
 
-                newVariable = new LinguisticVariable(attributeName, variableName, labelsFuzzSet,
-                        new DenseUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
+                newVariable = new LinguisticVariable(variableName, newLabels,
+                        new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
                 variables.add(newVariable);
             }
 

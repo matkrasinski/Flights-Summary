@@ -78,7 +78,7 @@ public class FuzzySet {
                 newRanges.add(newRange);
             }
         }
-        return new CrispSet(new DenseUniverse(newRanges));
+        return new CrispSet(new ContinuousUniverse(newRanges));
     }
 
     public double getCardinality() {
@@ -94,7 +94,7 @@ public class FuzzySet {
         }
         return integral;
     }
-    private double getComplementCardinality() {
+    public double getComplementCardinality() {
         if (getUniverseOfDiscourse().getType() == UniverseType.DISCRETE) {
             return getUniverseOfDiscourse().getRange().get(0).stream().mapToDouble(x -> (1 - calculateMembership(x))).sum();
         }
@@ -108,7 +108,7 @@ public class FuzzySet {
         return integral;
     }
 
-    private double getUniverseCardinality() {
+    public double getUniverseCardinality() {
         return getCardinality() + getComplementCardinality();
     }
 
@@ -185,7 +185,7 @@ public class FuzzySet {
     public boolean isEmpty() {
         if (getUniverseOfDiscourse().getType() == UniverseType.DISCRETE)
             return getSupp().getElements().isEmpty();
-        return ((DenseUniverse) getUniverseOfDiscourse()).discretizeUniverse()
+        return ((ContinuousUniverse) getUniverseOfDiscourse()).discretizeUniverse()
                 .stream().map(this::calculateMembership).filter(e -> e > 0).toList().isEmpty();
     }
 
@@ -199,7 +199,31 @@ public class FuzzySet {
         return membershipFunction.calculateMembershipDegree(x);
     }
 
-    private double calculateIntegral(UnivariateFunction function, double min, double max) {
+    public static List<Double> calculateMembershipAnd(List<List<Double>> objects, List<FuzzySet> sets) {
+        List<Double> minimumValues = new ArrayList<>();
+
+        int numPositions = objects.get(0).size();
+
+        for (int i = 0; i < numPositions; i++) {
+            double minValue = 1;
+
+            int finalI = i;
+            List<Double> rows = objects.stream().map(list -> list.get(finalI)).toList();
+
+            int index = 0;
+            for (double x : rows) {
+                double value = sets.get(index).calculateMembership(x);
+                if (value < minValue)
+                    minValue = value;
+                index++;
+            }
+            minimumValues.add(minValue);
+        }
+        return minimumValues;
+    }
+
+
+    public double calculateIntegral(UnivariateFunction function, double min, double max) {
         SimpsonIntegrator integrator = new SimpsonIntegrator();
         return integrator.integrate(Integer.MAX_VALUE, function, min, max);
     }

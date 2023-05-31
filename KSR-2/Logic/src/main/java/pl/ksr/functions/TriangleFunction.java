@@ -28,4 +28,5 @@ public class TriangleFunction extends MembershipFunction {
             return 0;
     }
 
+
 }

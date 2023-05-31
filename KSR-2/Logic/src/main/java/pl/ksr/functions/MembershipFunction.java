@@ -8,7 +8,7 @@ public abstract class MembershipFunction {
     public Universe getUniverseOfDiscourse() {
         return universeOfDiscourse;
     }
-    public void setUniverseOfDiscourse(Universe universe) {
-        this.universeOfDiscourse = universe;
-    }
+
+
+
 }

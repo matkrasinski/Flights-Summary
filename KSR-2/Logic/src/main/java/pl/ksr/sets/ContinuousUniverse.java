@@ -3,16 +3,16 @@ package pl.ksr.sets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DenseUniverse implements Universe {
+public class ContinuousUniverse implements Universe {
 
     private final List<List<Double>> ranges;
 
-    public DenseUniverse(double min, double max) {
+    public ContinuousUniverse(double min, double max) {
         this.ranges = new ArrayList<>();
         this.ranges.add(List.of(min, max));
     }
 
-    public DenseUniverse(List<List<Double>> ranges) {
+    public ContinuousUniverse(List<List<Double>> ranges) {
         this.ranges = ranges;
     }
 
@@ -28,7 +28,7 @@ public class DenseUniverse implements Universe {
 
     @Override
     public UniverseType getType() {
-        return UniverseType.DENSE;
+        return UniverseType.CONTINUOUS;
     }
 
     @Override

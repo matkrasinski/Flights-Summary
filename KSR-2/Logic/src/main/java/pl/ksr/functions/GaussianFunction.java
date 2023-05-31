@@ -13,7 +13,10 @@ public class GaussianFunction extends MembershipFunction {
     }
     @Override
     public double calculateMembershipDegree(double x) {
-        return Math.exp(-0.5 * (Math.pow((x - m) / s, 2)));
+        double membership = Math.exp(-0.5 * (Math.pow((x - m) / s, 2)));
+        if (membership < 1e-2)
+            return 0;
+        return membership;
     }
 
 }
