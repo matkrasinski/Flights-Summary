@@ -39,7 +39,7 @@ public class ContinuousUniverse implements Universe {
     public List<Double> discretizeUniverse() {
         List<Double> discretized = new ArrayList<>();
         for (List<Double> range : getRange()) {
-            for (double i = range.get(0); i <= range.get(1); i += 0.1) {
+            for (double i = range.get(0); i <= range.get(1); i += 1) {
                 discretized.add(i);
             }
         }

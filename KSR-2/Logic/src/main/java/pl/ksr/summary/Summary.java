@@ -2,7 +2,6 @@ package pl.ksr.summary;
 
 import pl.ksr.lingustic.Label;
 import pl.ksr.lingustic.LinguisticQuantifier;
-import pl.ksr.lingustic.LinguisticVariable;
 
 import java.util.List;
 
@@ -59,4 +58,5 @@ public class Summary {
     public LinguisticQuantifier getQuantifier() {
         return quantifier;
     }
+
 }

@@ -11,46 +11,70 @@ import java.util.List;
 
 public class SummaryGenerator {
 
+//    public static Summary generateSingleSubjectFirstForm(LinguisticQuantifier quantifier,
+//                                                         Subject subject,
+//                                                         List<Label> summarizers) {
+//        List<List<Double>> objects = new ArrayList<>();
+//        for (Label summarizer : summarizers)
+//            objects.add(FlightsRepository.findAllByName(summarizer.getAttributeName()));
+//
+//        List<Double> intersectionList = FuzzySet.calculateMembershipAnd(objects,
+//                summarizers.stream().map(Label::getFuzzySet).toList());
+//
+//        boolean summarizersEmpty = false;
+//        boolean isEmpty = true;
+//        if (summarizers.size() > 1) {
+//            isEmpty = intersectionList.stream().anyMatch(x -> x <= 0);
+//            summarizersEmpty = summarizers.stream().anyMatch(e -> e.getFuzzySet().isEmpty());
+//        }
+//        for (int i = 0; i < summarizers.size(); i++ )
+//            for (int j = i + 1; j < summarizers.size(); j++ )
+//                if (summarizers.get(i).equals(summarizers.get(j))) {
+//                    summarizersEmpty = true;
+//                    break;
+//                }
+//
+//        if (!summarizersEmpty && isEmpty) {
+//            StringBuilder summaryText = new StringBuilder(quantifier.getLabel().getLabelName() + " " + subject.getSubject() + " had/were ");
+//            for (Label summarizer : summarizers) {
+//                summaryText.append(summarizer.getLabelName()).append(" and had/were ");
+//            }
+//            summaryText = new StringBuilder(summaryText.substring(0, summaryText.length() - " and had/were ".length()));
+//            Summary summary = new Summary(
+//                    summaryText.toString(), SummaryType.SingleIForm, List.of(subject), summarizers, Collections.emptyList(),
+//                    quantifier
+//            );
+//            summary.setQualityMeasures(new QualityMeasures(summary));
+//            System.out.println(summaryText);
+//            return summary;
+//        }
+//
+//        return null;
+//    }
+
     public static Summary generateSingleSubjectFirstForm(LinguisticQuantifier quantifier,
                                                          Subject subject,
                                                          List<Label> summarizers) {
-        List<List<Double>> objects = new ArrayList<>();
-        for (Label summarizer : summarizers)
-            objects.add(FlightsRepository.findAllByName(summarizer.getAttributeName()));
 
-        List<Double> intersectionList = FuzzySet.calculateMembershipAnd(objects,
-                summarizers.stream().map(Label::getFuzzySet).toList());
-
-        boolean summarizersEmpty = false;
-        boolean isEmpty = true;
-        if (summarizers.size() > 1) {
-            isEmpty = intersectionList.stream().anyMatch(x -> x <= 0);
-            summarizersEmpty = summarizers.stream().anyMatch(e -> e.getFuzzySet().isEmpty());
-        }
-        for (int i = 0; i < summarizers.size(); i++ )
-            for (int j = i + 1; j < summarizers.size(); j++ )
-                if (summarizers.get(i).equals(summarizers.get(j))) {
-                    summarizersEmpty = true;
-                    break;
-                }
-
-        if (!summarizersEmpty && isEmpty) {
-            StringBuilder summaryText = new StringBuilder(quantifier.getLabel().getLabelName() + " " + subject.getSubject() + " had/were ");
-            for (Label summarizer : summarizers) {
-                summaryText.append(summarizer.getLabelName()).append(" and had/were ");
+        StringBuilder summaryText = new StringBuilder(quantifier.getLabel().getLabelName() + " " + subject.getSubject() + " had/were ");
+        for (int i = 0; i < summarizers.size(); i++) {
+            if (!summarizers.get(i).getFuzzySet().isEmpty()) {
+                summaryText.append(summarizers.get(i).getLabelName());
             }
-            summaryText = new StringBuilder(summaryText.substring(0, summaryText.length() - " and had/were ".length()));
-            Summary summary = new Summary(
-                    summaryText.toString(), SummaryType.SingleIForm, List.of(subject), summarizers, Collections.emptyList(),
-                    quantifier
-            );
-            summary.setQualityMeasures(new QualityMeasures(summary));
-            System.out.println(summaryText);
-            return summary;
+
+            if (i + 1 != summarizers.size()) {
+                summaryText.append(" and had/were ");
+            }
+
         }
 
-        return null;
+        System.out.println(summaryText);
+        Summary summary = new Summary(summaryText.toString(), SummaryType.SingleIForm, List.of(subject), summarizers, null, quantifier);
+        summary.setQualityMeasures(new QualityMeasures(summary));
+
+        return summary;
     }
+
 
     public static Summary generateSingleSubjectSecondForm(LinguisticQuantifier quantifier,
                                                           Subject subject,

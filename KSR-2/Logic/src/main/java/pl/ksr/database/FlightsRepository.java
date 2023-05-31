@@ -49,12 +49,40 @@ public class FlightsRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                if (Objects.equals(columnName, "departure_daytime")) {
-                    String departureTime = resultSet.getString("departure_daytime");
-                    all.add((double) parseTimeToMinutes(departureTime));
-                } else {
-                    double row = resultSet.getDouble(columnName);
-                    all.add(row);
+                if (!Objects.equals(columnName, "manufacturer")) {
+                    if (Objects.equals(columnName, "departure_daytime")) {
+                        String departureTime = resultSet.getString("departure_daytime");
+                        all.add((double) parseTimeToMinutes(departureTime));
+                    } else {
+                        double row = resultSet.getDouble(columnName);
+                        all.add(row);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return all;
+    }
+
+    public static List<Double> findAllByNameAndSubject(String columnName, String subject) {
+        List<Double> all = new ArrayList<>();
+
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            String SUBJECT_RECORDS = "SELECT " + columnName +
+                    " FROM public.flights where manufacturer = " + "'" + subject +  "'";
+            PreparedStatement preparedStatement = connection.prepareStatement(SUBJECT_RECORDS);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                if (!Objects.equals(columnName, "manufacturer")) {
+                    if (Objects.equals(columnName, "departure_daytime")) {
+                        String departureTime = resultSet.getString("departure_daytime");
+                        all.add((double) parseTimeToMinutes(departureTime));
+                    } else {
+                        double row = resultSet.getDouble(columnName);
+                        all.add(row);
+                    }
                 }
             }
         } catch (SQLException e) {

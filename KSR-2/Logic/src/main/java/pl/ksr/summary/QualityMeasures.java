@@ -1,14 +1,8 @@
 package pl.ksr.summary;
 
-import pl.ksr.database.Flight;
-import pl.ksr.database.FlightsRepository;
 import pl.ksr.lingustic.Label;
 import pl.ksr.lingustic.LinguisticQuantifier;
-import pl.ksr.lingustic.LinguisticVariable;
-import pl.ksr.sets.FuzzySet;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -49,53 +43,53 @@ public class QualityMeasures {
     // Degree of truth
     public double calculateT_1(LinguisticQuantifier quantifier, List<Label> summarizers) {
         double degreeOfTruth = 0;
-        if (summarizers.size() == 1) {
-            List<Double> xs = FlightsRepository.findAllByName(summarizers.get(0).getAttributeName());
-            double sum = 0;
-            for (double x : xs)
-                sum += summarizers.get(0).getFuzzySet().calculateMembership(x);
-            System.out.println("sum :" + sum);
-            if (quantifier.isRelative()) {
-                sum = sum / summary.getSubjects().get(0).getObjects().size();
-            }
-            System.out.println("sum after division :" + sum);
-
-            degreeOfTruth = quantifier.getLabel().getFuzzySet().calculateMembership(sum);
-        } else if (summarizers.size() > 1) {
-            List<List<Double>> objects = new ArrayList<>();
-            for (Label label : summarizers)
-                objects.add(FlightsRepository.findAllByName(label.getAttributeName()));
-
-
-//            System.out.println("summarizer :" + );
-            List<Double> sum1 = FuzzySet.calculateMembershipAnd(objects,
-                     summarizers.stream().map(Label::getFuzzySet).toList());
-
-            double sum = sum1.stream().mapToDouble(e -> e).sum();
-            System.out.println("sum :" + sum);
-
-            double delimiter = objects.get(objects.size() - 1).stream()
-                    .mapToDouble(e -> summarizers.get(summarizers.size() - 1).getFuzzySet().calculateMembership(e))
-                    .sum();
-//            double delimiter = x2.stream().mapToDouble(e -> qualifier.getFuzzySet().calculateMembership(e)).sum();
-
-            if (quantifier.isRelative())
-                sum = sum / delimiter;
-            System.out.println("sum after division :" + sum);
-            if (Double.isNaN(sum))
-                sum = 0;
-            degreeOfTruth = quantifier.getLabel().getFuzzySet().calculateMembership(sum);
-
-        } else if (summary.getSummaryType() == SummaryType.MultiIForm) {
-            // TODO
-        } else if (summary.getSummaryType() == SummaryType.MultiIIForm) {
-            // TODO
-        } else if (summary.getSummaryType() == SummaryType.MultiIIIForm) {
-            // TODO
-        } else if (summary.getSummaryType() == SummaryType.MultiIVForm) {
-            // TODO
-        }
-        T_1 = degreeOfTruth;
+//        if (summarizers.size() == 1) {
+//            List<Double> xs = FlightsRepository.findAllByName(summarizers.get(0).getAttributeName());
+//            double sum = 0;
+//            for (double x : xs)
+//                sum += summarizers.get(0).getFuzzySet().calculateMembership(x);
+//            System.out.println("sum :" + sum);
+//            if (quantifier.isRelative()) {
+//                sum = sum / summary.getSubjects().get(0).getObjects().size();
+//            }
+//            System.out.println("sum after division :" + sum);
+//
+//            degreeOfTruth = quantifier.getLabel().getFuzzySet().calculateMembership(sum);
+//        } else if (summarizers.size() > 1) {
+//            List<List<Double>> objects = new ArrayList<>();
+//            for (Label label : summarizers)
+//                objects.add(FlightsRepository.findAllByName(label.getAttributeName()));
+//
+//
+////            System.out.println("summarizer :" + );
+//            List<Double> sum1 = FuzzySet.calculateMembershipAnd(objects,
+//                     summarizers.stream().map(Label::getFuzzySet).toList());
+//
+//            double sum = sum1.stream().mapToDouble(e -> e).sum();
+//            System.out.println("sum :" + sum);
+//
+//            double delimiter = objects.get(objects.size() - 1).stream()
+//                    .mapToDouble(e -> summarizers.get(summarizers.size() - 1).getFuzzySet().calculateMembership(e))
+//                    .sum();
+////            double delimiter = x2.stream().mapToDouble(e -> qualifier.getFuzzySet().calculateMembership(e)).sum();
+//
+//            if (quantifier.isRelative())
+//                sum = sum / delimiter;
+//            System.out.println("sum after division :" + sum);
+//            if (Double.isNaN(sum))
+//                sum = 0;
+//            degreeOfTruth = quantifier.getLabel().getFuzzySet().calculateMembership(sum);
+//
+//        } else if (summary.getSummaryType() == SummaryType.MultiIForm) {
+//            // TODO
+//        } else if (summary.getSummaryType() == SummaryType.MultiIIForm) {
+//            // TODO
+//        } else if (summary.getSummaryType() == SummaryType.MultiIIIForm) {
+//            // TODO
+//        } else if (summary.getSummaryType() == SummaryType.MultiIVForm) {
+//            // TODO
+//        }
+//        T_1 = degreeOfTruth;
         return T_1;
     }
 
@@ -114,31 +108,7 @@ public class QualityMeasures {
     public double calculateT_3(List<Label> summarizers, Label qualifier) {
         double t = 0;
         double h = 0;
-        List<List<Double>> objects = new ArrayList<>();
-        for (var summarizer : summarizers)
-            objects.add(FlightsRepository.findAllByName(summarizer.getAttributeName()));
-        int numPositions = objects.get(0).size();
 
-        var summarizerSupp = summarizers.get(0).getFuzzySet().getSupp();
-
-        if (qualifier != null) {
-            List<Double> x2 = FlightsRepository.findAllByName(qualifier.getAttributeName());
-            var qualifierSupp = qualifier.getFuzzySet().getSupp();
-
-            for (int i = 0; i < numPositions; i++)
-                if (summarizerSupp.getUniverseOfDiscourse().isIn(objects.get(0).get(i))
-                        && qualifierSupp.getUniverseOfDiscourse().isIn(x2.get(i)))
-                    t++;
-            for (Double di : x2)
-                if (qualifierSupp.getUniverseOfDiscourse().isIn(di))
-                    h++;
-            T_3 = t / h;
-            return T_3;
-        }
-        for (int i = 0; i < numPositions; i++)
-            if (summarizerSupp.getUniverseOfDiscourse().isIn(objects.get(0).get(i)))
-                t++;
-        T_3 = t / numPositions;
         return T_3;
 
     }
@@ -146,19 +116,7 @@ public class QualityMeasures {
     // Degree of appropriateness
     public double calculateT_4(List<Label> summarizers, Label qualifier) {
         double product = 1;
-        double degreeOfCovering = calculateT_3(summarizers, qualifier);
 
-        for (Label summarizer : summarizers) {
-            double r = 0;
-            List<Double> objects  = FlightsRepository.findAllByName(summarizer.getAttributeName());
-            for (double di : objects) {
-                if (summarizer.getFuzzySet().calculateMembership(di) > 0)
-                    r++;
-            }
-            product *= r / objects.size();
-        }
-
-        T_4 = Math.abs(product - degreeOfCovering);
         return T_4;
     }
 
@@ -198,12 +156,6 @@ public class QualityMeasures {
     public double calculateT_7(LinguisticQuantifier quantifier) {
         double quantifierCardinality = 1;
 
-        var range = quantifier.getLabel().getFuzzySet().getUniverseOfDiscourse().getRange().get(0);
-
-        quantifierCardinality *= quantifier.getLabel().getFuzzySet().getCardinality() /
-                Math.abs(range.get(0) - range.get(range.size() - 1));
-
-        T_7 = 1 - quantifierCardinality;
         return T_7;
     }
 

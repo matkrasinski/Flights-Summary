@@ -2,11 +2,11 @@ package pl.ksr.sets;
 
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.integration.SimpsonIntegrator;
-import pl.ksr.functions.CompoundFunction;
 import pl.ksr.functions.MembershipFunction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 public class FuzzySet {
@@ -18,28 +18,41 @@ public class FuzzySet {
     }
 
     public FuzzySet complement() {
-        MembershipFunction function = new CompoundFunction(
-                List.of(new MembershipFunction() {
+        MembershipFunction function = new MembershipFunction() {
                     @Override
                     public double calculateMembershipDegree(double x) {
                         return 1 - calculateMembership(x);
                     }
-                }),
-                membershipFunction.getUniverseOfDiscourse()
-        );
-
+                };
+        function.universeOfDiscourse = this.getUniverseOfDiscourse();
         return new FuzzySet(function);
     }
 
     public FuzzySet intersection(FuzzySet fuzzySet) {
-        CompoundFunction function = new CompoundFunction(membershipFunction, true);
-        function.addFunction(fuzzySet.getMembershipFunction());
+        MembershipFunction function = new MembershipFunction() {
+            @Override
+            public double calculateMembershipDegree(double x) {
+                return Math.min(calculateMembership(x), fuzzySet.membershipFunction.calculateMembershipDegree(x));
+            }
+        };
+        function.universeOfDiscourse =
+                new ContinuousUniverse(Stream.concat(this.getUniverseOfDiscourse().getRange().stream(),
+                        fuzzySet.getUniverseOfDiscourse().getRange().stream()).toList());
+
         return new FuzzySet(function);
     }
 
     public FuzzySet union(FuzzySet fuzzySet) {
-        CompoundFunction function = new CompoundFunction(membershipFunction, false);
-        function.addFunction(fuzzySet.getMembershipFunction());
+        MembershipFunction function = new MembershipFunction() {
+            @Override
+            public double calculateMembershipDegree(double x) {
+                return Math.max(calculateMembership(x), fuzzySet.membershipFunction.calculateMembershipDegree(x));
+            }
+        };
+        function.universeOfDiscourse =
+                new ContinuousUniverse(Stream.concat(this.getUniverseOfDiscourse().getRange().stream(),
+                        fuzzySet.getUniverseOfDiscourse().getRange().stream()).toList());
+
         return new FuzzySet(function);
     }
 

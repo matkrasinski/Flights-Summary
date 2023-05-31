@@ -6,25 +6,16 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="650.0" prefWidth="1012.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.ksr.view.MainController">
 <children>
-   <Button fx:id="generateButton" layoutX="367.0" layoutY="313.0" mnemonicParsing="false" onAction="#generateSummaries" prefHeight="25.0" prefWidth="167.0" text="Generate summaries" />
-   <ListView fx:id="summaries" layoutX="59.0" layoutY="348.0" prefHeight="244.0" prefWidth="873.0" />
-      <Button fx:id="button" layoutX="714.0" layoutY="314.0" mnemonicParsing="false" onAction="#saveSummaries" prefHeight="25.0" prefWidth="122.0" text="Save summaries" />
-      <RadioButton layoutX="197.0" layoutY="187.0" mnemonicParsing="false" onAction="#getQuantifiersNames" text="Absolute">
-         <toggleGroup>
-            <ToggleGroup fx:id="quantifiers" />
-         </toggleGroup>
-      </RadioButton>
-      <RadioButton fx:id="quantifierRadio" layoutX="98.0" layoutY="187.0" mnemonicParsing="false" onAction="#getQuantifiersNames" selected="true" text="Relative" toggleGroup="$quantifiers" />
-      <ComboBox fx:id="quantifiersBox" layoutX="98.0" layoutY="229.0" prefHeight="25.0" prefWidth="185.0" promptText="Choose quantifier" />
+   <Button fx:id="generateButton" layoutX="608.0" layoutY="153.0" mnemonicParsing="false" onAction="#generateSummaries" prefHeight="25.0" prefWidth="167.0" text="Generate summaries" />
+      <Button fx:id="button" layoutX="788.0" layoutY="153.0" mnemonicParsing="false" onAction="#saveSummaries" prefHeight="25.0" prefWidth="122.0" text="Save summaries" />
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="979.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <menus>
           <Menu fx:id="menu" mnemonicParsing="false" text="Switch">
@@ -33,25 +24,29 @@
                </items></Menu>
         </menus>
       </MenuBar>
-      <ComboBox fx:id="summarizerBox" layoutX="371.0" layoutY="40.0" onAction="#pickSummarizer" prefHeight="25.0" prefWidth="185.0" promptText="Attribute - summarizer" />
-      <ComboBox fx:id="labelsBox1" layoutX="371.0" layoutY="71.0" prefHeight="25.0" prefWidth="185.0" promptText="Choose label" />
-      <ComboBox fx:id="qualifierBox" layoutX="716.0" layoutY="40.0" onAction="#pickQualifier" prefHeight="25.0" prefWidth="167.0" promptText="Attribute - qualifier" />
-      <ComboBox fx:id="labelsBox2" layoutX="716.0" layoutY="71.0" prefHeight="25.0" prefWidth="167.0" promptText="Choose label" />
-      <ListView fx:id="summarizersList" layoutX="335.0" layoutY="137.0" prefHeight="136.0" prefWidth="257.0" />
-      <ListView fx:id="qualifiersList" layoutX="680.0" layoutY="136.0" prefHeight="136.0" prefWidth="257.0" />
-      <ComboBox fx:id="summaryTypes" layoutX="99.0" layoutY="132.0" prefHeight="25.0" prefWidth="185.0" promptText="Choose summary type" />
-      <Text layoutX="118.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Summary type">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Text>
-      <Button layoutX="413.0" layoutY="109.0" mnemonicParsing="false" onAction="#addToSummarizers" text="+" />
-      <Button layoutX="757.0" layoutY="108.0" mnemonicParsing="false" onAction="#addToQualifiers" text="+" />
-      <Button layoutX="823.0" layoutY="108.0" mnemonicParsing="false" onAction="#removeFromQualifiers" prefHeight="25.0" prefWidth="25.0" text="-" />
-      <Button layoutX="478.0" layoutY="109.0" mnemonicParsing="false" onAction="#removeFromSummarizers" prefHeight="25.0" prefWidth="25.0" text="-" />
-      <TextField fx:id="weightsField" layoutX="62.0" layoutY="313.0" prefHeight="25.0" prefWidth="282.0" />
-      <Text layoutX="185.0" layoutY="303.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Weights" />
-      <Button layoutX="549.0" layoutY="314.0" mnemonicParsing="false" onAction="#sort" prefHeight="25.0" prefWidth="150.0" text="Sort" />
-      <ComboBox fx:id="measuresBox" layoutX="549.0" layoutY="287.0" prefWidth="150.0" />
-      <Button fx:id="resetButton" layoutX="851.0" layoutY="314.0" mnemonicParsing="false" onAction="#reset" prefHeight="25.0" prefWidth="82.0" text="Reset" />
+      <ComboBox fx:id="summarizerBox" layoutX="62.0" layoutY="68.0" onAction="#pickAttribute" prefHeight="25.0" prefWidth="185.0" promptText="Attribute" />
+      <ComboBox fx:id="labelsBox" layoutX="62.0" layoutY="110.0" prefHeight="25.0" prefWidth="185.0" promptText="Choose label" />
+      <ListView fx:id="summarizersList" layoutX="326.0" layoutY="42.0" prefHeight="136.0" prefWidth="257.0" />
+      <Button layoutX="278.0" layoutY="67.0" mnemonicParsing="false" onAction="#addToAttributesList" text="+" />
+      <Button layoutX="278.0" layoutY="110.0" mnemonicParsing="false" onAction="#removeFromAttributesList" prefHeight="25.0" prefWidth="25.0" text="-" />
+      <TextField fx:id="weightsField" layoutX="608.0" layoutY="79.0" prefHeight="25.0" prefWidth="282.0" />
+      <Text layoutX="731.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Weights" />
+      <Button layoutX="808.0" layoutY="111.0" mnemonicParsing="false" onAction="#reset" prefHeight="25.0" prefWidth="82.0" text="Reset" />
+      <TableView fx:id="summaries" layoutX="43.0" layoutY="199.0" prefHeight="419.0" prefWidth="920.0">
+        <columns>
+          <TableColumn fx:id="summaryColumn" prefWidth="320.0" text="Summary" />
+            <TableColumn fx:id="tColumn" prefWidth="50.0" text="T" />
+          <TableColumn fx:id="t1Column" prefWidth="50.0" text="T1" />
+            <TableColumn fx:id="t2Column" prefWidth="50.0" text="T2" />
+            <TableColumn fx:id="t3Column" prefWidth="50.0" text="T3" />
+            <TableColumn fx:id="t4Column" prefWidth="50.0" text="T4" />
+            <TableColumn fx:id="t5Column" prefWidth="50.0" text="T5" />
+            <TableColumn fx:id="t6Column" prefWidth="50.0" text="T6" />
+            <TableColumn fx:id="t7Column" prefWidth="50.0" text="T7" />
+            <TableColumn fx:id="t8Column" prefWidth="50.0" text="T8" />
+            <TableColumn fx:id="t9Column" prefWidth="50.0" text="T9" />
+            <TableColumn fx:id="t10Column" prefWidth="50.0" text="T10" />
+            <TableColumn fx:id="t11Column" prefWidth="50.0" text="T11" />
+        </columns>
+      </TableView>
 </children></AnchorPane>
