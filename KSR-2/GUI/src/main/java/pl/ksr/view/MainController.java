@@ -1,5 +1,6 @@
 package pl.ksr.view;
 
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -7,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.controlsfx.control.CheckTreeView;
 import pl.ksr.lingustic.Label;
 import pl.ksr.lingustic.*;
 import pl.ksr.summary.Subject;
@@ -50,37 +52,29 @@ public class MainController {
     @FXML
     private TableColumn<SummaryRow, Double> t11Column;
 
-
-
-    @FXML
-    private ComboBox<String> summarizerBox;
-    @FXML
-    private ComboBox<String> labelsBox;
-
-    @FXML
-    private ListView<String> summarizersList;
-
     @FXML
     private TextField weightsField;
 
     @FXML
     private Button generateButton;
 
+    @FXML
+    private ScrollPane attributesPane;
+
     private List<Label> currentSummarizers;
-    private List<pl.ksr.summary.Summary> currentSummaries;
+    private List<Summary> currentSummaries;
     private List<Double> weights;
     private List<LinguisticVariable> allVariables;
     private List<LinguisticQuantifier> allQuantifiers;
-    private LinguisticVariable selectedSummarizer;
-    private LinguisticVariable selectedQualifier;
+    private List<Label> selectedAttributes;
     private String[] types;
 
 
     public void initialize() {
         summaries.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        summarizersList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        getVariables();
+
+        initVariables();
         setCellsValuesFactors();
 
         allQuantifiers = new ArrayList<>();
@@ -104,62 +98,119 @@ public class MainController {
     }
 
 
-    public void getVariables() {
+    public void initVariables() {
         allVariables = VariableManager.loadVariables();
+        CheckBoxTreeItem<String> attributes = new CheckBoxTreeItem<>();
 
-        summarizerBox.getItems().addAll(allVariables.stream().map(LinguisticVariable::getVariableName).toList());
-    }
-
-    public void pickAttribute() {
-        String currSummarizer = summarizerBox.getValue();
-
-        var summarizerLabels = allVariables.stream().filter(e -> e.getVariableName().equals(currSummarizer)).toList();
-
-        if (!labelsBox.getItems().isEmpty())
-            labelsBox.getItems().clear();
-
-        selectedSummarizer = summarizerLabels.get(0);
-
-        labelsBox.getItems().addAll(selectedSummarizer.getLabelsNames());
-    }
-
-    public void addToAttributesList() {
-        Label label = null;
-        for (Label l : selectedSummarizer.getLabels())
-            if (l.getLabelName().equals(labelsBox.getValue()))
-                label = l;
-
-        if (label != null) {
-            if (currentSummarizers == null) {
-                currentSummarizers = new ArrayList<>();
+        for (var variable : allVariables) {
+            CheckBoxTreeItem<String> newAttribute = new CheckBoxTreeItem<>(variable.getVariableName());
+            for (var label : variable.getLabels()) {
+                newAttribute.getChildren().add(new CheckBoxTreeItem<>(label.getLabelName()));
             }
-            currentSummarizers.add(label);
-            summarizersList.getItems().add(labelsBox.getValue());
+            attributes.getChildren().add(newAttribute);
         }
-        currentSummarizers.forEach(e -> System.out.println(e.getLabelName()));
-    }
 
+        CheckTreeView<String> checkTreeView = new CheckTreeView<>(attributes);
+        checkTreeView.setShowRoot(false);
 
+        checkTreeView.getCheckModel().getCheckedItems().addListener((ListChangeListener<TreeItem<String>>) change -> {
+            selectedAttributes = new ArrayList<>();
 
-    public void removeFromAttributesList() {
-        for (Label label : currentSummarizers) {
-            for (String item : summarizersList.getSelectionModel().getSelectedItems()) {
-                if (label.getLabelName().equals(item)) {
-                    currentSummarizers.remove(label);
-                    break;
+            for (var checked : checkTreeView.getCheckModel().getCheckedItems()) {
+                for (LinguisticVariable variable : allVariables) {
+                    for (Label label : variable.getLabels()) {
+                        if (label.getLabelName().equals(checked.getValue()))
+                            selectedAttributes.add(label);
+                    }
                 }
             }
-            if (currentSummarizers.isEmpty())
-                break;
-        }
 
-//        currentSummarizers.removeIf(label -> label.getLabelName().equals(summarizersList.getSelectionModel().getSelectedItems()));
-        currentSummarizers.forEach(e -> System.out.println(e.getLabelName()));
-        summarizersList.getItems().remove(summarizersList.getSelectionModel().getSelectedItem());
+            selectedAttributes.forEach(e -> System.out.println(e.getLabelName()));
+            System.out.println(selectedAttributes.size());
+
+        });
+
+        attributesPane.setContent(checkTreeView);
     }
 
+    public void generateSummaries() {
+        int[] numbers = selectedAttributes.stream().mapToInt(e -> selectedAttributes.indexOf(e)).toArray();
+        Subject subject = new Subject();
+        List<List<Integer>> indexes = generateVariations(numbers);
+        List<List<Integer>> combinations = calculateCombinations(selectedAttributes.size());
+        List<Summary> summaries = new ArrayList<>();
+        for (var quantifier : allQuantifiers) {
+//            for (List<Integer> i : indexes) {
+//                Summary summary = SummaryGenerator.generateSingleSubjectFirstForm(quantifier, subject,
+//                        i.stream().map(e -> selectedAttributes.get(e)).toList());
+//                if (summary != null)
+//                    summaries.add(summary);
+//            }
+
+            for (List<Integer> combination : combinations) {
+                List<Integer> group1 = new ArrayList<>();
+                List<Integer> group2 = new ArrayList<>();
+
+                for (int i = 0; i < selectedAttributes.size(); i++) {
+                    if (combination.contains(i)) {
+                        group1.add(i);
+                    } else {
+                        group2.add(i);
+                    }
+                }
+                Summary summary = SummaryGenerator.generateSingleSubjectSecondForm(quantifier,
+                        subject, group1.stream().map(e -> selectedAttributes.get(e)).toList(),
+                        group2.stream().map(e -> selectedAttributes.get(e)).toList());
+                if (summary != null)
+                    summaries.add(summary);
+
+            }
 
 
+        }
+        currentSummaries = summaries;
+        loadSummaries();
+    }
+
+    public static List<List<Integer>> generateVariations(int[] numbers) {
+        List<List<Integer>> variations = new ArrayList<>();
+        for (int i = 1; i <= numbers.length; i++) {
+            backtrack(numbers, new ArrayList<>(), variations, i, 0);
+        }
+
+        return variations;
+    }
+
+    private static void backtrack(int[] numbers, List<Integer> variation, List<List<Integer>> variations, int size, int startIndex) {
+        if (variation.size() == size) {
+            variations.add(new ArrayList<>(variation));
+            return;
+        }
+
+        for (int i = startIndex; i < numbers.length; i++) {
+            variation.add(numbers[i]);
+            backtrack(numbers, variation, variations, size, i + 1);
+            variation.remove(variation.size() - 1);
+        }
+    }
+
+    public static List<List<Integer>> calculateCombinations(int n) {
+        List<List<Integer>> combinations = new ArrayList<>();
+
+        for (int i = 1; i < (1 << (n - 1)); i++) {
+            List<Integer> combination = new ArrayList<>();
+
+            for (int j = 0; j < n - 1; j++) {
+                if ((i & (1 << j)) > 0) {
+                    combination.add(j + 1);
+                }
+            }
+
+            combinations.add(combination);
+        }
+
+        return combinations;
+    }
 
     public List<Double> parseWeightsField() {
         List<Double> weights = new ArrayList<>();
@@ -170,24 +221,7 @@ public class MainController {
         return weights;
     }
 
-    public void generateSummaries() {
-        List<Summary> summaries = new ArrayList<>();
 
-        Subject subject = new Subject();
-
-        for (LinguisticQuantifier quantifier : allQuantifiers) {
-            Summary summary = SummaryGenerator.generateSingleSubjectFirstForm(quantifier, subject, currentSummarizers);
-            summaries.add(summary);
-        }
-
-        if (currentSummaries != null)
-            currentSummaries.addAll(summaries);
-        else
-            currentSummaries = summaries;
-
-
-        loadSummaries();
-    }
 
     public void loadSummaries() {
         parseWeightsField();
@@ -220,7 +254,6 @@ public class MainController {
         t10Column.setCellValueFactory(new PropertyValueFactory<>("t10"));
         t11Column.setCellValueFactory(new PropertyValueFactory<>("t11"));
     }
-
 
     @FXML
     public void switchToAdvanced() throws IOException {

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -24,15 +23,10 @@
                </items></Menu>
         </menus>
       </MenuBar>
-      <ComboBox fx:id="summarizerBox" layoutX="62.0" layoutY="68.0" onAction="#pickAttribute" prefHeight="25.0" prefWidth="185.0" promptText="Attribute" />
-      <ComboBox fx:id="labelsBox" layoutX="62.0" layoutY="110.0" prefHeight="25.0" prefWidth="185.0" promptText="Choose label" />
-      <ListView fx:id="summarizersList" layoutX="326.0" layoutY="42.0" prefHeight="136.0" prefWidth="257.0" />
-      <Button layoutX="278.0" layoutY="67.0" mnemonicParsing="false" onAction="#addToAttributesList" text="+" />
-      <Button layoutX="278.0" layoutY="110.0" mnemonicParsing="false" onAction="#removeFromAttributesList" prefHeight="25.0" prefWidth="25.0" text="-" />
       <TextField fx:id="weightsField" layoutX="608.0" layoutY="79.0" prefHeight="25.0" prefWidth="282.0" />
       <Text layoutX="731.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Weights" />
       <Button layoutX="808.0" layoutY="111.0" mnemonicParsing="false" onAction="#reset" prefHeight="25.0" prefWidth="82.0" text="Reset" />
-      <TableView fx:id="summaries" layoutX="43.0" layoutY="199.0" prefHeight="419.0" prefWidth="920.0">
+      <TableView fx:id="summaries" layoutX="43.0" layoutY="301.0" prefHeight="317.0" prefWidth="920.0">
         <columns>
           <TableColumn fx:id="summaryColumn" prefWidth="320.0" text="Summary" />
             <TableColumn fx:id="tColumn" prefWidth="50.0" text="T" />
@@ -49,4 +43,5 @@
             <TableColumn fx:id="t11Column" prefWidth="50.0" text="T11" />
         </columns>
       </TableView>
+      <ScrollPane fx:id="attributesPane" layoutX="115.0" layoutY="38.0" prefHeight="255.0" prefWidth="240.0" />
 </children></AnchorPane>

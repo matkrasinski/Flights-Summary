@@ -2,6 +2,9 @@ package pl.ksr.lingustic;
 
 import pl.ksr.sets.FuzzySet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Label {
     private String attributeName;
     private final String label;
@@ -26,5 +29,22 @@ public class Label {
     }
     public String getAttributeName() {
         return attributeName;
+    }
+
+    public List<Double> andConnective(List<List<Double>> objects, List<Label> labels) {
+        List<Double> res = new ArrayList<>();
+        for (int i = 0; i < objects.get(0).size(); i++) {
+            double min = 1;
+            for (int j = 0; j < labels.size(); j++) {
+                double value = labels.get(j).getFuzzySet().calculateMembership(objects.get(j).get(i));
+                if (value < min)
+                    min = value;
+            }
+            if (min > 0)
+                System.out.println(min);
+            res.add(min);
+        }
+        return res;
+
     }
 }

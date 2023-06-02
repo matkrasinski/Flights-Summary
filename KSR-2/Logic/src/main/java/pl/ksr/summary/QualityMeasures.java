@@ -138,7 +138,7 @@ public class QualityMeasures {
 
     // Degree of quantifier imprecision
     public double calculateT_6(LinguisticQuantifier quantifier) {
-        var degreeOfFuzziness = quantifier.getLabel().getFuzzySet().getDegreeOfFuzziness();
+        var degreeOfFuzziness = quantifier.getFuzzySet().getDegreeOfFuzziness();
 
 //        quantifierImprecision =
 //                Math.abs(supp.getUniverseOfDiscourse().getRange().get(0).get(0)

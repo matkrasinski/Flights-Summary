@@ -35,9 +35,18 @@ public class FuzzySet {
                 return Math.min(calculateMembership(x), fuzzySet.membershipFunction.calculateMembershipDegree(x));
             }
         };
-        function.universeOfDiscourse =
-                new ContinuousUniverse(Stream.concat(this.getUniverseOfDiscourse().getRange().stream(),
-                        fuzzySet.getUniverseOfDiscourse().getRange().stream()).toList());
+
+        if (getUniverseOfDiscourse() instanceof ContinuousUniverse) {
+            function.universeOfDiscourse =
+                    new ContinuousUniverse(Stream.concat(this.getUniverseOfDiscourse().getRange().stream(),
+                            fuzzySet.getUniverseOfDiscourse().getRange().stream()).toList());
+        } else {
+            function.universeOfDiscourse =
+                    new DiscreteUniverse(Stream.concat(this.getUniverseOfDiscourse().getRange().get(0).stream(),
+                            fuzzySet.getUniverseOfDiscourse().getRange().get(0).stream()).toList());
+        }
+
+
 
         return new FuzzySet(function);
     }
@@ -198,8 +207,8 @@ public class FuzzySet {
     public boolean isEmpty() {
         if (getUniverseOfDiscourse().getType() == UniverseType.DISCRETE)
             return getSupp().getElements().isEmpty();
-        return ((ContinuousUniverse) getUniverseOfDiscourse()).discretizeUniverse()
-                .stream().map(this::calculateMembership).filter(e -> e > 0).toList().isEmpty();
+        return ((ContinuousUniverse) getUniverseOfDiscourse()).discretizeUniverse().stream()
+               .filter(e -> calculateMembership(e) > 0).toList().isEmpty();
     }
 
     public double getHeight() {
@@ -211,30 +220,6 @@ public class FuzzySet {
     public double calculateMembership(double x) {
         return membershipFunction.calculateMembershipDegree(x);
     }
-
-    public static List<Double> calculateMembershipAnd(List<List<Double>> objects, List<FuzzySet> sets) {
-        List<Double> minimumValues = new ArrayList<>();
-
-        int numPositions = objects.get(0).size();
-
-        for (int i = 0; i < numPositions; i++) {
-            double minValue = 1;
-
-            int finalI = i;
-            List<Double> rows = objects.stream().map(list -> list.get(finalI)).toList();
-
-            int index = 0;
-            for (double x : rows) {
-                double value = sets.get(index).calculateMembership(x);
-                if (value < minValue)
-                    minValue = value;
-                index++;
-            }
-            minimumValues.add(minValue);
-        }
-        return minimumValues;
-    }
-
 
     public double calculateIntegral(UnivariateFunction function, double min, double max) {
         SimpsonIntegrator integrator = new SimpsonIntegrator();

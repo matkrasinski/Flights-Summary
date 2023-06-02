@@ -39,8 +39,8 @@ public class QuantifierManager {
                             new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(true,
-                            new Label(current.get("label").asText(),
-                                    new FuzzySet(function)));
+                            current.get("label").asText(),
+                                    new FuzzySet(function));
                 } else if (Objects.equals(current.get("function").asText(), TriangleFunction.class.getSimpleName())) {
                     MembershipFunction function = new TriangleFunction(parameters.get("a").asDouble(),
                             parameters.get("b").asDouble(),
@@ -48,8 +48,8 @@ public class QuantifierManager {
                             new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(true,
-                            new Label(current.get("label").asText(),
-                            new FuzzySet(function)));
+                            current.get("label").asText(),
+                            new FuzzySet(function));
                 } else if (Objects.equals(current.get("function").asText(), GaussianFunction.class.getSimpleName())) {
                     MembershipFunction function = new GaussianFunction(
                             parameters.get("m").asDouble(),
@@ -57,8 +57,8 @@ public class QuantifierManager {
                             new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(true,
-                            new Label(current.get("label").asText(),
-                            new FuzzySet(function)));
+                            current.get("label").asText(),
+                            new FuzzySet(function));
                 } else {
                     Universe universe = new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble());
                     MembershipFunction function = new CompoundFunction(List.of(
@@ -74,8 +74,8 @@ public class QuantifierManager {
 
 
                     newQuantifier = new LinguisticQuantifier(true,
-                            new Label(current.get("label").asText(),
-                            new FuzzySet(function)));
+                            current.get("label").asText(),
+                            new FuzzySet(function));
                 }
                 quantifiers.add(newQuantifier);
             }
@@ -111,8 +111,8 @@ public class QuantifierManager {
                             new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(false,
-                            new Label(current.get("quantifierLabel").asText(),
-                            new FuzzySet(function)));
+                            current.get("quantifierLabel").asText(),
+                            new FuzzySet(function));
                 } else if (Objects.equals(current.get("function").asText(), TriangleFunction.class.getSimpleName())) {
                     MembershipFunction function = new TriangleFunction(parameters.get("a").asDouble(),
                             parameters.get("b").asDouble(),
@@ -120,8 +120,8 @@ public class QuantifierManager {
                             new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(false,
-                            new Label(current.get("quantifierLabel").asText(),
-                            new FuzzySet(function)));
+                            current.get("quantifierLabel").asText(),
+                            new FuzzySet(function));
                 } else if (Objects.equals(current.get("function").asText(), GaussianFunction.class.getSimpleName())) {
                     MembershipFunction function = new GaussianFunction(
                             parameters.get("m").asDouble(),
@@ -129,8 +129,8 @@ public class QuantifierManager {
                             new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(false,
-                            new Label(current.get("label").asText(),
-                            new FuzzySet(function)));
+                            current.get("label").asText(),
+                            new FuzzySet(function));
                 } else {
                     Universe universe = new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble());
                     MembershipFunction function = new CompoundFunction(List.of(
@@ -145,8 +145,8 @@ public class QuantifierManager {
                             )), universe, false);
 
                     newQuantifier = new LinguisticQuantifier(false,
-                            new Label(current.get("quantifierLabel").asText(),
-                            new FuzzySet(function)));
+                            current.get("quantifierLabel").asText(),
+                            new FuzzySet(function));
                 }
                 quantifiers.add(newQuantifier);
             }

@@ -21,18 +21,18 @@ public class SummaryRow {
 
     public SummaryRow(Summary summary) {
         this.summary = summary.getSummary();
-        this.t = summary.getQualityMeasures().getT_1();
-        this.t1 = summary.getQualityMeasures().getT_2();
-        this.t2 = summary.getQualityMeasures().getT_3();
-        this.t3 = summary.getQualityMeasures().getT_4();
-        this.t4 = summary.getQualityMeasures().getT_5();
-        this.t5 = summary.getQualityMeasures().getT_6();
-        this.t6 = summary.getQualityMeasures().getT_7();
-        this.t7 = summary.getQualityMeasures().getT_8();
-        this.t8 = summary.getQualityMeasures().getT_9();
-        this.t9 = summary.getQualityMeasures().getT_1();
-        this.t10 = summary.getQualityMeasures().getT_10();
-        this.t11 = summary.getQualityMeasures().getT_11();
+        this.t = (double) Math.round(summary.getQualityMeasures().getT_1() * 100) / 100;
+        this.t1 = (double) Math.round(summary.getQualityMeasures().getT_2() * 100) / 100;
+        this.t2 = (double) Math.round(summary.getQualityMeasures().getT_3() * 100) / 100;
+        this.t3 = (double) Math.round(summary.getQualityMeasures().getT_4() * 100) / 100;
+        this.t4 = (double) Math.round(summary.getQualityMeasures().getT_5() * 100) / 100;
+        this.t5 = (double) Math.round(summary.getQualityMeasures().getT_6() * 100) / 100;
+        this.t6 = (double) Math.round(summary.getQualityMeasures().getT_7() * 100) / 100;
+        this.t7 = (double) Math.round(summary.getQualityMeasures().getT_8() * 100) / 100;
+        this.t8 = (double) Math.round(summary.getQualityMeasures().getT_9() * 100) / 100;
+        this.t9 = (double) Math.round(summary.getQualityMeasures().getT_1() * 100) / 100;
+        this.t10 = (double) Math.round(summary.getQualityMeasures().getT_10() * 100) / 100;
+        this.t11 = (double) Math.round(summary.getQualityMeasures().getT_11() * 100) / 100;
     }
 
     @Override
