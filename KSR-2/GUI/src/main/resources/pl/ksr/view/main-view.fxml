@@ -7,14 +7,12 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="650.0" prefWidth="1012.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.ksr.view.MainController">
 <children>
-   <Button fx:id="generateButton" layoutX="608.0" layoutY="153.0" mnemonicParsing="false" onAction="#generateSummaries" prefHeight="25.0" prefWidth="167.0" text="Generate summaries" />
-      <Button fx:id="button" layoutX="788.0" layoutY="153.0" mnemonicParsing="false" onAction="#saveSummaries" prefHeight="25.0" prefWidth="122.0" text="Save summaries" />
+   <Button fx:id="generateButton" layoutX="431.0" layoutY="268.0" mnemonicParsing="false" onAction="#generateSummaries" prefHeight="25.0" prefWidth="144.0" text="Generate summaries" />
+      <Button fx:id="button" layoutX="789.0" layoutY="268.0" mnemonicParsing="false" onAction="#saveSummaries" prefHeight="25.0" prefWidth="144.0" text="Save summaries" />
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="979.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <menus>
           <Menu fx:id="menu" mnemonicParsing="false" text="Switch">
@@ -23,9 +21,7 @@
                </items></Menu>
         </menus>
       </MenuBar>
-      <TextField fx:id="weightsField" layoutX="608.0" layoutY="79.0" prefHeight="25.0" prefWidth="282.0" />
-      <Text layoutX="731.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Weights" />
-      <Button layoutX="808.0" layoutY="111.0" mnemonicParsing="false" onAction="#reset" prefHeight="25.0" prefWidth="82.0" text="Reset" />
+      <Button layoutX="608.0" layoutY="268.0" mnemonicParsing="false" onAction="#reset" prefHeight="25.0" prefWidth="144.0" text="Reset" />
       <TableView fx:id="summaries" layoutX="43.0" layoutY="301.0" prefHeight="317.0" prefWidth="920.0">
         <columns>
           <TableColumn fx:id="summaryColumn" prefWidth="320.0" text="Summary" />
@@ -43,5 +39,6 @@
             <TableColumn fx:id="t11Column" prefWidth="50.0" text="T11" />
         </columns>
       </TableView>
-      <ScrollPane fx:id="attributesPane" layoutX="115.0" layoutY="38.0" prefHeight="255.0" prefWidth="240.0" />
+      <ScrollPane fx:id="attributesPane" fitToHeight="true" fitToWidth="true" layoutX="115.0" layoutY="38.0" prefHeight="255.0" prefWidth="290.0" />
+      <ScrollPane fx:id="subjectScrollPane" fitToHeight="true" fitToWidth="true" layoutX="523.0" layoutY="38.0" prefHeight="200.0" prefWidth="314.0" />
 </children></AnchorPane>

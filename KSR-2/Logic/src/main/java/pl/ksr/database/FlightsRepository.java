@@ -34,6 +34,7 @@ public class FlightsRepository {
                         .build();
                 allFlights.add(flight);
             }
+            resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -59,6 +60,7 @@ public class FlightsRepository {
                     }
                 }
             }
+            resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -85,6 +87,7 @@ public class FlightsRepository {
                     }
                 }
             }
+            resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -149,6 +152,7 @@ public class FlightsRepository {
                         .build();
                 allFlights.add(flight);
             }
+            resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

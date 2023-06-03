@@ -21,7 +21,7 @@ public class Subject {
         this.objects = new HashMap<>();
         if (allSubjects().contains(subject)) {
             initializeAttributes(subject);
-            this.subject = "flights where manufacturer was " +  subject;
+            this.subject = "flights where aircraft manufacturer was " +  subject;
         } else {
             this.subject = "flights";
             initializeAttributes();

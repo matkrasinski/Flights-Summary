@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdvancedController {
@@ -49,10 +50,16 @@ public class AdvancedController {
     @FXML
     private Button submitButton;
 
+    @FXML
+    private TextField weightsField;
+
+
     public void initialize() {
         setObjectToAdd();
         setInvisible();
         linguisticVariableField.setValue("flight start");
+        weightsField.setText("0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09");
+        WeightsContext.setWeights(parseWeightsField());
     }
 
     public void setObjectToAdd() {
@@ -66,6 +73,16 @@ public class AdvancedController {
         standardDeviation.setVisible(false);
         standardDeviationField.setVisible(false);
     }
+
+    public List<Double> parseWeightsField() {
+        List<Double> weights = new ArrayList<>();
+        for (String field : weightsField.getText().split(", ")) {
+//            weights.add(Double.parseDouble(field));
+            weights.add(1d / 11);
+        }
+        return weights;
+    }
+
     @FXML
     public void switchToMainView() throws IOException {
         Stage primaryStage = (Stage) submitButton.getScene().getWindow();

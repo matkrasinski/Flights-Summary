@@ -31,7 +31,7 @@ public class Label {
         return attributeName;
     }
 
-    public List<Double> andConnective(List<List<Double>> objects, List<Label> labels) {
+    public static List<Double> andConnective(List<List<Double>> objects, List<Label> labels) {
         List<Double> res = new ArrayList<>();
         for (int i = 0; i < objects.get(0).size(); i++) {
             double min = 1;
@@ -40,8 +40,8 @@ public class Label {
                 if (value < min)
                     min = value;
             }
-            if (min > 0)
-                System.out.println(min);
+//            if (min > 0)
+//                System.out.println(min);
             res.add(min);
         }
         return res;

@@ -51,39 +51,29 @@ public class MainController {
     private TableColumn<SummaryRow, Double> t10Column;
     @FXML
     private TableColumn<SummaryRow, Double> t11Column;
-
-    @FXML
-    private TextField weightsField;
-
     @FXML
     private Button generateButton;
-
     @FXML
     private ScrollPane attributesPane;
+    @FXML
+    private ScrollPane subjectScrollPane;
 
-    private List<Label> currentSummarizers;
     private List<Summary> currentSummaries;
-    private List<Double> weights;
     private List<LinguisticVariable> allVariables;
     private List<LinguisticQuantifier> allQuantifiers;
     private List<Label> selectedAttributes;
-    private String[] types;
-
+    private List<Subject> selectedSubjects;
 
     public void initialize() {
         summaries.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-
         initVariables();
+        initSubjects();
         setCellsValuesFactors();
 
         allQuantifiers = new ArrayList<>();
         allQuantifiers.addAll(QuantifierManager.loadAbsoluteQuantifiers());
         allQuantifiers.addAll(QuantifierManager.loadRelativeQuantifiers());
-
-        weightsField.setText("0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09");
-
-        weights = parseWeightsField();
     }
 
     public void saveSummaries() {
@@ -113,6 +103,8 @@ public class MainController {
         CheckTreeView<String> checkTreeView = new CheckTreeView<>(attributes);
         checkTreeView.setShowRoot(false);
 
+
+
         checkTreeView.getCheckModel().getCheckedItems().addListener((ListChangeListener<TreeItem<String>>) change -> {
             selectedAttributes = new ArrayList<>();
 
@@ -125,52 +117,121 @@ public class MainController {
                 }
             }
 
-            selectedAttributes.forEach(e -> System.out.println(e.getLabelName()));
-            System.out.println(selectedAttributes.size());
+//            selectedAttributes.forEach(e -> System.out.println(e.getLabelName()));
+//            System.out.println(selectedAttributes.size());
 
         });
 
         attributesPane.setContent(checkTreeView);
     }
 
-    public void generateSummaries() {
-        int[] numbers = selectedAttributes.stream().mapToInt(e -> selectedAttributes.indexOf(e)).toArray();
-        Subject subject = new Subject();
-        List<List<Integer>> indexes = generateVariations(numbers);
-        List<List<Integer>> combinations = calculateCombinations(selectedAttributes.size());
-        List<Summary> summaries = new ArrayList<>();
-        for (var quantifier : allQuantifiers) {
-//            for (List<Integer> i : indexes) {
-//                Summary summary = SummaryGenerator.generateSingleSubjectFirstForm(quantifier, subject,
-//                        i.stream().map(e -> selectedAttributes.get(e)).toList());
-//                if (summary != null)
-//                    summaries.add(summary);
-//            }
+    public void initSubjects() {
+        List<String> allSubjects = Subject.allSubjects();
+        System.out.println(allSubjects);
 
-            for (List<Integer> combination : combinations) {
-                List<Integer> group1 = new ArrayList<>();
-                List<Integer> group2 = new ArrayList<>();
+        CheckBoxTreeItem<String> rootItem = new CheckBoxTreeItem<>();
 
-                for (int i = 0; i < selectedAttributes.size(); i++) {
-                    if (combination.contains(i)) {
-                        group1.add(i);
-                    } else {
-                        group2.add(i);
+        CheckBoxTreeItem<String> defaultSubject = new CheckBoxTreeItem<>("All flights");
+
+        selectedSubjects = new ArrayList<>();
+        selectedSubjects.add(new Subject());
+
+        CheckBoxTreeItem<String> multiSubjects = new CheckBoxTreeItem<>("Flights where aircraft manufacturer was");
+
+        CheckBoxTreeItem<String> boeingItem = new CheckBoxTreeItem<>(allSubjects.get(0));
+        CheckBoxTreeItem<String> airbusItem = new CheckBoxTreeItem<>(allSubjects.get(1));
+
+        multiSubjects.getChildren().add(boeingItem);
+        multiSubjects.getChildren().add(airbusItem);
+
+        rootItem.getChildren().add(defaultSubject);
+        rootItem.getChildren().add(multiSubjects);
+        CheckTreeView<String> subjects = new CheckTreeView<>(rootItem);
+        subjects.setShowRoot(false);
+
+
+
+        subjects.getCheckModel().getCheckedItems().addListener((ListChangeListener<TreeItem<String>>) change -> {
+            selectedSubjects = new ArrayList<>();
+            for (var item : subjects.getCheckModel().getCheckedItems()) {
+                if (item != null) {
+                    if (item.getValue().equals("All flights")) {
+                        selectedSubjects.add(new Subject());
+                        break;
+                    }
+                    if (item.getValue().equals("Boeing")) {
+                        selectedSubjects.add(new Subject("Boeing"));
+                    }
+                    if (item.getValue().equals("Airbus")) {
+                        selectedSubjects.add(new Subject("Airbus"));
                     }
                 }
-                Summary summary = SummaryGenerator.generateSingleSubjectSecondForm(quantifier,
-                        subject, group1.stream().map(e -> selectedAttributes.get(e)).toList(),
-                        group2.stream().map(e -> selectedAttributes.get(e)).toList());
-                if (summary != null)
-                    summaries.add(summary);
-
             }
 
+            System.out.println(selectedSubjects.size());
 
+
+
+        });
+
+
+
+        subjectScrollPane.setContent(subjects);
+
+    }
+
+    public void generateSummaries() {
+        int[] numbers = selectedAttributes.stream().mapToInt(e -> selectedAttributes.indexOf(e)).toArray();
+        List<List<Integer>> indexes = generateVariations(numbers);
+        System.out.println(indexes);
+
+        if (selectedSubjects.size() == 1) {
+            List<Summary> summaries = new ArrayList<>();
+            for (var quantifier : allQuantifiers) {
+                for (List<Integer> i : indexes) {
+                    Summary summary = SummaryGenerator.generateSingleSubjectFirstForm(quantifier, selectedSubjects.get(0),
+                            i.stream().map(e -> selectedAttributes.get(e)).toList());
+                    if (summary != null)
+                        summaries.add(summary);
+                }
+                // TODO second form
+            }
+            currentSummaries = summaries;
+        } else if (selectedSubjects.size() == 2){
+            List<Summary> summaries = new ArrayList<>();
+            for (var quantifier : allQuantifiers) {
+                for (List<Integer> i : indexes) {
+                    //FIRST
+                    Summary summary1 = SummaryGenerator.generateMultiSubjectFirstForm(quantifier, selectedSubjects,
+                            i.stream().map(e -> selectedAttributes.get(e)).toList());
+                    Summary summary2 = SummaryGenerator.generateMultiSubjectFirstForm(quantifier,
+                            List.of(selectedSubjects.get(1), selectedSubjects.get(0)),
+                            i.stream().map(e -> selectedAttributes.get(e)).toList());
+
+                    summaries.add(summary1);
+                    summaries.add(summary2);
+
+                    // FOURTH
+                    Summary summary3 = SummaryGenerator.generateMultiSubjectFourthForm(selectedSubjects, selectedAttributes);
+                    Summary summary4 = SummaryGenerator.generateMultiSubjectFourthForm(
+                            List.of(selectedSubjects.get(1), selectedSubjects.get(0)), selectedAttributes);
+                    summaries.add(summary3);
+                    summaries.add(summary4);
+                }
+                // TODO second form
+                // TODO third form
+                // TODO fourth form
+            }
+            currentSummaries = summaries;
         }
-        currentSummaries = summaries;
+
+
+
+
+
         loadSummaries();
     }
+
 
     public static List<List<Integer>> generateVariations(int[] numbers) {
         List<List<Integer>> variations = new ArrayList<>();
@@ -197,35 +258,23 @@ public class MainController {
     public static List<List<Integer>> calculateCombinations(int n) {
         List<List<Integer>> combinations = new ArrayList<>();
 
-        for (int i = 1; i < (1 << (n - 1)); i++) {
+        // Generowanie kombinacji
+        for (int i = 1; i < (1 << n - 1); i++) {
             List<Integer> combination = new ArrayList<>();
 
-            for (int j = 0; j < n - 1; j++) {
+            for (int j = 0; j < n; j++) {
                 if ((i & (1 << j)) > 0) {
-                    combination.add(j + 1);
+                    combination.add(j);
                 }
             }
 
             combinations.add(combination);
         }
-
         return combinations;
     }
 
-    public List<Double> parseWeightsField() {
-        List<Double> weights = new ArrayList<>();
-        for (String field : weightsField.getText().split(", ")) {
-//            weights.add(Double.parseDouble(field));
-            weights.add(1d / 11);
-        }
-        return weights;
-    }
-
-
 
     public void loadSummaries() {
-        parseWeightsField();
-
         List<SummaryRow> rows = currentSummaries.stream().map(SummaryRow::new).toList();
 
         rows.forEach(System.out::println);

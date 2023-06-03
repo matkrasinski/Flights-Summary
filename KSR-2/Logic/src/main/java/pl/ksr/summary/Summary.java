@@ -8,7 +8,6 @@ import java.util.List;
 public class Summary {
 
     private final String summary;
-    private final SummaryType summaryType;
     private QualityMeasures qualityMeasures;
     private final List<Subject> subjects;
     private final List<Label> summarizers;
@@ -16,11 +15,9 @@ public class Summary {
     private final LinguisticQuantifier quantifier;
 
 
-    public Summary(String summary, SummaryType summaryType,
-                   List<Subject> subjects, List<Label> summarizers, List<Label> qualifiers,
+    public Summary(String summary, List<Subject> subjects, List<Label> summarizers, List<Label> qualifiers,
                    LinguisticQuantifier quantifier) {
         this.summary = summary;
-        this.summaryType = summaryType;
         this.subjects = subjects;
         this.summarizers = summarizers;
         this.qualifiers = qualifiers;
@@ -33,10 +30,6 @@ public class Summary {
 
     public QualityMeasures getQualityMeasures() {
         return qualityMeasures;
-    }
-
-    public SummaryType getSummaryType() {
-        return summaryType;
     }
 
     public List<Subject> getSubjects() {
