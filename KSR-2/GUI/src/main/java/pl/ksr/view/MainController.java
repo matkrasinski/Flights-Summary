@@ -13,7 +13,7 @@ import pl.ksr.lingustic.Label;
 import pl.ksr.lingustic.*;
 import pl.ksr.summary.Subject;
 import pl.ksr.summary.Summary;
-import pl.ksr.summary.SummaryGenerator;
+import pl.ksr.summary.SummaryFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +60,8 @@ public class MainController {
 
     private List<Summary> currentSummaries;
     private List<LinguisticVariable> allVariables;
-    private List<LinguisticQuantifier> allQuantifiers;
+    private List<LinguisticQuantifier> relativeQuantifiers;
+    private List<LinguisticQuantifier> absoluteQuantifiers;
     private List<Label> selectedAttributes;
     private List<Subject> selectedSubjects;
 
@@ -71,11 +72,11 @@ public class MainController {
         initSubjects();
         setCellsValuesFactors();
 
-        allQuantifiers = new ArrayList<>();
-        allQuantifiers.addAll(QuantifierManager.loadAbsoluteQuantifiers());
-        allQuantifiers.addAll(QuantifierManager.loadRelativeQuantifiers());
+        relativeQuantifiers = new ArrayList<>();
+        absoluteQuantifiers = new ArrayList<>();
+        absoluteQuantifiers.addAll(QuantifierManager.loadAbsoluteQuantifiers());
+        relativeQuantifiers.addAll(QuantifierManager.loadRelativeQuantifiers());
     }
-
     public void saveSummaries() {
         List<String> selected = summaries.getSelectionModel().getSelectedItems()
                 .stream().map(SummaryRow::toString).toList();
@@ -86,8 +87,6 @@ public class MainController {
         if (file != null)
             FileManager.writeToFile(file.getAbsolutePath(), selected);
     }
-
-
     public void initVariables() {
         allVariables = VariableManager.loadVariables();
         CheckBoxTreeItem<String> attributes = new CheckBoxTreeItem<>();
@@ -124,11 +123,7 @@ public class MainController {
 
         attributesPane.setContent(checkTreeView);
     }
-
     public void initSubjects() {
-        List<String> allSubjects = Subject.allSubjects();
-        System.out.println(allSubjects);
-
         CheckBoxTreeItem<String> rootItem = new CheckBoxTreeItem<>();
 
         CheckBoxTreeItem<String> defaultSubject = new CheckBoxTreeItem<>("All flights");
@@ -138,8 +133,8 @@ public class MainController {
 
         CheckBoxTreeItem<String> multiSubjects = new CheckBoxTreeItem<>("Flights where aircraft manufacturer was");
 
-        CheckBoxTreeItem<String> boeingItem = new CheckBoxTreeItem<>(allSubjects.get(0));
-        CheckBoxTreeItem<String> airbusItem = new CheckBoxTreeItem<>(allSubjects.get(1));
+        CheckBoxTreeItem<String> boeingItem = new CheckBoxTreeItem<>("Boeing");
+        CheckBoxTreeItem<String> airbusItem = new CheckBoxTreeItem<>("Airbus");
 
         multiSubjects.getChildren().add(boeingItem);
         multiSubjects.getChildren().add(airbusItem);
@@ -179,105 +174,28 @@ public class MainController {
         subjectScrollPane.setContent(subjects);
 
     }
-
     public void generateSummaries() {
-        int[] numbers = selectedAttributes.stream().mapToInt(e -> selectedAttributes.indexOf(e)).toArray();
-        List<List<Integer>> indexes = generateVariations(numbers);
-        System.out.println(indexes);
-
         if (selectedSubjects.size() == 1) {
-            List<Summary> summaries = new ArrayList<>();
-            for (var quantifier : allQuantifiers) {
-                for (List<Integer> i : indexes) {
-                    Summary summary = SummaryGenerator.generateSingleSubjectFirstForm(quantifier, selectedSubjects.get(0),
-                            i.stream().map(e -> selectedAttributes.get(e)).toList());
-                    if (summary != null)
-                        summaries.add(summary);
-                }
-                // TODO second form
-            }
-            currentSummaries = summaries;
+            currentSummaries = SummaryFactory.generateAllSingleSubject(absoluteQuantifiers, relativeQuantifiers,
+                    selectedAttributes, selectedSubjects.get(0));
         } else if (selectedSubjects.size() == 2){
-            List<Summary> summaries = new ArrayList<>();
-            for (var quantifier : allQuantifiers) {
-                for (List<Integer> i : indexes) {
-                    //FIRST
-                    Summary summary1 = SummaryGenerator.generateMultiSubjectFirstForm(quantifier, selectedSubjects,
-                            i.stream().map(e -> selectedAttributes.get(e)).toList());
-                    Summary summary2 = SummaryGenerator.generateMultiSubjectFirstForm(quantifier,
-                            List.of(selectedSubjects.get(1), selectedSubjects.get(0)),
-                            i.stream().map(e -> selectedAttributes.get(e)).toList());
-
-                    summaries.add(summary1);
-                    summaries.add(summary2);
-
-                    // FOURTH
-                    Summary summary3 = SummaryGenerator.generateMultiSubjectFourthForm(selectedSubjects, selectedAttributes);
-                    Summary summary4 = SummaryGenerator.generateMultiSubjectFourthForm(
-                            List.of(selectedSubjects.get(1), selectedSubjects.get(0)), selectedAttributes);
-                    summaries.add(summary3);
-                    summaries.add(summary4);
-                }
-                // TODO second form
-                // TODO third form
-                // TODO fourth form
-            }
-            currentSummaries = summaries;
+            currentSummaries = SummaryFactory.generateAllMultiSubject(
+                    relativeQuantifiers,
+                    selectedAttributes,
+                    selectedSubjects
+            );
         }
-
-
-
+        System.out.println(currentSummaries.size());
 
 
         loadSummaries();
     }
 
 
-    public static List<List<Integer>> generateVariations(int[] numbers) {
-        List<List<Integer>> variations = new ArrayList<>();
-        for (int i = 1; i <= numbers.length; i++) {
-            backtrack(numbers, new ArrayList<>(), variations, i, 0);
-        }
-
-        return variations;
-    }
-
-    private static void backtrack(int[] numbers, List<Integer> variation, List<List<Integer>> variations, int size, int startIndex) {
-        if (variation.size() == size) {
-            variations.add(new ArrayList<>(variation));
-            return;
-        }
-
-        for (int i = startIndex; i < numbers.length; i++) {
-            variation.add(numbers[i]);
-            backtrack(numbers, variation, variations, size, i + 1);
-            variation.remove(variation.size() - 1);
-        }
-    }
-
-    public static List<List<Integer>> calculateCombinations(int n) {
-        List<List<Integer>> combinations = new ArrayList<>();
-
-        // Generowanie kombinacji
-        for (int i = 1; i < (1 << n - 1); i++) {
-            List<Integer> combination = new ArrayList<>();
-
-            for (int j = 0; j < n; j++) {
-                if ((i & (1 << j)) > 0) {
-                    combination.add(j);
-                }
-            }
-
-            combinations.add(combination);
-        }
-        return combinations;
-    }
-
-
     public void loadSummaries() {
         List<SummaryRow> rows = currentSummaries.stream().map(SummaryRow::new).toList();
 
-        rows.forEach(System.out::println);
+//        rows.forEach(System.out::println);
 
 
         this.summaries.getItems().addAll(rows);

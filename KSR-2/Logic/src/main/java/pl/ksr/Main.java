@@ -10,28 +10,72 @@ public class Main {
         lista.add(1);
         lista.add(2);
         lista.add(3);
-        lista.add(4);
 
-        List<List<Integer>> kombinacje = generujKombinacje(lista);
+        var combs = generateAllCombinations(lista);
+
+        System.out.println(combs.size() / 2);
+        System.out.println(combs);
+
+//        lista.add(3);
+//        lista.add(4);
+
+//        List<List<Integer>> kombinacje = generujKombinacje(lista);
+//        Set<String> unique = new HashSet<>();
+//
+//
+//        for (List<Integer> kombinacja : kombinacje) {
+//            StringBuilder comb = new StringBuilder();
+//            for (int i : kombinacja)
+//                comb.append(i);
+//
+//            for (int i = 1; i < kombinacja.size(); i++) {
+//                String cut = sortString(comb.substring(0, i)) +  "," + sortString(comb.substring(i));
+//                unique.add(cut);
+//            }
+//        }
+
+//        List<List<Integer>> parts = new ArrayList<>();
+//        for (String str : unique) {
+//            String[] split = str.split(",");
+//            List<Integer> first = Arrays.stream(split[0].split("")).mapToInt(Integer::parseInt).boxed().toList();
+//            List<Integer> second = Arrays.stream(split[1].split("")).mapToInt(Integer::parseInt).boxed().toList();
+//
+//            System.out.println(first + " " + second);
+//            parts.add(first);
+//            parts.add(second);
+//        }
+//
+//        System.out.println(unique);
+//        System.out.println(parts);
+//        System.out.println(unique.size());
+
+    }
+
+    public static List<List<Integer>> generateAllCombinations(List<Integer> numbers) {
+        List<List<Integer>> combinations = generateCombination(numbers);
         Set<String> unique = new HashSet<>();
+        for (List<Integer> combination : combinations) {
+            StringBuilder combinationSequence = new StringBuilder();
+            for (int i : combination)
+                combinationSequence.append(i);
 
-        // Wyświetlanie kombinacji
-        for (List<Integer> kombinacja : kombinacje) {
-            StringBuilder comb = new StringBuilder();
-            for (int i : kombinacja)
-                comb.append(i);
-
-            for (int i = 1; i < kombinacja.size(); i++) {
-                String cut = sortString(comb.substring(0, i)) +  "," + sortString(comb.substring(i));
-//                System.out.println(cut);
-//                cut = sortString(cut);
+            for (int i = 1; i < combination.size(); i++) {
+                String cut = sortString(combinationSequence.substring(0, i)) +  "," + sortString(combinationSequence.substring(i));
                 unique.add(cut);
-
             }
         }
-        System.out.println(unique);
-        System.out.println(unique.size());
 
+        List<List<Integer>> parts = new ArrayList<>();
+        for (String str : unique) {
+            String[] split = str.split(",");
+            List<Integer> first = Arrays.stream(split[0].split("")).mapToInt(Integer::parseInt).boxed().toList();
+            List<Integer> second = Arrays.stream(split[1].split("")).mapToInt(Integer::parseInt).boxed().toList();
+
+            System.out.println(first + " " + second);
+            parts.add(first);
+            parts.add(second);
+        }
+        return parts;
     }
 
     private static String sortString(String str) {
@@ -50,19 +94,19 @@ public class Main {
         return sortedNumberString.toString();
     }
 
-    public static List<List<Integer>> generujKombinacje(List<Integer> lista) {
-        List<List<Integer>> kombinacje = new ArrayList<>();
+    public static List<List<Integer>> generateCombination(List<Integer> lista) {
+        List<List<Integer>> combination = new ArrayList<>();
 
         // Generowanie kombinacji rekurencyjnie
-        generujKombinacjeRekurencyjnie(kombinacje, lista, new ArrayList<Integer>());
+        generujKombinacjeRekurencyjnie(combination, lista, new ArrayList<>());
 
         // Usuwanie pustych list i kombinacji z jednym elementem
-        kombinacje.removeIf(list -> list.isEmpty() || list.size() == 1);
+        combination.removeIf(list -> list.isEmpty() || list.size() == 1);
 
         // Dodawanie kombinacji ze wszystkimi elementami oryginalnej listy
-        kombinacje.add(lista);
+        combination.add(lista);
 
-        return kombinacje;
+        return combination;
     }
 
     private static void generujKombinacjeRekurencyjnie(List<List<Integer>> kombinacje, List<Integer> lista, List<Integer> aktualnaKombinacja) {

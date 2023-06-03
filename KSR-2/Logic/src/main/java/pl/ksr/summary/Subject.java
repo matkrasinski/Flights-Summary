@@ -7,41 +7,42 @@ import java.util.List;
 import java.util.Map;
 
 public class Subject {
-    private final String subject;
+    private String subject;
 
     public Map<String, List<Double>> objects;
 
     public Subject() {
         this.objects = new HashMap<>();
         this.subject = "flights";
-        initializeAttributes();
+        initializeAttributes(this.subject);
     }
 
     public Subject(String subject) {
         this.objects = new HashMap<>();
-        if (allSubjects().contains(subject)) {
-            initializeAttributes(subject);
-            this.subject = "flights where aircraft manufacturer was " +  subject;
-        } else {
-            this.subject = "flights";
-            initializeAttributes();
-        }
+        this.subject = subject;
+        initializeAttributes(this.subject);
     }
 
     public static List<String> allSubjects() {
         return FlightsRepository.getAllSubjects();
     }
 
-    private void initializeAttributes() {
-        List<String> attributesNames = FlightsRepository.getAttributesNames();
-        for (String attribute : attributesNames) {
-            objects.put(attribute, FlightsRepository.findAllByName(attribute));
-        }
-    }
     private void initializeAttributes(String subject) {
-        List<String> attributesNames = FlightsRepository.getAttributesNames();
-        for (String attribute : attributesNames) {
-            objects.put(attribute, FlightsRepository.findAllByNameAndSubject(attribute, subject));
+        try {
+            List<String> attributesNames = FlightsRepository.getAttributesNames();
+            if (allSubjects().contains(subject)) {
+                for (String attribute : attributesNames) {
+                    objects.put(attribute, FlightsRepository.findAllByName(attribute));
+                }
+                this.subject = "flights where aircraft manufacturer was " +  subject;
+            } else {
+                this.subject = "flights";
+                for (String attribute : attributesNames) {
+                    objects.put(attribute, FlightsRepository.findAllByNameAndSubject(attribute, subject));
+                }
+            }
+        } catch (RuntimeException e) {
+            System.out.println("Something went wrong while loading subjects");
         }
     }
 
