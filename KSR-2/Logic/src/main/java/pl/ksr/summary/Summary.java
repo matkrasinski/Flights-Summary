@@ -15,9 +15,10 @@ public class Summary {
     private final LinguisticQuantifier quantifier;
 
 
-    public Summary(String summary, List<Subject> subjects, List<Label> summarizers, List<Label> qualifiers,
-                   LinguisticQuantifier quantifier) {
+    public Summary(String summary, LinguisticQuantifier quantifier, List<Subject> subjects, List<Label> summarizers,
+                   List<Label> qualifiers, QualityMeasures qualityMeasures) {
         this.summary = summary;
+        this.qualityMeasures = qualityMeasures;
         this.subjects = subjects;
         this.summarizers = summarizers;
         this.qualifiers = qualifiers;

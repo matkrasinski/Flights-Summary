@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -23,76 +24,144 @@
                </items></Menu>
          </menus>
       </MenuBar>
-      <Text fx:id="pointA" layoutX="728.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Point A: ">
+      <ComboBox fx:id="objectToAdd" layoutX="108.0" layoutY="70.0" prefWidth="150.0" promptText="choose object" />
+      <Text layoutX="303.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New label's name:">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <ComboBox fx:id="objectToAdd" layoutX="103.0" layoutY="117.0" prefWidth="150.0" promptText="choose object" />
-      <Text layoutX="329.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New label's name:">
+      <Text layoutX="108.0" layoutY="129.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Linguistic variable:">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <TextField fx:id="pointBField" layoutX="815.0" layoutY="92.0" />
-      <Text layoutX="117.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Linguistic variable:">
+      <ComboBox fx:id="linguisticVariableField" layoutX="108.0" layoutY="133.0" prefWidth="150.0" />
+      <ComboBox fx:id="functionTypes" layoutX="303.0" layoutY="133.0" onAction="#onFunctionChange" prefHeight="25.0" prefWidth="150.0" promptText="Select function" />
+      <Text layoutX="303.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Function type:">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <ComboBox fx:id="linguisticVariableField" layoutX="103.0" layoutY="222.0" prefWidth="150.0" />
-      <ComboBox layoutX="314.0" layoutY="217.0" prefWidth="150.0" promptText="Trapezoid" />
-      <Text layoutX="329.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Function type:">
+      <TextField fx:id="labelField" layoutX="303.0" layoutY="70.0" prefHeight="25.0" prefWidth="150.0" />
+      <Text layoutX="108.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select object to add label:">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <Text fx:id="pointD" layoutX="730.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Point D:">
+      <Button fx:id="submitButton" layoutX="166.0" layoutY="349.0" mnemonicParsing="false" onAction="#addQuantifier" prefHeight="25.0" prefWidth="249.0" text="Add" />
+      <Text layoutX="270.0" layoutY="436.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Weights:">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <Text fx:id="pointC" layoutX="729.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Point C:">
+      <GridPane fx:id="triangleForm" layoutX="170.0" layoutY="191.0" prefHeight="90.0" prefWidth="240.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Point A:" textAlignment="CENTER" wrappingWidth="120.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Point B:" textAlignment="CENTER" wrappingWidth="120.0" GridPane.rowIndex="1" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Point C:" textAlignment="CENTER" wrappingWidth="120.0" GridPane.rowIndex="2" />
+            <TextField fx:id="triangleA" GridPane.columnIndex="1" />
+            <TextField fx:id="triangleB" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="triangleC" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         </children>
+      </GridPane>
+      <GridPane fx:id="trapezoidForm" layoutX="170.0" layoutY="185.0" prefHeight="144.0" prefWidth="240.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Point A:" textAlignment="CENTER" wrappingWidth="120.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Point B:" textAlignment="CENTER" wrappingWidth="120.0" GridPane.rowIndex="1" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Point C:" textAlignment="CENTER" wrappingWidth="120.0" GridPane.rowIndex="2" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Point D:" textAlignment="CENTER" wrappingWidth="120.0" GridPane.rowIndex="3" />
+            <TextField fx:id="trapezoidA" GridPane.columnIndex="1" />
+            <TextField fx:id="trapezoidB" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="trapezoidC" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="trapezoidD" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+      <GridPane fx:id="gaussianForm" layoutX="170.0" layoutY="185.0" prefHeight="103.0" prefWidth="240.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mean μ :" textAlignment="CENTER" wrappingWidth="120.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Stardard deviation σ :" textAlignment="CENTER" wrappingWidth="120.0" GridPane.rowIndex="1" />
+            <TextField fx:id="gaussianM" GridPane.columnIndex="1" />
+            <TextField fx:id="gaussianS" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+      <Text layoutX="675.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Attributes:" wrappingWidth="77.240234375">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <Text fx:id="pointB" layoutX="729.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Point B:">
+      <Text layoutX="675.0" layoutY="354.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quantifiers:" wrappingWidth="77.240234375">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <TextField fx:id="pointCField" layoutX="815.0" layoutY="138.0" />
-      <TextField fx:id="pointDField" layoutX="815.0" layoutY="182.0" />
-      <TextField fx:id="pointAField" layoutX="815.0" layoutY="52.0" />
-      <TextField layoutX="315.0" layoutY="112.0" />
-      <Text layoutX="103.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select object to add label:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Text>
-      <Text fx:id="averageM" layoutX="716.0" layoutY="92.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Average m: ">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Text>
-      <TextField fx:id="averageMField" layoutX="817.0" layoutY="74.0" />
-      <Text fx:id="standardDeviation" layoutX="681.0" layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Standard diviation: ">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Text>
-      <TextField fx:id="standardDeviationField" layoutX="817.0" layoutY="117.0" />
-      <Button fx:id="submitButton" layoutX="568.0" layoutY="241.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="249.0" text="Submit" />
-      <LineChart fx:id="chart" layoutX="99.0" layoutY="441.0" prefHeight="170.0" prefWidth="821.0">
-        <xAxis>
-          <CategoryAxis side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis side="LEFT" />
-        </yAxis>
-      </LineChart>
-      <TextField fx:id="weightsField" layoutX="92.0" layoutY="314.0" prefHeight="25.0" prefWidth="282.0" />
-      <Text layoutX="215.0" layoutY="304.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Weights" />
+      <ScrollPane fx:id="attributesPane" fitToHeight="true" fitToWidth="true" layoutX="675.0" layoutY="61.0" prefHeight="261.0" prefWidth="290.0" />
+      <ScrollPane fx:id="quantifiersPane" fitToHeight="true" fitToWidth="true" layoutX="675.0" layoutY="362.0" prefHeight="261.0" prefWidth="290.0" />
+      <GridPane layoutX="170.0" layoutY="448.0" prefHeight="175.0" prefWidth="240.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <TextField fx:id="t1Field" alignment="CENTER" onKeyPressed="#parseWeightsField" onKeyTyped="#parseWeightsField" GridPane.columnIndex="1" />
+            <TextField fx:id="t2Field" alignment="CENTER" onKeyPressed="#parseWeightsField" onKeyTyped="#parseWeightsField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="t3Field" alignment="CENTER" onKeyPressed="#parseWeightsField" onKeyTyped="#parseWeightsField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="t4Field" alignment="CENTER" onKeyPressed="#parseWeightsField" onKeyTyped="#parseWeightsField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="t5Field" alignment="CENTER" onKeyPressed="#parseWeightsField" onKeyTyped="#parseWeightsField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="t6Field" alignment="CENTER" onKeyPressed="#parseWeightsField" onKeyTyped="#parseWeightsField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="t7Field" alignment="CENTER" onKeyPressed="#parseWeightsField" onKeyTyped="#parseWeightsField" GridPane.columnIndex="3" />
+            <TextField fx:id="t8Field" alignment="CENTER" onKeyPressed="#parseWeightsField" onKeyTyped="#parseWeightsField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <TextField fx:id="t9Field" alignment="CENTER" onKeyPressed="#parseWeightsField" onKeyTyped="#parseWeightsField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <TextField fx:id="t10Field" alignment="CENTER" onKeyPressed="#parseWeightsField" onKeyTyped="#parseWeightsField" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <TextField fx:id="t11Field" alignment="CENTER" onKeyPressed="#parseWeightsField" onKeyTyped="#parseWeightsField" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="T1" textAlignment="CENTER" wrappingWidth="60.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="T2" textAlignment="CENTER" wrappingWidth="60.0" GridPane.rowIndex="1" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="T3" textAlignment="CENTER" wrappingWidth="60.0" GridPane.rowIndex="2" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="T4" textAlignment="CENTER" wrappingWidth="60.0" GridPane.rowIndex="3" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="T5" textAlignment="CENTER" wrappingWidth="60.0" GridPane.rowIndex="4" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="T6" textAlignment="CENTER" wrappingWidth="60.0" GridPane.rowIndex="5" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="T7" textAlignment="CENTER" wrappingWidth="60.0" GridPane.columnIndex="2" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="T8" textAlignment="CENTER" wrappingWidth="60.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="T9" textAlignment="CENTER" wrappingWidth="60.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="T10" textAlignment="CENTER" wrappingWidth="60.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="T11" textAlignment="CENTER" wrappingWidth="60.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+         </children>
+      </GridPane>
    </children>
 </AnchorPane>

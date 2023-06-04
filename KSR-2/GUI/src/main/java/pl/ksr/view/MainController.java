@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckTreeView;
@@ -57,6 +58,8 @@ public class MainController {
     private ScrollPane attributesPane;
     @FXML
     private ScrollPane subjectScrollPane;
+    @FXML
+    private Text summaryCounterText;
 
     private List<Summary> currentSummaries;
     private List<LinguisticVariable> allVariables;
@@ -80,7 +83,7 @@ public class MainController {
     public void saveSummaries() {
         List<String> selected = summaries.getSelectionModel().getSelectedItems()
                 .stream().map(SummaryRow::toString).toList();
-        System.out.println(selected);
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         File file = fileChooser.showSaveDialog(null);
@@ -102,8 +105,6 @@ public class MainController {
         CheckTreeView<String> checkTreeView = new CheckTreeView<>(attributes);
         checkTreeView.setShowRoot(false);
 
-
-
         checkTreeView.getCheckModel().getCheckedItems().addListener((ListChangeListener<TreeItem<String>>) change -> {
             selectedAttributes = new ArrayList<>();
 
@@ -115,10 +116,6 @@ public class MainController {
                     }
                 }
             }
-
-//            selectedAttributes.forEach(e -> System.out.println(e.getLabelName()));
-//            System.out.println(selectedAttributes.size());
-
         });
 
         attributesPane.setContent(checkTreeView);
@@ -144,8 +141,6 @@ public class MainController {
         CheckTreeView<String> subjects = new CheckTreeView<>(rootItem);
         subjects.setShowRoot(false);
 
-
-
         subjects.getCheckModel().getCheckedItems().addListener((ListChangeListener<TreeItem<String>>) change -> {
             selectedSubjects = new ArrayList<>();
             for (var item : subjects.getCheckModel().getCheckedItems()) {
@@ -163,16 +158,9 @@ public class MainController {
                 }
             }
 
-            System.out.println(selectedSubjects.size());
-
-
-
         });
 
-
-
         subjectScrollPane.setContent(subjects);
-
     }
     public void generateSummaries() {
         if (selectedSubjects.size() == 1) {
@@ -185,25 +173,19 @@ public class MainController {
                     selectedSubjects
             );
         }
-        System.out.println(currentSummaries.size());
-
 
         loadSummaries();
     }
-
-
     public void loadSummaries() {
         List<SummaryRow> rows = currentSummaries.stream().map(SummaryRow::new).toList();
-
-//        rows.forEach(System.out::println);
-
-
+        summaryCounterText.setText("Current summaries counter: "  + rows.size());
         this.summaries.getItems().addAll(rows);
     }
 
     public void reset() {
         summaries.getItems().clear();
         currentSummaries.clear();
+        summaryCounterText.setText("");
     }
 
     private void setCellsValuesFactors() {

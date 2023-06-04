@@ -46,8 +46,6 @@ public class FuzzySet {
                             fuzzySet.getUniverseOfDiscourse().getRange().get(0).stream()).toList());
         }
 
-
-
         return new FuzzySet(function);
     }
 

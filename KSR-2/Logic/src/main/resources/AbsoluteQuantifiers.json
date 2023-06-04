@@ -1,7 +1,7 @@
 {
   "absoluteQuantifiers": [
     {
-      "quantifierLabel": "less than 100",
+      "label": "less than 100",
       "function": "TrapezoidFunction",
       "parameters": {
         "a": -100,
@@ -11,7 +11,7 @@
       }
     },
     {
-      "quantifierLabel": "about 300",
+      "label": "about 300",
       "function": "TrapezoidFunction",
       "parameters": {
         "a": 150,
@@ -21,7 +21,7 @@
       }
     },
     {
-      "quantifierLabel": "about 500",
+      "label": "about 500",
       "function": "TrapezoidFunction",
       "parameters": {
         "a": 300,
@@ -31,7 +31,7 @@
       }
     },
     {
-      "quantifierLabel": "about 1000",
+      "label": "about 1000",
       "function": "TrapezoidFunction",
       "parameters": {
         "a": 600,
@@ -41,7 +41,7 @@
       }
     },
     {
-      "quantifierLabel": "about 1500",
+      "label": "about 1500",
       "function": "TrapezoidFunction",
       "parameters": {
         "a": 1100,
@@ -51,7 +51,7 @@
       }
     },
     {
-      "quantifierLabel": "more than 2000",
+      "label": "more than 2000",
       "function": "TrapezoidFunction",
       "parameters": {
         "a": 1900,

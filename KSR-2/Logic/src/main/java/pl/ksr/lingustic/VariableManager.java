@@ -86,7 +86,6 @@ public class VariableManager {
     }
 
     public static void addLabel(String attributeName, LinguisticVariable variable) {
-
     }
 
 

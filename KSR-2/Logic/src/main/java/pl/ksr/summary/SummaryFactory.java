@@ -59,9 +59,11 @@ public class SummaryFactory {
 
                 // FOURTH
                 if (!forthIsGenerated) {
-                    Summary summary3 = SummaryGenerator.generateMultiSubjectFourthForm(selectedSubjects, selectedAttributes);
+                    Summary summary3 = SummaryGenerator.generateMultiSubjectFourthForm(selectedSubjects,
+                            i.stream().map(selectedAttributes::get).toList());
                     Summary summary4 = SummaryGenerator.generateMultiSubjectFourthForm(
-                            List.of(selectedSubjects.get(1), selectedSubjects.get(0)), selectedAttributes);
+                            List.of(selectedSubjects.get(1), selectedSubjects.get(0)),
+                            i.stream().map(selectedAttributes::get).toList());
                     summaries.add(summary3);
                     summaries.add(summary4);
                 }
@@ -168,7 +170,6 @@ public class SummaryFactory {
             List<Integer> first = Arrays.stream(split[0].split("")).mapToInt(Integer::parseInt).boxed().toList();
             List<Integer> second = Arrays.stream(split[1].split("")).mapToInt(Integer::parseInt).boxed().toList();
 
-            System.out.println(first + " " + second);
             parts.add(first);
             parts.add(second);
         }

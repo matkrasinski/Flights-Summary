@@ -21,16 +21,17 @@ public class SummaryRow {
 
     public SummaryRow(Summary summary) {
         this.summary = summary.getSummary();
-        this.t = (double) Math.round(summary.getQualityMeasures().getT_1() * 100) / 100;
-        this.t1 = (double) Math.round(summary.getQualityMeasures().getT_2() * 100) / 100;
-        this.t2 = (double) Math.round(summary.getQualityMeasures().getT_3() * 100) / 100;
-        this.t3 = (double) Math.round(summary.getQualityMeasures().getT_4() * 100) / 100;
-        this.t4 = (double) Math.round(summary.getQualityMeasures().getT_5() * 100) / 100;
-        this.t5 = (double) Math.round(summary.getQualityMeasures().getT_6() * 100) / 100;
-        this.t6 = (double) Math.round(summary.getQualityMeasures().getT_7() * 100) / 100;
-        this.t7 = (double) Math.round(summary.getQualityMeasures().getT_8() * 100) / 100;
-        this.t8 = (double) Math.round(summary.getQualityMeasures().getT_9() * 100) / 100;
-        this.t9 = (double) Math.round(summary.getQualityMeasures().getT_1() * 100) / 100;
+        this.t = (double) Math.round(summary.getQualityMeasures()
+                .calculateOptimalSummary(WeightsContext.getWeights()) * 100) / 100;
+        this.t1 = (double) Math.round(summary.getQualityMeasures().getT_1() * 100) / 100;
+        this.t2 = (double) Math.round(summary.getQualityMeasures().getT_2() * 100) / 100;
+        this.t3 = (double) Math.round(summary.getQualityMeasures().getT_3() * 100) / 100;
+        this.t4 = (double) Math.round(summary.getQualityMeasures().getT_4() * 100) / 100;
+        this.t5 = (double) Math.round(summary.getQualityMeasures().getT_5() * 100) / 100;
+        this.t6 = (double) Math.round(summary.getQualityMeasures().getT_6() * 100) / 100;
+        this.t7 = (double) Math.round(summary.getQualityMeasures().getT_7() * 100) / 100;
+        this.t8 = (double) Math.round(summary.getQualityMeasures().getT_8() * 100) / 100;
+        this.t9 = (double) Math.round(summary.getQualityMeasures().getT_9() * 100) / 100;
         this.t10 = (double) Math.round(summary.getQualityMeasures().getT_10() * 100) / 100;
         this.t11 = (double) Math.round(summary.getQualityMeasures().getT_11() * 100) / 100;
     }
@@ -92,4 +93,5 @@ public class SummaryRow {
     public double getT11() {
         return t11;
     }
+
 }

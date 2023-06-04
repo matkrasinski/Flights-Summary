@@ -32,13 +32,13 @@ public class Subject {
             List<String> attributesNames = FlightsRepository.getAttributesNames();
             if (allSubjects().contains(subject)) {
                 for (String attribute : attributesNames) {
-                    objects.put(attribute, FlightsRepository.findAllByName(attribute));
+                    objects.put(attribute, FlightsRepository.findAllByNameAndSubject(attribute, subject));
                 }
                 this.subject = "flights where aircraft manufacturer was " +  subject;
             } else {
                 this.subject = "flights";
                 for (String attribute : attributesNames) {
-                    objects.put(attribute, FlightsRepository.findAllByNameAndSubject(attribute, subject));
+                    objects.put(attribute, FlightsRepository.findAllByName(attribute));
                 }
             }
         } catch (RuntimeException e) {
