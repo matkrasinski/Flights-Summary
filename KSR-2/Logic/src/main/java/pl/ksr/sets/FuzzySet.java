@@ -4,7 +4,6 @@ import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.integration.SimpsonIntegrator;
 import pl.ksr.functions.MembershipFunction;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -63,46 +62,49 @@ public class FuzzySet {
         return new FuzzySet(function);
     }
 
-    public CrispSet getSupp() {
-        return getAlphaCut(0);
+    public CrispSet getSupp(List<Double> objects) {
+        return getAlphaCut(0, objects);
     }
 
-    public CrispSet getAlphaCut(double alpha) {
-        if (getUniverseOfDiscourse().getType() == UniverseType.DISCRETE) {
-            return new CrispSet(getUniverseOfDiscourse().getRange().get(0).stream()
-                    .filter(e -> calculateMembership(e) > alpha).toList(),
-                    getUniverseOfDiscourse());
-        }
-        List<List<Double>> ranges = getUniverseOfDiscourse().getRange();
+    public CrispSet getAlphaCut(double alpha, List<Double> objects) {
+        List<Double> newObjects = objects.stream().filter(e -> calculateMembership(e) > alpha).toList();
+        return new CrispSet(newObjects, getUniverseOfDiscourse());
 
-        List<List<Double>> newRanges = new ArrayList<>();
-        List<Double> newRange = new ArrayList<>();
-        for (List<Double> range : ranges) {
-
-            boolean isStart = false;
-            for (double i = range.get(0); i <= range.get(1); i+=0.01) {
-                double value = calculateMembership(i);
-                if (value >= 1e-5 && !isStart) {
-                    newRange.add(i);
-                    isStart = true;
-                }
-                if (isStart && value <= 1e-5) {
-                    newRange.add(i);
-                    newRanges.add(newRange);
-                    newRange = new ArrayList<>();
-                    isStart = false;
-                }
-            }
-            if (isStart) {
-                newRange.add(range.get(1));
-                newRanges.add(newRange);
-            }
-        }
-        return new CrispSet(new ContinuousUniverse(newRanges));
+//        if (getUniverseOfDiscourse().getType() == UniverseType.DISCRETE) {
+//            return new CrispSet(getUniverseOfDiscourse().getRange().get(0).stream()
+//                    .filter(e -> calculateMembership(e) > alpha).toList(),
+//                    getUniverseOfDiscourse());
+//        }
+//        List<List<Double>> ranges = getUniverseOfDiscourse().getRange();
+//
+//        List<List<Double>> newRanges = new ArrayList<>();
+//        List<Double> newRange = new ArrayList<>();
+//        for (List<Double> range : ranges) {
+//
+//            boolean isStart = false;
+//            for (double i = range.get(0); i <= range.get(1); i+=0.01) {
+//                double value = calculateMembership(i);
+//                if (value >= 1e-5 && !isStart) {
+//                    newRange.add(i);
+//                    isStart = true;
+//                }
+//                if (isStart && value <= 1e-5) {
+//                    newRange.add(i);
+//                    newRanges.add(newRange);
+//                    newRange = new ArrayList<>();
+//                    isStart = false;
+//                }
+//            }
+//            if (isStart) {
+//                newRange.add(range.get(1));
+//                newRanges.add(newRange);
+//            }
+//        }
+//        return new CrispSet(new ContinuousUniverse(newRanges));
     }
 
-    public double getCardinality() {
-        if (getUniverseOfDiscourse().getType() == UniverseType.DISCRETE) {
+    public double getCardinality(List<Double> objects) {
+        if (objects != null) {
             return getUniverseOfDiscourse().getRange().get(0).stream().mapToDouble(this::calculateMembership).sum();
         }
         UnivariateFunction function = this::calculateMembership;
@@ -129,21 +131,21 @@ public class FuzzySet {
     }
 
     public double getUniverseCardinality() {
-        return getCardinality() + getComplementCardinality();
+        return getCardinality(null) + getComplementCardinality();
     }
 
-    public double getDegreeOfFuzziness() {
-        return getAlphaDegreeOfFuzziness(0);
+    public double getDegreeOfFuzziness(List<Double> objects) {
+        return getAlphaDegreeOfFuzziness(0, objects);
     }
 
-    public double getAlphaDegreeOfFuzziness(double alpha) {
+    public double getAlphaDegreeOfFuzziness(double alpha, List<Double> objects) {
         if (getUniverseOfDiscourse().getType() == UniverseType.DISCRETE) {
-            return getAlphaCut(alpha).getElements().size() / getUniverseCardinality();
+            return getAlphaCut(alpha, objects).getElements().size() / getUniverseCardinality();
         }
 
         UnivariateFunction function = this::calculateMembership;
 
-        CrispSet alphaCut = getAlphaCut(alpha);
+        CrispSet alphaCut = getAlphaCut(alpha, objects);
 
         double sum = 0;
         for (List<Double> range : alphaCut.getUniverseOfDiscourse().getRange()) {
@@ -179,38 +181,35 @@ public class FuzzySet {
         return upper / lower;
     }
 
-    public boolean isNormal() {
-        return getHeight() == 1;
+    public boolean isNormal(List<Double> objects) {
+        return getHeight(objects) == 1;
     }
 
     public boolean isConvex() {
-        for (double alpha = 0; alpha <= 1; alpha += 0.1) {
-            CrispSet alphaCut = getAlphaCut(alpha);
-            for (int i = 0; i < alphaCut.getElements().size(); i++) {
-                double r = alphaCut.getElements().get(i);
-                for (int j = i + 1; j < alphaCut.getElements().size(); j++) {
-                    double s = alphaCut.getElements().get(j);
-                    for (double lambda = 0; lambda <= 1; lambda += 0.1) {
-                        double value = lambda * r + (1 - lambda) * s;
-                        if (alphaCut.getUniverseOfDiscourse().contains(value)) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+//        for (double alpha = 0; alpha <= 1; alpha += 0.1) {
+//            CrispSet alphaCut = getAlphaCut(alpha);
+//            for (int i = 0; i < alphaCut.getElements().size(); i++) {
+//                double r = alphaCut.getElements().get(i);
+//                for (int j = i + 1; j < alphaCut.getElements().size(); j++) {
+//                    double s = alphaCut.getElements().get(j);
+//                    for (double lambda = 0; lambda <= 1; lambda += 0.1) {
+//                        double value = lambda * r + (1 - lambda) * s;
+//                        if (alphaCut.getUniverseOfDiscourse().contains(value)) {
+//                            return true;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+        return true;
     }
 
-    public boolean isEmpty() {
-        if (getUniverseOfDiscourse().getType() == UniverseType.DISCRETE)
-            return getSupp().getElements().isEmpty();
-        return ((ContinuousUniverse) getUniverseOfDiscourse()).discretizeUniverse().stream()
-               .filter(e -> calculateMembership(e) > 0).toList().isEmpty();
+    public boolean isEmpty(List<Double> objects) {
+        return getSupp(objects).getElements().isEmpty();
     }
 
-    public double getHeight() {
-        return getSupp().getElements().stream()
+    public double getHeight(List<Double> objects) {
+        return getSupp(objects).getElements().stream()
                 .mapToDouble(membershipFunction::calculateMembershipDegree)
                 .max().orElse(0d);
     }

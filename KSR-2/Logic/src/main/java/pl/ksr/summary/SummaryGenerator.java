@@ -1,12 +1,10 @@
 package pl.ksr.summary;
 
-import pl.ksr.functions.TrapezoidFunction;
 import pl.ksr.lingustic.Label;
 import pl.ksr.lingustic.LinguisticQuantifier;
-import pl.ksr.sets.DiscreteUniverse;
-import pl.ksr.sets.FuzzySet;
 import pl.ksr.summary.measures.*;
 
+import java.util.Collections;
 import java.util.List;
 
 public class SummaryGenerator {
@@ -20,23 +18,19 @@ public class SummaryGenerator {
 
         double m = subject.getObject(summarizers.get(0).getAttributeName()).size();
 
-        Label databaseQualifier = new Label("database", new FuzzySet(
-                new TrapezoidFunction(0.01, 0, m, m + 0.01, new DiscreteUniverse(List.of(0d, m)))
-        ));
-
 
         QualityMeasures qualityMeasures = new QualityMeasures(
                 DegreeOfTruth.calculateT1forSingleFirstForm(quantifier, subject, summarizers),
-                DegreeOfImprecision.calculateT2(summarizers),
+                DegreeOfImprecision.calculateT2(subject, summarizers),
                 DegreeOfCovering.calculateT3(subject, summarizers),
                 DegreeOfAppropriateness.calculateT4(subject, summarizers),
                 LengthOfSummary.calculateT5(summarizers),
                 QuantifierImprecision.calculateT6(quantifier),
                 QuantifierRelativeCardinality.calculateT7(quantifier),
-                SummarizerCardinality.calculateT8(summarizers),
-                QualifierImprecision.calculateT9(List.of(databaseQualifier)),
-                QualifierRelativeCardinality.calculateT10(List.of(databaseQualifier)),
-                LengthOfQualifier.calculateT11(List.of(databaseQualifier))
+                SummarizerCardinality.calculateT8(subject, summarizers),
+                QualifierImprecision.calculateT9(subject, Collections.emptyList()),
+                QualifierRelativeCardinality.calculateT10(Collections.emptyList()),
+                LengthOfQualifier.calculateT11(Collections.emptyList())
         );
 
         return new Summary(summaryText, quantifier, List.of(subject), summarizers, null, qualityMeasures);
@@ -53,14 +47,14 @@ public class SummaryGenerator {
 
         QualityMeasures qualityMeasures = new QualityMeasures(
                 DegreeOfTruth.calculateT1forSingleSecondForm(quantifier, subject, summarizers, qualifiers),
-                DegreeOfImprecision.calculateT2(summarizers),
+                DegreeOfImprecision.calculateT2(subject, summarizers),
                 DegreeOfCovering.calculateT3(subject, summarizers, qualifiers),
                 DegreeOfAppropriateness.calculateT4(subject, summarizers, qualifiers),
                 LengthOfSummary.calculateT5(summarizers),
                 QuantifierImprecision.calculateT6(quantifier),
                 QuantifierRelativeCardinality.calculateT7(quantifier),
-                SummarizerCardinality.calculateT8(summarizers),
-                QualifierImprecision.calculateT9(qualifiers),
+                SummarizerCardinality.calculateT8(subject, summarizers),
+                QualifierImprecision.calculateT9(subject, qualifiers),
                 QualifierRelativeCardinality.calculateT10(qualifiers),
                 LengthOfQualifier.calculateT11(qualifiers)
         );

@@ -9,7 +9,7 @@ public class QualifierRelativeCardinality {
         double product = 1;
 
         for (Label qualifier : qualifiers) {
-            product *= (qualifier.getFuzzySet().getCardinality() / qualifier.getFuzzySet().getUniverseCardinality());
+            product *= (qualifier.getFuzzySet().getCardinality(null) / qualifier.getFuzzySet().getUniverseCardinality());
         }
 
         return 1 - Math.pow(product, 1d / qualifiers.size());
