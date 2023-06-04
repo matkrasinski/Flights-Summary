@@ -5,7 +5,6 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
@@ -23,23 +22,7 @@
         </menus>
       </MenuBar>
       <Button layoutX="621.0" layoutY="268.0" mnemonicParsing="false" onAction="#reset" prefHeight="25.0" prefWidth="162.0" text="Reset" />
-      <TableView fx:id="summaries" layoutX="43.0" layoutY="301.0" prefHeight="317.0" prefWidth="920.0">
-        <columns>
-          <TableColumn fx:id="summaryColumn" prefWidth="320.0" text="Summary" />
-            <TableColumn fx:id="tColumn" prefWidth="50.0" text="T" />
-          <TableColumn fx:id="t1Column" prefWidth="50.0" text="T1" />
-            <TableColumn fx:id="t2Column" prefWidth="50.0" text="T2" />
-            <TableColumn fx:id="t3Column" prefWidth="50.0" text="T3" />
-            <TableColumn fx:id="t4Column" prefWidth="50.0" text="T4" />
-            <TableColumn fx:id="t5Column" prefWidth="50.0" text="T5" />
-            <TableColumn fx:id="t6Column" prefWidth="50.0" text="T6" />
-            <TableColumn fx:id="t7Column" prefWidth="50.0" text="T7" />
-            <TableColumn fx:id="t8Column" prefWidth="50.0" text="T8" />
-            <TableColumn fx:id="t9Column" prefWidth="50.0" text="T9" />
-            <TableColumn fx:id="t10Column" prefWidth="50.0" text="T10" />
-            <TableColumn fx:id="t11Column" prefWidth="50.0" text="T11" />
-        </columns>
-      </TableView>
+      <TableView fx:id="summaries" layoutX="43.0" layoutY="301.0" prefHeight="317.0" prefWidth="920.0" />
       <ScrollPane fx:id="attributesPane" fitToHeight="true" fitToWidth="true" layoutX="124.0" layoutY="55.0" prefHeight="238.0" prefWidth="290.0" />
       <ScrollPane fx:id="subjectScrollPane" fitToHeight="true" fitToWidth="true" layoutX="523.0" layoutY="55.0" prefHeight="200.0" prefWidth="314.0" />
       <Text layoutX="124.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Summary subject properties:" wrappingWidth="215.21630859375" />

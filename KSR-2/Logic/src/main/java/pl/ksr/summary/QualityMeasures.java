@@ -4,16 +4,16 @@ import java.util.List;
 
 public class QualityMeasures {
     private final double T_1;
-    private final double T_2;
-    private final double T_3;
-    private final double T_4;
-    private final double T_5;
-    private final double T_6;
-    private final double T_7;
-    private final double T_8;
-    private final double T_9;
-    private final double T_10;
-    private final double T_11;
+    private double T_2;
+    private double T_3;
+    private double T_4;
+    private double T_5;
+    private double T_6;
+    private double T_7;
+    private double T_8;
+    private double T_9;
+    private double T_10;
+    private double T_11;
 
     public QualityMeasures(double t_1, double t_2, double t_3, double t_4, double t_5, double t_6, double t_7,
                            double t_8, double t_9, double t_10, double t_11) {
@@ -30,12 +30,19 @@ public class QualityMeasures {
         T_11 = t_11;
     }
 
+    public QualityMeasures(double t_1) {
+        this.T_1 = t_1;
+    }
+
     // An extended concept of the optimal summary
     public double calculateOptimalSummary(List<Double> weights) {
         double T = 0;
         List<Double> Ts = getAll();
-        for (int i = 0; i < Ts.size(); i++)
-            T += weights.get(i) * Ts.get(i);
+        for (int i = 0; i < Ts.size(); i++) {
+            if (!Double.isNaN(Ts.get(i))) {
+                T += weights.get(i) * Ts.get(i);
+            }
+        }
 
         return T;
     }

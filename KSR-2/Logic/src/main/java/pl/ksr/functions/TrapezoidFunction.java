@@ -25,10 +25,22 @@ public class TrapezoidFunction extends MembershipFunction {
             membership = 1;
         else if (c <= x && x <= d)
             membership = (d - x) / (d - c);
-        if (Double.isNaN(membership))
-            return 0;
         return membership;
     }
 
+    public double getA() {
+        return a;
+    }
 
+    public double getB() {
+        return b;
+    }
+
+    public double getC() {
+        return c;
+    }
+
+    public double getD() {
+        return d;
+    }
 }

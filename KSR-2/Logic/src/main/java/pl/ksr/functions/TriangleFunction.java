@@ -28,5 +28,15 @@ public class TriangleFunction extends MembershipFunction {
             return 0;
     }
 
+    public double getA() {
+        return a;
+    }
 
+    public double getB() {
+        return b;
+    }
+
+    public double getC() {
+        return c;
+    }
 }

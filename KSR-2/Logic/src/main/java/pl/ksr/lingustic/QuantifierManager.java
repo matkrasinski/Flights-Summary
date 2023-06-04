@@ -160,14 +160,18 @@ public class QuantifierManager {
         return quantifiers;
     }
 
-    public static void addLabelToRelativeQuantifiers(String label, String functionName, List<Double> parameters) {
-        addLabel("RelativeQuantifiers.json", label, functionName, parameters);
+    public static void addLabelToRelativeQuantifiers(LinguisticQuantifier quantifier) {
+        addLabel("RelativeQuantifiers.json", quantifier);
     }
-    public static void addLabelToAbsoluteQuantifiers(String label, String functionName, List<Double> parameters) {
-        addLabel("AbsoluteQuantifiers.json", label, functionName, parameters);
+    public static void addLabelToAbsoluteQuantifiers(LinguisticQuantifier quantifier) {
+        addLabel("AbsoluteQuantifiers.json", quantifier);
     }
-    private static void addLabel(String fileName, String label, String functionName, List<Double> parameters) {
+    private static void addLabel(String fileName, LinguisticQuantifier quantifier) {
         try {
+            String label = quantifier.getLabel();
+            MembershipFunction function = quantifier.getFuzzySet().getMembershipFunction();
+            String functionName = function.getClass().getSimpleName();
+
             ObjectMapper mapper = new ObjectMapper();
             File file = new File(Objects.requireNonNull(VariableManager.class.getResource("/" + fileName)).getPath());
 
@@ -186,19 +190,19 @@ public class QuantifierManager {
 
             switch (functionName) {
                 case "TriangleFunction" -> {
-                    parametersObject.put("a", parameters.get(0));
-                    parametersObject.put("b", parameters.get(1));
-                    parametersObject.put("c", parameters.get(2));
+                    parametersObject.put("a", ((TriangleFunction) function).getA());
+                    parametersObject.put("b", ((TriangleFunction) function).getB());
+                    parametersObject.put("c", ((TriangleFunction) function).getC());
                 }
                 case "TrapezoidFunction" -> {
-                    parametersObject.put("a", parameters.get(0));
-                    parametersObject.put("b", parameters.get(1));
-                    parametersObject.put("c", parameters.get(2));
-                    parametersObject.put("d", parameters.get(3));
+                    parametersObject.put("a", ((TrapezoidFunction) function).getA());
+                    parametersObject.put("b", ((TrapezoidFunction) function).getB());
+                    parametersObject.put("c", ((TrapezoidFunction) function).getC());
+                    parametersObject.put("d", ((TrapezoidFunction) function).getD());
                 }
                 case "GaussianFunction" -> {
-                    parametersObject.put("m", parameters.get(0));
-                    parametersObject.put("s", parameters.get(1));
+                    parametersObject.put("m", ((GaussianFunction) function).getM());
+                    parametersObject.put("s", ((GaussianFunction) function).getS());
                 }
             }
 
@@ -207,8 +211,6 @@ public class QuantifierManager {
 
             FileWriter fileWriter = new FileWriter(file);
             mapper.writeValue(fileWriter, jsonNode);
-
-            System.out.println(jsonNode);
 
             fileWriter.close();
         } catch (IOException e) {

@@ -6,13 +6,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import pl.ksr.lingustic.LinguisticQuantifier;
-import pl.ksr.lingustic.LinguisticVariable;
-import pl.ksr.lingustic.QuantifierManager;
-import pl.ksr.lingustic.VariableManager;
+import pl.ksr.functions.GaussianFunction;
+import pl.ksr.functions.TrapezoidFunction;
+import pl.ksr.functions.TriangleFunction;
+import pl.ksr.lingustic.Label;
+import pl.ksr.lingustic.*;
+import pl.ksr.sets.FuzzySet;
+import pl.ksr.sets.Universe;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AdvancedController {
@@ -20,7 +22,7 @@ public class AdvancedController {
     @FXML
     private ComboBox<String> objectToAdd;
     @FXML
-    private ComboBox<String> linguisticVariableField;
+    private ComboBox<String> attributeQuantifierName;
     @FXML
     private ComboBox<String> functionTypes;
 
@@ -90,10 +92,15 @@ public class AdvancedController {
     private TextField labelField;
 
 
+    private List<LinguisticVariable> allVariables;
+    private List<LinguisticQuantifier> relativeQuantifiers;
+    private List<LinguisticQuantifier> absoluteQuantifiers;
+
     public void initialize() {
+        loadVariables();
+        loadQuantifiers();
         setObjectToAdd();
 
-        linguisticVariableField.setValue("flight start");
         setDefault();
         parseWeightsField();
         initFunctionTypes();
@@ -182,7 +189,7 @@ public class AdvancedController {
     }
 
     public void loadVariables() {
-        List<LinguisticVariable> allVariables = VariableManager.loadVariables();
+        allVariables = VariableManager.loadVariables();
         TreeItem<String> attributes = new CheckBoxTreeItem<>();
 
         for (var variable : allVariables) {
@@ -201,9 +208,8 @@ public class AdvancedController {
     }
 
     public void loadQuantifiers() {
-        List<LinguisticQuantifier> relativeQuantifiers = QuantifierManager.loadRelativeQuantifiers();
-        List<LinguisticQuantifier> absoluteQuantifiers = QuantifierManager.loadAbsoluteQuantifiers();
-
+        absoluteQuantifiers = QuantifierManager.loadAbsoluteQuantifiers();
+        relativeQuantifiers = QuantifierManager.loadRelativeQuantifiers();
         TreeItem<String> quantifiers = new CheckBoxTreeItem<>();
 
         TreeItem<String> relativeItem = new CheckBoxTreeItem<>("Relative quantifiers");
@@ -223,37 +229,111 @@ public class AdvancedController {
         quantifiersPane.setContent(treeView);
     }
 
-    public void numericOnly(TextField field) {
-        // TODO
+    public void loadVariablesOrQuantifiers() {
+        if (objectToAdd.getValue().equals("Quantifier")) {
+            attributeQuantifierName.getItems().clear();
+            attributeQuantifierName.getItems().add("relative quantifiers");
+            attributeQuantifierName.getItems().add("absolute quantifiers");
+        } else if (objectToAdd.getValue().equals("Summarizer/Qualifier")) {
+            attributeQuantifierName.getItems().clear();
+            for (var variable : allVariables) {
+                attributeQuantifierName.getItems().add(variable.getVariableName());
+            }
+        }
     }
+
 
     public void addQuantifier() {
         String label = labelField.getText();
         String functionName = functionTypes.getSelectionModel().getSelectedItem();
-        List<Double> parameters = new ArrayList<>();
+        boolean isRelative = attributeQuantifierName.getValue().equals("relative quantifiers");
+
+        Universe newUniverse = null;
+
+        FuzzySet newFuzzySet = null;
         switch (functionName) {
             case "TriangleFunction" -> {
-                parameters.add(Double.parseDouble(triangleA.getText()));
-                parameters.add(Double.parseDouble(triangleB.getText()));
-                parameters.add(Double.parseDouble(triangleC.getText()));
+                newFuzzySet = new FuzzySet(
+                        new TriangleFunction(
+                                Double.parseDouble(triangleA.getText()),
+                                Double.parseDouble(triangleB.getText()),
+                                Double.parseDouble(triangleC.getText()),
+                                newUniverse));
             }
             case "TrapezoidFunction" -> {
-                parameters.add(Double.parseDouble(trapezoidA.getText()));
-                parameters.add(Double.parseDouble(trapezoidB.getText()));
-                parameters.add(Double.parseDouble(trapezoidC.getText()));
-                parameters.add(Double.parseDouble(trapezoidD.getText()));
+                newFuzzySet = new FuzzySet(
+                        new TrapezoidFunction(
+                                Double.parseDouble(trapezoidA.getText()),
+                                Double.parseDouble(trapezoidB.getText()),
+                                Double.parseDouble(trapezoidC.getText()),
+                                Double.parseDouble(trapezoidC.getText()),
+                                newUniverse));
             }
             case "GaussianFunction" -> {
-                parameters.add(Double.parseDouble(gaussianM.getText()));
-                parameters.add(Double.parseDouble(gaussianS.getText()));
+                newFuzzySet = new FuzzySet(
+                        new GaussianFunction(
+                                Double.parseDouble(gaussianM.getText()),
+                                Double.parseDouble(gaussianS.getText()),
+                                newUniverse));
+            }
+        }
+        if (isRelative) {
+            QuantifierManager.addLabelToRelativeQuantifiers(new LinguisticQuantifier(true, label, newFuzzySet));
+        } else {
+            QuantifierManager.addLabelToAbsoluteQuantifiers(new LinguisticQuantifier(false, label, newFuzzySet));
+        }
+        loadQuantifiers();
+    }
+    public void addLabel() {
+        String label = labelField.getText();
+        String attributeName = attributeQuantifierName.getValue();
+        String functionName = functionTypes.getSelectionModel().getSelectedItem();
+        Universe newUniverse = null;
+        var optionalUniverse = allVariables.stream().filter(e -> e.getVariableName().equals(attributeName)).findFirst();
+        if (optionalUniverse.isPresent()) {
+            newUniverse = optionalUniverse.get().getUniverseOfDiscourse();
+        }
+        FuzzySet newFuzzySet = null;
+        switch (functionName) {
+            case "TriangleFunction" -> {
+                newFuzzySet = new FuzzySet(
+                        new TriangleFunction(Double.parseDouble(triangleA.getText()),
+                        Double.parseDouble(triangleB.getText()),
+                        Double.parseDouble(triangleC.getText()),
+                        newUniverse));
+            }
+            case "TrapezoidFunction" -> {
+                newFuzzySet = new FuzzySet(
+                        new TrapezoidFunction(Double.parseDouble(trapezoidA.getText()),
+                                Double.parseDouble(trapezoidB.getText()),
+                                Double.parseDouble(trapezoidC.getText()),
+                                Double.parseDouble(trapezoidC.getText()),
+                                newUniverse));
+            }
+            case "GaussianFunction" -> {
+                newFuzzySet = new FuzzySet(
+                        new GaussianFunction(Double.parseDouble(gaussianM.getText()),
+                                Double.parseDouble(gaussianS.getText()),
+                                newUniverse));
             }
         }
 
-        QuantifierManager.addLabelToRelativeQuantifiers(label, functionName, parameters);
-
-        loadQuantifiers();
+        VariableManager.addLabel( new Label(attributeName, label, newFuzzySet));
+        loadVariables();
     }
 
+    public void add() {
+        if (objectToAdd.getValue().equals("Quantifier")) {
+            addQuantifier();
+        } else if (objectToAdd.getValue().equals("Summarizer/Qualifier")) {
+            addLabel();
+        }
+
+    }
+
+    public void numericOnly(TextField field) {
+        // TODO
+    }
     @FXML
     public void switchToMainView() throws IOException {
         Stage primaryStage = (Stage) submitButton.getScene().getWindow();

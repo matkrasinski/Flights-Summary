@@ -54,7 +54,7 @@ public class CrispSet {
                         set.getElements().stream())
                 .collect(Collectors.toSet());
         if (universeOfDiscourse.getType() == UniverseType.CONTINUOUS) {
-            unique.removeIf(x -> !this.universeOfDiscourse.isIn(x) && !set.universeOfDiscourse.isIn(x));
+            unique.removeIf(x -> !this.universeOfDiscourse.contains(x) && !set.universeOfDiscourse.contains(x));
             Universe universe = new ContinuousUniverse(
                     Stream.concat(this.getUniverseOfDiscourse().getRange().stream(),
                             set.universeOfDiscourse.getRange().stream()).toList()
@@ -68,7 +68,7 @@ public class CrispSet {
                         set.universeOfDiscourse.getRange().get(0).stream()
                 ).toList()
         );
-        unique.removeIf(x -> !universe.isIn(x));
+        unique.removeIf(x -> !universe.contains(x));
 
         return new CrispSet(unique.stream().toList(), universe);
     }
@@ -92,7 +92,7 @@ public class CrispSet {
                 intersection[1] = Math.min(intersection[1], currentRange[1]);
             }
             Universe newUniverse = new ContinuousUniverse(intersection[0], intersection[1]);
-            unique.removeIf(x -> !newUniverse.isIn(x));
+            unique.removeIf(x -> !newUniverse.contains(x));
             return new CrispSet(unique.stream().toList(), newUniverse);
         }
 

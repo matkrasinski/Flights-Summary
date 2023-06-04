@@ -78,9 +78,9 @@ public class FuzzySet {
         List<List<Double>> newRanges = new ArrayList<>();
         List<Double> newRange = new ArrayList<>();
         for (List<Double> range : ranges) {
-            double step = 0.001;
+
             boolean isStart = false;
-            for (double i = range.get(0); i <= range.get(1); i += step) {
+            for (double i = range.get(0); i <= range.get(1); i+=0.01) {
                 double value = calculateMembership(i);
                 if (value >= 1e-5 && !isStart) {
                     newRange.add(i);
@@ -192,7 +192,7 @@ public class FuzzySet {
                     double s = alphaCut.getElements().get(j);
                     for (double lambda = 0; lambda <= 1; lambda += 0.1) {
                         double value = lambda * r + (1 - lambda) * s;
-                        if (alphaCut.getUniverseOfDiscourse().isIn(value)) {
+                        if (alphaCut.getUniverseOfDiscourse().contains(value)) {
                             return true;
                         }
                     }

@@ -69,7 +69,7 @@ public class CompoundFunction extends MembershipFunction {
             Set<Double> values = new HashSet<>();
             for (double x : universeOfDiscourse.getRange().get(0)) {
                 for (MembershipFunction function : functions) {
-                    if (membershipFunction.getUniverseOfDiscourse().isIn(x) || function.getUniverseOfDiscourse().isIn(x)) {
+                    if (membershipFunction.getUniverseOfDiscourse().contains(x) || function.getUniverseOfDiscourse().contains(x)) {
                         values.add(x);
                         break;
                     }

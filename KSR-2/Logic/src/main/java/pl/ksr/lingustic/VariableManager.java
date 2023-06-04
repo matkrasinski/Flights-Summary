@@ -3,13 +3,17 @@ package pl.ksr.lingustic;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import pl.ksr.functions.*;
 import pl.ksr.sets.ContinuousUniverse;
 import pl.ksr.sets.FuzzySet;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class VariableManager {
 
@@ -85,7 +89,68 @@ public class VariableManager {
         return variables;
     }
 
-    public static void addLabel(String attributeName, LinguisticVariable variable) {
+    public static void addLabel(Label label) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            File file = new File(Objects.requireNonNull(VariableManager.class.getResource("/Variables.json")).getPath());
+            JsonNode jsonNode = mapper.readTree(file);
+            ArrayNode arrayNode = (ArrayNode) jsonNode.get("linguisticVariables");
+
+            JsonNode node = null;
+            for (var s : arrayNode) {
+                System.out.println(s.get("variableName").textValue() + " " + label.getAttributeName());
+                if (s.get("variableName").textValue().equals(label.getAttributeName())) {
+                    node = s;
+                    break;
+                }
+            }
+
+            assert node != null;
+            ArrayNode labelsArrayNode = (ArrayNode) node.get("labels");
+            String functionName = label.getFuzzySet().getMembershipFunction().getClass().getSimpleName();
+
+            var newLabel = mapper.createObjectNode();
+            newLabel.put("label", label.getLabelName());
+            newLabel.put("function", label.getFuzzySet().getMembershipFunction().getClass().getSimpleName());
+
+            var parametersObject = mapper.createObjectNode();
+            switch (functionName) {
+                case "TriangleFunction" -> {
+                    parametersObject.put("a",
+                            ((TriangleFunction) label.getFuzzySet().getMembershipFunction()).getA());
+                    parametersObject.put("b",
+                            ((TriangleFunction) label.getFuzzySet().getMembershipFunction()).getB());
+                    parametersObject.put("c",
+                            ((TriangleFunction) label.getFuzzySet().getMembershipFunction()).getC());
+                }
+                case "TrapezoidFunction" -> {
+                    parametersObject.put("a",
+                            ((TrapezoidFunction) label.getFuzzySet().getMembershipFunction()).getA());
+                    parametersObject.put("b",
+                            ((TrapezoidFunction) label.getFuzzySet().getMembershipFunction()).getB());
+                    parametersObject.put("c",
+                            ((TrapezoidFunction) label.getFuzzySet().getMembershipFunction()).getC());
+                    parametersObject.put("d",
+                            ((TrapezoidFunction) label.getFuzzySet().getMembershipFunction()).getD());
+                }
+                case "GaussianFunction" -> {
+                    parametersObject.put("m",
+                            ((GaussianFunction) label.getFuzzySet().getMembershipFunction()).getM());
+                    parametersObject.put("s",
+                            ((GaussianFunction) label.getFuzzySet().getMembershipFunction()).getS());
+                }
+            }
+
+            newLabel.putIfAbsent("parameters", parametersObject);
+            labelsArrayNode.add(newLabel);
+            System.out.println(jsonNode);
+            FileWriter fileWriter = new FileWriter(file);
+            mapper.writeValue(fileWriter, jsonNode);
+
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

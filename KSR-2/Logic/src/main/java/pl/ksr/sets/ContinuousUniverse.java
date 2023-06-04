@@ -17,7 +17,7 @@ public class ContinuousUniverse implements Universe {
     }
 
     @Override
-    public boolean isIn(double x) {
+    public boolean contains(double x) {
         for (List<Double> range : ranges) {
             if (x >= range.get(0) && x <= range.get(1)) {
                 return true;

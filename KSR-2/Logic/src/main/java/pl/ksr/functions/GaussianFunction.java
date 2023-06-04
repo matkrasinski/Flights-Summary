@@ -19,4 +19,11 @@ public class GaussianFunction extends MembershipFunction {
         return membership;
     }
 
+    public double getM() {
+        return m;
+    }
+
+    public double getS() {
+        return s;
+    }
 }

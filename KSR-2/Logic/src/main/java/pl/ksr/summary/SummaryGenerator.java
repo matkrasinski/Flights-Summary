@@ -1,7 +1,10 @@
 package pl.ksr.summary;
 
+import pl.ksr.functions.TrapezoidFunction;
 import pl.ksr.lingustic.Label;
 import pl.ksr.lingustic.LinguisticQuantifier;
+import pl.ksr.sets.DiscreteUniverse;
+import pl.ksr.sets.FuzzySet;
 import pl.ksr.summary.measures.*;
 
 import java.util.List;
@@ -15,19 +18,25 @@ public class SummaryGenerator {
                 subject.getSubject() + " had/were " +
                 concatLabels(summarizers.stream().map(Label::getLabelName).toList());
 
+        double m = subject.getObject(summarizers.get(0).getAttributeName()).size();
+
+        Label databaseQualifier = new Label("database", new FuzzySet(
+                new TrapezoidFunction(0.01, 0, m, m + 0.01, new DiscreteUniverse(List.of(0d, m)))
+        ));
+
 
         QualityMeasures qualityMeasures = new QualityMeasures(
                 DegreeOfTruth.calculateT1forSingleFirstForm(quantifier, subject, summarizers),
                 DegreeOfImprecision.calculateT2(summarizers),
-                DegreeOfCovering.calculateT3(),
-                DegreeOfAppropriateness.calculateT4(),
+                DegreeOfCovering.calculateT3(subject, summarizers),
+                DegreeOfAppropriateness.calculateT4(subject, summarizers),
                 LengthOfSummary.calculateT5(summarizers),
                 QuantifierImprecision.calculateT6(quantifier),
                 QuantifierRelativeCardinality.calculateT7(quantifier),
                 SummarizerCardinality.calculateT8(summarizers),
-                0,
-                0,
-                0
+                QualifierImprecision.calculateT9(List.of(databaseQualifier)),
+                QualifierRelativeCardinality.calculateT10(List.of(databaseQualifier)),
+                LengthOfQualifier.calculateT11(List.of(databaseQualifier))
         );
 
         return new Summary(summaryText, quantifier, List.of(subject), summarizers, null, qualityMeasures);
@@ -45,8 +54,8 @@ public class SummaryGenerator {
         QualityMeasures qualityMeasures = new QualityMeasures(
                 DegreeOfTruth.calculateT1forSingleSecondForm(quantifier, subject, summarizers, qualifiers),
                 DegreeOfImprecision.calculateT2(summarizers),
-                DegreeOfCovering.calculateT3(),
-                DegreeOfAppropriateness.calculateT4(),
+                DegreeOfCovering.calculateT3(subject, summarizers, qualifiers),
+                DegreeOfAppropriateness.calculateT4(subject, summarizers, qualifiers),
                 LengthOfSummary.calculateT5(summarizers),
                 QuantifierImprecision.calculateT6(quantifier),
                 QuantifierRelativeCardinality.calculateT7(quantifier),
@@ -71,20 +80,10 @@ public class SummaryGenerator {
                 " had/were " +
                 concatLabels(summarizers.stream().map(Label::getLabelName).toList());
 
-
         QualityMeasures qualityMeasures = new QualityMeasures(
-                DegreeOfTruth.calculateT1forMultiFirstForm(quantifier, subjects, summarizers),
-                DegreeOfImprecision.calculateT2(summarizers),
-                DegreeOfCovering.calculateT3(),
-                DegreeOfAppropriateness.calculateT4(),
-                LengthOfSummary.calculateT5(summarizers),
-                QuantifierImprecision.calculateT6(quantifier),
-                QuantifierRelativeCardinality.calculateT7(quantifier),
-                SummarizerCardinality.calculateT8(summarizers),
-                0,
-                0,
-                0
+                DegreeOfTruth.calculateT1forMultiFirstForm(quantifier, subjects, summarizers)
         );
+
 
         return new Summary(summaryText, quantifier, subjects, summarizers, null, qualityMeasures);
     }
@@ -102,17 +101,7 @@ public class SummaryGenerator {
                 concatLabels(summarizers.stream().map(Label::getLabelName).toList());
 
         QualityMeasures qualityMeasures = new QualityMeasures(
-                DegreeOfTruth.calculateT1forMultiSecondForm(quantifier, subjects, summarizers, qualifiers),
-                DegreeOfImprecision.calculateT2(summarizers),
-                DegreeOfCovering.calculateT3(),
-                DegreeOfAppropriateness.calculateT4(),
-                LengthOfSummary.calculateT5(summarizers),
-                QuantifierImprecision.calculateT6(quantifier),
-                QuantifierRelativeCardinality.calculateT7(quantifier),
-                SummarizerCardinality.calculateT8(summarizers),
-                QualifierImprecision.calculateT9(qualifiers),
-                QualifierRelativeCardinality.calculateT10(qualifiers),
-                LengthOfQualifier.calculateT11(qualifiers)
+                DegreeOfTruth.calculateT1forMultiSecondForm(quantifier, subjects, summarizers, qualifiers)
         );
 
         return new Summary(summaryText, quantifier, subjects, summarizers, qualifiers, qualityMeasures);
@@ -131,17 +120,7 @@ public class SummaryGenerator {
                 concatLabels(summarizers.stream().map(Label::getLabelName).toList());
 
         QualityMeasures qualityMeasures = new QualityMeasures(
-                DegreeOfTruth.calculateT1forMultiThirdForm(quantifier, subjects, summarizers, qualifiers),
-                DegreeOfImprecision.calculateT2(summarizers),
-                DegreeOfCovering.calculateT3(),
-                DegreeOfAppropriateness.calculateT4(),
-                LengthOfSummary.calculateT5(summarizers),
-                QuantifierImprecision.calculateT6(quantifier),
-                QuantifierRelativeCardinality.calculateT7(quantifier),
-                SummarizerCardinality.calculateT8(summarizers),
-                QualifierImprecision.calculateT9(qualifiers),
-                QualifierRelativeCardinality.calculateT10(qualifiers),
-                LengthOfQualifier.calculateT11(qualifiers)
+                DegreeOfTruth.calculateT1forMultiThirdForm(quantifier, subjects, summarizers, qualifiers)
         );
 
         return new Summary(summaryText, quantifier, subjects, summarizers, qualifiers, qualityMeasures);
@@ -153,17 +132,7 @@ public class SummaryGenerator {
                 concatLabels(summarizers.stream().map(Label::getLabelName).toList());
 
         QualityMeasures qualityMeasures = new QualityMeasures(
-                DegreeOfTruth.calculateT1forMultiFourthForm(subjects, summarizers),
-                DegreeOfImprecision.calculateT2(summarizers),
-                DegreeOfCovering.calculateT3(),
-                DegreeOfAppropriateness.calculateT4(),
-                LengthOfSummary.calculateT5(summarizers),
-                0,
-                0,
-                SummarizerCardinality.calculateT8(summarizers),
-                0,
-                0,
-                0
+                DegreeOfTruth.calculateT1forMultiFourthForm(subjects, summarizers)
         );
 
         return new Summary(summaryText, null, subjects, summarizers, null, qualityMeasures);

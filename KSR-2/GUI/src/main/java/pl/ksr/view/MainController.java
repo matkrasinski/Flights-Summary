@@ -73,7 +73,7 @@ public class MainController {
 
         initVariables();
         initSubjects();
-        setCellsValuesFactors();
+//        setCellsValuesFactorsSingle();
 
         relativeQuantifiers = new ArrayList<>();
         absoluteQuantifiers = new ArrayList<>();
@@ -166,19 +166,30 @@ public class MainController {
         if (selectedSubjects.size() == 1) {
             currentSummaries = SummaryFactory.generateAllSingleSubject(absoluteQuantifiers, relativeQuantifiers,
                     selectedAttributes, selectedSubjects.get(0));
-        } else if (selectedSubjects.size() == 2){
+            setCellsValuesFactorsSingle();
+            loadSingleSubjectSummaries();
+        } else if (selectedSubjects.size() == 2) {
             currentSummaries = SummaryFactory.generateAllMultiSubject(
                     relativeQuantifiers,
                     selectedAttributes,
                     selectedSubjects
             );
+            setCellsValuesFactorsMulti();
+            loadMultiSubjectSummaries();
         }
-
-        loadSummaries();
     }
-    public void loadSummaries() {
+    public void loadSingleSubjectSummaries() {
         List<SummaryRow> rows = currentSummaries.stream().map(SummaryRow::new).toList();
         summaryCounterText.setText("Current summaries counter: "  + rows.size());
+        this.summaries.getItems().clear();
+        this.summaries.getItems().addAll(rows);
+    }
+
+    public void loadMultiSubjectSummaries() {
+        List<SummaryRow> rows = currentSummaries.stream()
+                .map(e -> new SummaryRow(e.getSummary(), e.getQualityMeasures().getT_1())).toList();
+        summaryCounterText.setText("Current summaries counter: "  + rows.size());
+        this.summaries.getItems().clear();
         this.summaries.getItems().addAll(rows);
     }
 
@@ -188,7 +199,40 @@ public class MainController {
         summaryCounterText.setText("");
     }
 
-    private void setCellsValuesFactors() {
+    private void setCellsValuesFactorsSingle() {
+        summaries.getColumns().clear();
+
+        summaryColumn = new TableColumn<>("Summary");
+        tColumn = new TableColumn<>("T");
+        t1Column = new TableColumn<>("T1");
+        t2Column = new TableColumn<>("T2");
+        t3Column = new TableColumn<>("T3");
+        t4Column = new TableColumn<>("T4");
+        t5Column = new TableColumn<>("T5");
+        t6Column = new TableColumn<>("T6");
+        t7Column = new TableColumn<>("T7");
+        t8Column = new TableColumn<>("T8");
+        t9Column = new TableColumn<>("T9");
+        t10Column = new TableColumn<>("T10");
+        t11Column = new TableColumn<>("T11");
+
+        summaryColumn.setPrefWidth(320);
+        tColumn.setPrefWidth(50);
+        t1Column.setPrefWidth(50);
+        t2Column.setPrefWidth(50);
+        t3Column.setPrefWidth(50);
+        t4Column.setPrefWidth(50);
+        t5Column.setPrefWidth(50);
+        t6Column.setPrefWidth(50);
+        t7Column.setPrefWidth(50);
+        t8Column.setPrefWidth(50);
+        t9Column.setPrefWidth(50);
+        t10Column.setPrefWidth(50);
+        t11Column.setPrefWidth(50);
+
+        summaries.getColumns().addAll(List.of(summaryColumn, tColumn, t1Column, t2Column, t3Column,
+                t4Column, t5Column, t6Column, t7Column, t8Column, t9Column, t10Column, t11Column));
+
         summaryColumn.setCellValueFactory(new PropertyValueFactory<>("summary"));
         tColumn.setCellValueFactory(new PropertyValueFactory<>("t"));
         t1Column.setCellValueFactory(new PropertyValueFactory<>("t1"));
@@ -202,6 +246,22 @@ public class MainController {
         t9Column.setCellValueFactory(new PropertyValueFactory<>("t9"));
         t10Column.setCellValueFactory(new PropertyValueFactory<>("t10"));
         t11Column.setCellValueFactory(new PropertyValueFactory<>("t11"));
+    }
+
+    private void setCellsValuesFactorsMulti() {
+        summaries.getColumns().clear();
+
+        summaryColumn = new TableColumn<>("Summary");
+        t1Column = new TableColumn<>("T1");
+        summaryColumn.setPrefWidth(820);
+        t1Column.setPrefWidth(50);
+
+
+        summaries.getColumns().add(summaryColumn);
+        summaries.getColumns().add(t1Column);
+
+        summaryColumn.setCellValueFactory(new PropertyValueFactory<>("summary"));
+        t1Column.setCellValueFactory(new PropertyValueFactory<>("t1"));
     }
 
     @FXML

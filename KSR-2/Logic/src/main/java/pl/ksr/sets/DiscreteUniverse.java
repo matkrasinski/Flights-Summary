@@ -1,6 +1,5 @@
 package pl.ksr.sets;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DiscreteUniverse implements Universe {
@@ -15,7 +14,7 @@ public class DiscreteUniverse implements Universe {
     }
 
     @Override
-    public boolean isIn(double x) {
+    public boolean contains(double x) {
         return X.contains(x);
     }
     @Override

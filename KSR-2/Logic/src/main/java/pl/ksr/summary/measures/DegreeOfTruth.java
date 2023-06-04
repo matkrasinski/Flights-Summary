@@ -62,11 +62,10 @@ public class DegreeOfTruth {
 
         double memberships1 = Label.andConnective(p1Objects, summarizers).stream().mapToDouble(e -> e).sum();
         double memberships2 = Label.andConnective(p2Objects, summarizers).stream().mapToDouble(e -> e).sum();
+        double arg = ((1d / p1Objects.size()) * memberships1) /
+                ((1d / p1Objects.size()) * memberships1 + (1d / p2Objects.size()) * memberships2);
 
-        return quantifier.getFuzzySet().calculateMembership(
-                ((1d / p1Objects.size()) * memberships1) /
-                        ((1d / p1Objects.size()) * memberships1 + (1d / p2Objects.size()) * memberships2)
-        );
+        return quantifier.getFuzzySet().calculateMembership(arg);
     }
     public static double calculateT1forMultiSecondForm(LinguisticQuantifier quantifier,
                                                        List<Subject> subjects,
@@ -132,21 +131,31 @@ public class DegreeOfTruth {
             p2.add(subjects.get(1).getObject(label.getAttributeName()));
         }
 
-        double sp1 = Label.andConnective(p1, summarizers).stream().mapToDouble(e -> e).sum();
-        double sp2 = Label.andConnective(p2, summarizers).stream().mapToDouble(e -> e).sum();
+        List<Double> sp1 = Label.andConnective(p1, summarizers).stream().mapToDouble(e -> e).boxed().toList();
+        List<Double> sp2 = Label.andConnective(p2, summarizers).stream().mapToDouble(e -> e).boxed().toList();
 
+        System.out.println(sp1);
+        System.out.println(sp2);
+        System.out.println();
         double m1 = p1.get(0).size();
         double m2 = p2.get(0).size();
+        double sum1 = 0;
+        double sum2 = 0;
+        for (var i : sp1) {
+            sum1 += i;
+        }
+        for (var i : sp2) {
+            sum2 += i;
+        }
 
-        double m = m1 + m2;
 
-        return 1 - implication(sp2 / m, sp1 / m);
+        return 1 - implication(sum1 / m1, sum2 / m2);
     }
 
     // Reichenbach implication
     private static double implication(double a, double b) {
-//        return Math.min(1, 1 - a + b);
-        return 1 - a + a * b;
+        return Math.min(1, 1 - a + b);
+//        return 1 - a + a * b;
     }
 
 }
