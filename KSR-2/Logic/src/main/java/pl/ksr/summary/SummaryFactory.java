@@ -39,7 +39,7 @@ public class SummaryFactory {
 
     public static List<Summary> generateAllMultiSubject(List<LinguisticQuantifier> relativeQuantifiers,
                                                         List<Label> selectedAttributes,
-                                                        List<Subject> selectedSubjects) {
+                                                            List<Subject> selectedSubjects) {
         List<Integer> numbers = selectedAttributes.stream().mapToInt(selectedAttributes::indexOf).boxed().toList();
         List<List<Integer>> onlySummarizersCombinations = generateVariations(numbers);
         List<List<Integer>> summarizersWithQualifiersCombs = generateAllCombinations(numbers);

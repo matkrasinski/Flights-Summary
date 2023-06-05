@@ -69,43 +69,11 @@ public class FuzzySet {
     public CrispSet getAlphaCut(double alpha, List<Double> objects) {
         List<Double> newObjects = objects.stream().filter(e -> calculateMembership(e) > alpha).toList();
         return new CrispSet(newObjects, getUniverseOfDiscourse());
-
-//        if (getUniverseOfDiscourse().getType() == UniverseType.DISCRETE) {
-//            return new CrispSet(getUniverseOfDiscourse().getRange().get(0).stream()
-//                    .filter(e -> calculateMembership(e) > alpha).toList(),
-//                    getUniverseOfDiscourse());
-//        }
-//        List<List<Double>> ranges = getUniverseOfDiscourse().getRange();
-//
-//        List<List<Double>> newRanges = new ArrayList<>();
-//        List<Double> newRange = new ArrayList<>();
-//        for (List<Double> range : ranges) {
-//
-//            boolean isStart = false;
-//            for (double i = range.get(0); i <= range.get(1); i+=0.01) {
-//                double value = calculateMembership(i);
-//                if (value >= 1e-5 && !isStart) {
-//                    newRange.add(i);
-//                    isStart = true;
-//                }
-//                if (isStart && value <= 1e-5) {
-//                    newRange.add(i);
-//                    newRanges.add(newRange);
-//                    newRange = new ArrayList<>();
-//                    isStart = false;
-//                }
-//            }
-//            if (isStart) {
-//                newRange.add(range.get(1));
-//                newRanges.add(newRange);
-//            }
-//        }
-//        return new CrispSet(new ContinuousUniverse(newRanges));
     }
 
     public double getCardinality(List<Double> objects) {
         if (objects != null) {
-            return getUniverseOfDiscourse().getRange().get(0).stream().mapToDouble(this::calculateMembership).sum();
+            return objects.stream().mapToDouble(this::calculateMembership).sum();
         }
         UnivariateFunction function = this::calculateMembership;
 

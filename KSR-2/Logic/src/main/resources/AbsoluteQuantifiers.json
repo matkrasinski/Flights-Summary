@@ -3,9 +3,10 @@
     {
       "label": "less than 100",
       "function": "TrapezoidFunction",
+      "range": [],
       "parameters": {
-        "a": -100,
-        "b": 0,
+        "a": 0,
+        "b": 0.01,
         "c": 99,
         "d": 200
       }

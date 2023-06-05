@@ -20,11 +20,11 @@ public class DegreeOfAppropriateness {
 
     private static double calculateR(Subject subject, List<Label> summarizers) {
         double r = 1;
-        double m = subject.getObject(summarizers.get(0).getAttributeName()).size();
         for (Label summarizer : summarizers) {
-            r *= subject.getObject(summarizer.getAttributeName())
-                    .stream().filter(e -> e > 0).mapToDouble(e -> e).count() / m;
+            List<Double> objects = subject.getObject(summarizer.getAttributeName());
+            r *= (double) summarizer.getFuzzySet().getSupp(objects).getElements().size() / objects.size();
         }
+
         return r;
     }
 }

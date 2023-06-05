@@ -134,25 +134,21 @@ public class DegreeOfTruth {
         List<Double> sp1 = Label.andConnective(p1, summarizers).stream().mapToDouble(e -> e).boxed().toList();
         List<Double> sp2 = Label.andConnective(p2, summarizers).stream().mapToDouble(e -> e).boxed().toList();
 
-        System.out.println(sp1);
-        System.out.println(sp2);
-        System.out.println();
-        double m1 = p1.get(0).size();
-        double m2 = p2.get(0).size();
+        double m1 = sp1.size();
+        double m2 = sp2.size();
         double sum1 = 0;
         double sum2 = 0;
-        for (var i : sp1) {
+
+        for (var i : sp1)
             sum1 += i;
-        }
-        for (var i : sp2) {
+        for (var i : sp2)
             sum2 += i;
-        }
 
-
-        return 1 - implication(sum1 / m1, sum2 / m2);
+        return 1 - implication(sum2 / m2, sum1 / m1);
     }
 
     // Reichenbach implication
+    // Lukasiewicz implication
     private static double implication(double a, double b) {
         return Math.min(1, 1 - a + b);
 //        return 1 - a + a * b;

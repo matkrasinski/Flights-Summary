@@ -29,7 +29,7 @@ public class SummaryGenerator {
                 QuantifierRelativeCardinality.calculateT7(quantifier),
                 SummarizerCardinality.calculateT8(subject, summarizers),
                 QualifierImprecision.calculateT9(subject, Collections.emptyList()),
-                QualifierRelativeCardinality.calculateT10(Collections.emptyList()),
+                QualifierRelativeCardinality.calculateT10(subject, Collections.emptyList()),
                 LengthOfQualifier.calculateT11(Collections.emptyList())
         );
 
@@ -55,7 +55,7 @@ public class SummaryGenerator {
                 QuantifierRelativeCardinality.calculateT7(quantifier),
                 SummarizerCardinality.calculateT8(subject, summarizers),
                 QualifierImprecision.calculateT9(subject, qualifiers),
-                QualifierRelativeCardinality.calculateT10(qualifiers),
+                QualifierRelativeCardinality.calculateT10(subject, qualifiers),
                 LengthOfQualifier.calculateT11(qualifiers)
         );
 

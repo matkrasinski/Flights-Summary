@@ -39,7 +39,7 @@ public class QuantifierManager {
                             parameters.get("b").asDouble(),
                             parameters.get("c").asDouble(),
                             parameters.get("d").asDouble(),
-                            new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
+                            new ContinuousUniverse(parameters.get("a").asDouble(), parameters.get("d").asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(true,
                             current.get("label").asText(),
@@ -48,7 +48,7 @@ public class QuantifierManager {
                     MembershipFunction function = new TriangleFunction(parameters.get("a").asDouble(),
                             parameters.get("b").asDouble(),
                             parameters.get("c").asDouble(),
-                            new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
+                            new ContinuousUniverse(parameters.get("a").asDouble(), parameters.get("c").asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(true,
                             current.get("label").asText(),
@@ -111,7 +111,7 @@ public class QuantifierManager {
                             parameters.get("b").asDouble(),
                             parameters.get("c").asDouble(),
                             parameters.get("d").asDouble(),
-                            new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
+                            new ContinuousUniverse(parameters.get("a").asDouble(), parameters.get("d").asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(false,
                             current.get("label").asText(),
@@ -120,7 +120,7 @@ public class QuantifierManager {
                     MembershipFunction function = new TriangleFunction(parameters.get("a").asDouble(),
                             parameters.get("b").asDouble(),
                             parameters.get("c").asDouble(),
-                            new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
+                            new ContinuousUniverse(parameters.get("a").asDouble(), parameters.get("c").asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(false,
                             current.get("label").asText(),
