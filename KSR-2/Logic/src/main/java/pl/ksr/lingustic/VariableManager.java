@@ -11,6 +11,7 @@ import pl.ksr.sets.FuzzySet;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,9 +23,10 @@ public class VariableManager {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File file = new File(Objects.requireNonNull(VariableManager.class.getResource("/Variables.json")).getPath());
 
-            JsonNode jsonNode = mapper.readTree(file);
+            InputStream inputStream = VariableManager.class.getResourceAsStream("/Variables.json");
+
+            JsonNode jsonNode = mapper.readTree(inputStream);
             JsonNode linguisticVariables = jsonNode.get("linguisticVariables");
 
             for (int i = 0; i < linguisticVariables.size(); i++) {
@@ -92,6 +94,7 @@ public class VariableManager {
     public static void addLabel(Label label) {
         try {
             ObjectMapper mapper = new ObjectMapper();
+
             File file = new File(Objects.requireNonNull(VariableManager.class.getResource("/Variables.json")).getPath());
             JsonNode jsonNode = mapper.readTree(file);
             ArrayNode arrayNode = (ArrayNode) jsonNode.get("linguisticVariables");

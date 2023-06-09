@@ -12,6 +12,7 @@ import pl.ksr.sets.Universe;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,9 +24,9 @@ public class QuantifierManager {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File file = new File(Objects.requireNonNull(QuantifierManager.class.getResource("/RelativeQuantifiers.json")).getPath());
+            InputStream inputStream = QuantifierManager.class.getResourceAsStream("/RelativeQuantifiers.json");
 
-            JsonNode jsonNode = mapper.readTree(file);
+            JsonNode jsonNode = mapper.readTree(inputStream);
             JsonNode relativeQuantifiers = jsonNode.get("relativeQuantifiers");
 
             for (int i = 0; i < relativeQuantifiers.size(); i++) {
@@ -95,9 +96,10 @@ public class QuantifierManager {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File file = new File(Objects.requireNonNull(QuantifierManager.class.getResource("/AbsoluteQuantifiers.json")).getFile());
 
-            JsonNode jsonNode = mapper.readTree(file);
+            InputStream inputStream = QuantifierManager.class.getResourceAsStream("/AbsoluteQuantifiers.json");
+
+            JsonNode jsonNode = mapper.readTree(inputStream);
             JsonNode relativeQuantifiers = jsonNode.get("absoluteQuantifiers");
 
             for (int i = 0; i < relativeQuantifiers.size(); i++) {
@@ -173,6 +175,8 @@ public class QuantifierManager {
             String functionName = function.getClass().getSimpleName();
 
             ObjectMapper mapper = new ObjectMapper();
+
+
             File file = new File(Objects.requireNonNull(VariableManager.class.getResource("/" + fileName)).getPath());
 
             JsonNode jsonNode = mapper.readTree(file);
