@@ -101,7 +101,6 @@ public class VariableManager {
 
             JsonNode node = null;
             for (var s : arrayNode) {
-                System.out.println(s.get("variableName").textValue() + " " + label.getAttributeName());
                 if (s.get("variableName").textValue().equals(label.getAttributeName())) {
                     node = s;
                     break;
@@ -146,7 +145,6 @@ public class VariableManager {
 
             newLabel.putIfAbsent("parameters", parametersObject);
             labelsArrayNode.add(newLabel);
-            System.out.println(jsonNode);
             FileWriter fileWriter = new FileWriter(file);
             mapper.writeValue(fileWriter, jsonNode);
 

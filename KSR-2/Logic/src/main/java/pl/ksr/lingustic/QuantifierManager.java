@@ -10,7 +10,6 @@ import pl.ksr.sets.FuzzySet;
 import pl.ksr.sets.Universe;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -40,16 +39,17 @@ public class QuantifierManager {
                             parameters.get("b").asDouble(),
                             parameters.get("c").asDouble(),
                             parameters.get("d").asDouble(),
-                            new ContinuousUniverse(parameters.get("a").asDouble(), parameters.get("d").asDouble()));
+                            new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(true,
                             current.get("label").asText(),
                                     new FuzzySet(function));
                 } else if (Objects.equals(current.get("function").asText(), TriangleFunction.class.getSimpleName())) {
-                    MembershipFunction function = new TriangleFunction(parameters.get("a").asDouble(),
+                    MembershipFunction function = new TriangleFunction(
+                            parameters.get("a").asDouble(),
                             parameters.get("b").asDouble(),
                             parameters.get("c").asDouble(),
-                            new ContinuousUniverse(parameters.get("a").asDouble(), parameters.get("c").asDouble()));
+                            new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(true,
                             current.get("label").asText(),
@@ -100,11 +100,11 @@ public class QuantifierManager {
             InputStream inputStream = QuantifierManager.class.getResourceAsStream("/AbsoluteQuantifiers.json");
 
             JsonNode jsonNode = mapper.readTree(inputStream);
-            JsonNode relativeQuantifiers = jsonNode.get("absoluteQuantifiers");
+            JsonNode absoluteQuantifiers = jsonNode.get("absoluteQuantifiers");
 
-            for (int i = 0; i < relativeQuantifiers.size(); i++) {
+            for (int i = 0; i < absoluteQuantifiers.size(); i++) {
                 LinguisticQuantifier newQuantifier;
-                JsonNode current = relativeQuantifiers.get(i);
+                JsonNode current = absoluteQuantifiers.get(i);
                 JsonNode parameters = current.get("parameters");
                 JsonNode range = jsonNode.get("range");
 
@@ -113,7 +113,7 @@ public class QuantifierManager {
                             parameters.get("b").asDouble(),
                             parameters.get("c").asDouble(),
                             parameters.get("d").asDouble(),
-                            new ContinuousUniverse(parameters.get("a").asDouble(), parameters.get("d").asDouble()));
+                            new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(false,
                             current.get("label").asText(),
@@ -122,7 +122,7 @@ public class QuantifierManager {
                     MembershipFunction function = new TriangleFunction(parameters.get("a").asDouble(),
                             parameters.get("b").asDouble(),
                             parameters.get("c").asDouble(),
-                            new ContinuousUniverse(parameters.get("a").asDouble(), parameters.get("c").asDouble()));
+                            new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
 
                     newQuantifier = new LinguisticQuantifier(false,
                             current.get("label").asText(),
@@ -176,10 +176,10 @@ public class QuantifierManager {
 
             ObjectMapper mapper = new ObjectMapper();
 
-
             File file = new File(Objects.requireNonNull(VariableManager.class.getResource("/" + fileName)).getPath());
 
             JsonNode jsonNode = mapper.readTree(file);
+
             ArrayNode array;
             if (jsonNode.has("relativeQuantifiers")) {
                 array = (ArrayNode) jsonNode.get("relativeQuantifiers");
@@ -212,13 +212,11 @@ public class QuantifierManager {
 
             newObject.putIfAbsent("parameters", parametersObject);
             array.add(newObject);
+            mapper.writeValue(file, jsonNode);
 
-            FileWriter fileWriter = new FileWriter(file);
-            mapper.writeValue(fileWriter, jsonNode);
-
-            fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

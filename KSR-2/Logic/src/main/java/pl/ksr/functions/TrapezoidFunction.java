@@ -18,14 +18,13 @@ public class TrapezoidFunction extends MembershipFunction {
 
     @Override
     public double calculateMembershipDegree(double x) {
-        double membership = 0;
         if (a <= x && x <= b)
-            membership = (x - a) / (b - a);
+            return (x - a) / (b - a);
         else if (b <= x && x <= c)
-            membership = 1;
+            return 1;
         else if (c <= x && x <= d)
-            membership = (d - x) / (d - c);
-        return membership;
+            return (d - x) / (d - c);
+        return 0;
     }
 
     public double getA() {

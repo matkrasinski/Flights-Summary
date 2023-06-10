@@ -10,11 +10,12 @@ public class DegreeOfCovering {
     public static double calculateT3(Subject subject, List<Label> summarizers, List<Label> qualifiers) {
         List<List<Double>> summarizerObjects = new ArrayList<>();
         List<List<Double>> qualifierObjects = new ArrayList<>();
-
         for (Label summarizer : summarizers)
             summarizerObjects.add(subject.getObject(summarizer.getAttributeName()));
+
         for (Label qualifier : qualifiers)
             qualifierObjects.add(subject.getObject(qualifier.getAttributeName()));
+
         List<Double> memberships1 = Label.andConnective(summarizerObjects, summarizers);
         List<Double> memberships2 = Label.andConnective(qualifierObjects, qualifiers);
 

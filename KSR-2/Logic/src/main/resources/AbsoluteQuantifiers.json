@@ -3,62 +3,61 @@
     {
       "label": "less than 100",
       "function": "TrapezoidFunction",
-      "range": [],
       "parameters": {
-        "a": 0,
-        "b": 0.01,
-        "c": 99,
-        "d": 200
+        "a": -0.01,
+        "b": 0.00,
+        "c": 99.00,
+        "d": 200.00
       }
     },
     {
       "label": "about 300",
       "function": "TrapezoidFunction",
       "parameters": {
-        "a": 150,
-        "b": 250,
-        "c": 350,
-        "d": 500
+        "a": 150.00,
+        "b": 250.00,
+        "c": 350.00,
+        "d": 500.00
       }
     },
     {
       "label": "about 500",
       "function": "TrapezoidFunction",
       "parameters": {
-        "a": 300,
-        "b": 400,
-        "c": 600,
-        "d": 750
+        "a": 300.00,
+        "b": 400.00,
+        "c": 600.00,
+        "d": 750.00
       }
     },
     {
       "label": "about 1000",
       "function": "TrapezoidFunction",
       "parameters": {
-        "a": 600,
-        "b": 900,
-        "c": 1100,
-        "d": 1400
+        "a": 600.00,
+        "b": 900.00,
+        "c": 1100.00,
+        "d": 1400.00
       }
     },
     {
       "label": "about 1500",
       "function": "TrapezoidFunction",
       "parameters": {
-        "a": 1100,
-        "b": 1400,
-        "c": 1600,
-        "d": 2000
+        "a": 1100.00,
+        "b": 1400.00,
+        "c": 1600.00,
+        "d": 2000.00
       }
     },
     {
       "label": "more than 2000",
       "function": "TrapezoidFunction",
       "parameters": {
-        "a": 1900,
-        "b": 2000,
-        "c": 15354,
-        "d": 15355
+        "a": 1900.00,
+        "b": 2000.00,
+        "c": 15354.00,
+        "d": 15354.01
       }
     }
   ],

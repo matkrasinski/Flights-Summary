@@ -1,22 +1,21 @@
 package pl.ksr.database;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
 public class DatabaseConnection {
 
-    public static Connection getConnection() {
-        Properties properties = loadProperties();
+    public static String DATABASE_URL = "jdbc:postgresql://localhost:5432/skyflow";
+    public static String DATABASE_USERNAME = "root";
+    public static String DATABASE_PASSWORD = "root";
 
+    public static Connection getConnection() {
         Connection connection;
         try {
-            String url = properties.getProperty("db.url");
-            String user = properties.getProperty("db.user");
-            String password = properties.getProperty("db.password");
+            String url = DATABASE_URL;
+            String user = DATABASE_USERNAME;
+            String password = DATABASE_PASSWORD;
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -25,17 +24,4 @@ public class DatabaseConnection {
         return connection;
     }
 
-    private static Properties loadProperties() {
-        Properties props = new Properties();
-        try (InputStream input = DatabaseConnection.class.getResourceAsStream("/config.properties")) {
-            if (input != null) {
-                props.load(input);
-            } else {
-                throw new IOException("Unable to find config.properties file");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return props;
-    }
 }

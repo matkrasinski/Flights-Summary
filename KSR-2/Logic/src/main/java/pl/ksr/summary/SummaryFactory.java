@@ -104,19 +104,14 @@ public class SummaryFactory {
     private static void generateCombinationsRecursion(List<List<Integer>> combination,
                                                       List<Integer> numbers,
                                                       List<Integer> actualCombination) {
-        // Dodawanie aktualnej kombinacji do listy kombinacji
         combination.add(new ArrayList<>(actualCombination));
 
-        // Generowanie kolejnych kombinacji
         for (int i = 0; i < numbers.size(); i++) {
             if (!actualCombination.contains(numbers.get(i))) {
-                // Dodawanie kolejnego elementu do aktualnej kombinacji
                 actualCombination.add(numbers.get(i));
 
-                // Rekurencyjne generowanie kombinacji z pozostałymi elementami
                 generateCombinationsRecursion(combination, numbers, actualCombination);
 
-                // Usuwanie ostatnio dodanego elementu, aby wygenerować kolejne kombinacje
                 actualCombination.remove(actualCombination.size() - 1);
             }
         }
@@ -124,13 +119,10 @@ public class SummaryFactory {
     public static List<List<Integer>> generateCombination(List<Integer> numbers) {
         List<List<Integer>> combination = new ArrayList<>();
 
-        // Generowanie kombinacji rekurencyjnie
         generateCombinationsRecursion(combination, numbers, new ArrayList<>());
 
-        // Usuwanie pustych list i kombinacji z jednym elementem
         combination.removeIf(list -> list.isEmpty() || list.size() == 1);
 
-        // Dodawanie kombinacji ze wszystkimi elementami oryginalnej listy
         combination.add(numbers);
 
         return combination;
@@ -142,7 +134,6 @@ public class SummaryFactory {
         }
         Arrays.sort(numbers);
 
-        // Convert the sorted array back to a string
         StringBuilder sortedNumberString = new StringBuilder();
 
         for (int number : numbers) {

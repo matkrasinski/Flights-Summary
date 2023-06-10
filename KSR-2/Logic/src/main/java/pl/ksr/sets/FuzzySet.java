@@ -4,6 +4,7 @@ import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.integration.SimpsonIntegrator;
 import pl.ksr.functions.MembershipFunction;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -65,6 +66,38 @@ public class FuzzySet {
     public CrispSet getSupp(List<Double> objects) {
         return getAlphaCut(0, objects);
     }
+    public List<List<Double>> getSuppRange() {
+        return getAlphaRange(1e-5);
+    }
+
+    public List<List<Double>> getAlphaRange(double alpha) {
+        List<List<Double>> ranges = getUniverseOfDiscourse().getRange();
+
+        List<List<Double>> newRanges = new ArrayList<>();
+        List<Double> newRange = new ArrayList<>();
+        for (List<Double> range : ranges) {
+
+            boolean isStart = false;
+            for (double i = range.get(0); i <= range.get(1); i += 0.001) {
+                double value = calculateMembership(i);
+                if (value >= alpha && !isStart) {
+                    newRange.add(i);
+                    isStart = true;
+                }
+                if (isStart && value <= 1e-5) {
+                    newRange.add(i);
+                    newRanges.add(newRange);
+                    newRange = new ArrayList<>();
+                    isStart = false;
+                }
+            }
+            if (isStart) {
+                newRange.add(range.get(1));
+                newRanges.add(newRange);
+            }
+        }
+        return newRanges;
+    }
 
     public CrispSet getAlphaCut(double alpha, List<Double> objects) {
         List<Double> newObjects = objects.stream().filter(e -> calculateMembership(e) > alpha).toList();
@@ -72,56 +105,42 @@ public class FuzzySet {
     }
 
     public double getCardinality(List<Double> objects) {
-        if (objects != null) {
-            return objects.stream().mapToDouble(this::calculateMembership).sum();
-        }
+        return objects.stream().mapToDouble(this::calculateMembership).sum();
+    }
+
+    public double getCardinalityLikeMeasure() {
         UnivariateFunction function = this::calculateMembership;
 
         double integral = 0;
 
-        for (List<Double> range : getUniverseOfDiscourse().getRange()) {
+        for (List<Double> range : getSuppRange()) {
             integral += calculateIntegral(function, range.get(0), range.get(1));
         }
+
         return integral;
     }
+
     public double getComplementCardinality() {
-        if (getUniverseOfDiscourse().getType() == UniverseType.DISCRETE) {
-            return getUniverseOfDiscourse().getRange().get(0).stream().mapToDouble(x -> (1 - calculateMembership(x))).sum();
-        }
         UnivariateFunction function = e -> (1 - calculateMembership(e));
 
         double integral = 0;
 
-        for (List<Double> range : getUniverseOfDiscourse().getRange()) {
+        for (List<Double> range : getUniverseOfDiscourse().getRange())
             integral += calculateIntegral(function, range.get(0), range.get(1));
-        }
+
         return integral;
     }
 
     public double getUniverseCardinality() {
-        return getCardinality(null) + getComplementCardinality();
+        return getCardinalityLikeMeasure() + getComplementCardinality();
     }
 
     public double getDegreeOfFuzziness(List<Double> objects) {
-        return getAlphaDegreeOfFuzziness(0, objects);
+        return getAlphaDegreeOfFuzziness(1e-5, objects);
     }
 
     public double getAlphaDegreeOfFuzziness(double alpha, List<Double> objects) {
-        if (getUniverseOfDiscourse().getType() == UniverseType.DISCRETE) {
-            return getAlphaCut(alpha, objects).getElements().size() / getUniverseCardinality();
-        }
-
-        UnivariateFunction function = this::calculateMembership;
-
-        CrispSet alphaCut = getAlphaCut(alpha, objects);
-
-        double sum = 0;
-        for (List<Double> range : alphaCut.getUniverseOfDiscourse().getRange()) {
-            sum += calculateIntegral(function, range.get(0), range.get(1));
-        }
-
-        double universeCardinality = getUniverseCardinality();
-        return sum / universeCardinality;
+        return (double) getAlphaCut(alpha, objects).getElements().size() / objects.size();
     }
 
     public double getCentroid() {

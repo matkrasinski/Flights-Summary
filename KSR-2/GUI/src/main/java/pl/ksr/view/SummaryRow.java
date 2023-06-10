@@ -41,10 +41,10 @@ public class SummaryRow {
     }
 
     private String roundNumbers(double value) {
-//        if (value < 1.00 && value > 0.99)
-//            return "0.99";
-//        if (value > 0 && value < 0.01)
-//            return "0.00";
+        if (value < 1.00 && value > 0.99)
+            return "0.99<";
+        if (value > 0 && value < 0.01)
+            return "0.00~";
         return String.valueOf((double) Math.round(value * 100) / 100);
     }
 

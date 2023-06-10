@@ -73,12 +73,9 @@ public class MainController {
 
         initVariables();
         initSubjects();
-//        setCellsValuesFactorsSingle();
 
-        relativeQuantifiers = new ArrayList<>();
-        absoluteQuantifiers = new ArrayList<>();
-        absoluteQuantifiers.addAll(QuantifierManager.loadAbsoluteQuantifiers());
-        relativeQuantifiers.addAll(QuantifierManager.loadRelativeQuantifiers());
+        relativeQuantifiers = QuantifierManager.loadRelativeQuantifiers();
+        absoluteQuantifiers = QuantifierManager.loadAbsoluteQuantifiers();
     }
     public void saveSummaries() {
         List<String> selected = summaries.getSelectionModel().getSelectedItems()
@@ -90,7 +87,7 @@ public class MainController {
         if (file != null)
             FileManager.writeToFile(file.getAbsolutePath(), selected);
     }
-    public void initVariables() {
+    public void initVariables()  {
         allVariables = VariableManager.loadVariables();
         CheckBoxTreeItem<String> attributes = new CheckBoxTreeItem<>();
 
@@ -117,7 +114,6 @@ public class MainController {
                 }
             }
         });
-
         attributesPane.setContent(checkTreeView);
     }
     public void initSubjects() {
@@ -163,7 +159,7 @@ public class MainController {
         subjectScrollPane.setContent(subjects);
     }
     public void generateSummaries() {
-        if (selectedSubjects.size() == 1) {
+        if (selectedSubjects.size() % 2 == 1) {
             currentSummaries = SummaryFactory.generateAllSingleSubject(absoluteQuantifiers, relativeQuantifiers,
                     selectedAttributes, selectedSubjects.get(0));
             setCellsValuesFactorsSingle();
@@ -262,6 +258,53 @@ public class MainController {
 
         summaryColumn.setCellValueFactory(new PropertyValueFactory<>("summary"));
         t1Column.setCellValueFactory(new PropertyValueFactory<>("t1"));
+    }
+
+    public void saveToLatexTable() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null)
+            FileManager.writeToFile(file.getAbsolutePath(), formatToLatexTable());
+    }
+
+    public void saveToLatexEnumerate() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null)
+            FileManager.writeToFile(file.getAbsolutePath(), formatToLatexEnumerate());
+    }
+
+    private List<String> formatToLatexTable() {
+        List<String> table = new ArrayList<>();
+        table.add("\\begin{center}");
+        table.add("\\captionof{table}{CAPTION}");
+        table.add("\\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}");
+        table.add("\\hline");
+        table.add("\\rowcolor[HTML]{EFEFEF} ");
+        table.add("nr & $T$ & $T_1$   & $T_2$   & $T_3$   & $T_4$   & $T_5$  & $T_6$   & $T_7$   & $T_8$   & $T_9$  & $T_{10}$ & $T_{11}$ \\\\ \\hline");
+        int index = 1;
+        for (SummaryRow s : summaries.getSelectionModel().getSelectedItems().stream().toList()) {
+            table.add(index +" & " + s.getT() + " & " + s.getT1() + " & " + s.getT2() + " & " + s.getT3() +
+                    " & " + s.getT4() + " & " + s.getT5() + " & " + s.getT6() + " & " + s.getT7() + " & " + s.getT8() +
+                    " & " + s.getT9() + " & " + s.getT10() + " & " + s.getT11() + "\\\\ \\hline");
+        }
+        table.add("\\end{tabular}");
+        table.add("\\end{center}");
+
+        return table;
+    }
+
+    private List<String> formatToLatexEnumerate() {
+        List<String> enumerate = new ArrayList<>();
+        enumerate.add("\\begin{enumerate}");
+        for (SummaryRow s : summaries.getSelectionModel().getSelectedItems().stream().toList()) {
+            enumerate.add("\\item " + s.getSummary() + ", " + s.getT() + "\\\\");
+        }
+        enumerate.add("\\end{enumerate}");
+
+        return enumerate;
     }
 
     @FXML

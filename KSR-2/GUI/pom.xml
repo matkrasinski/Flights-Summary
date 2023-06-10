@@ -70,7 +70,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>pl.ksr.HelloApplication</mainClass>
+                            <mainClass>pl.ksr.view.Launcher</mainClass>
                         </configuration>
                     </execution>
                 </executions>
@@ -84,7 +84,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
-                            <mainClass>pl.ksr.HelloApplication</mainClass>
+                            <mainClass>pl.ksr.view.Launcher</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

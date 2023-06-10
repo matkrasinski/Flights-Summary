@@ -34,7 +34,7 @@ public class Subject {
                 for (String attribute : attributesNames) {
                     objects.put(attribute, FlightsRepository.findAllByNameAndSubject(attribute, subject));
                 }
-                this.subject = "flights where aircraft manufacturer was " +  subject;
+                this.subject = "flights by " +  subject;
             } else {
                 this.subject = "flights";
                 for (String attribute : attributesNames) {

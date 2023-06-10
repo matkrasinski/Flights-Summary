@@ -7,8 +7,6 @@ import java.util.List;
 
 public class QualifierImprecision {
     public static double calculateT9(Subject subject, List<Label> qualifiers) {
-        if (qualifiers == null || qualifiers.isEmpty())
-            return 0;
         double product = 1;
         for (Label qualifier : qualifiers) {
             List<Double> objects = subject.getObject(qualifier.getAttributeName());

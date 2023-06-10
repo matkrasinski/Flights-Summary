@@ -5,7 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import pl.ksr.database.DatabaseConnection;
 import pl.ksr.functions.GaussianFunction;
 import pl.ksr.functions.TrapezoidFunction;
 import pl.ksr.functions.TriangleFunction;
@@ -35,9 +37,6 @@ public class AdvancedController {
     private GridPane trapezoidForm;
     @FXML
     private GridPane gaussianForm;
-    @FXML
-    private GridPane compoundForm;
-
     @FXML
     private TextField triangleA;
     @FXML
@@ -91,12 +90,21 @@ public class AdvancedController {
     @FXML
     private TextField labelField;
 
-
+    @FXML
+    private TextField dbUrl;
+    @FXML
+    private TextField dbUser;
+    @FXML
+    private TextField dbPassword;
+    @FXML
+    private Text info;
     private List<LinguisticVariable> allVariables;
     private List<LinguisticQuantifier> relativeQuantifiers;
     private List<LinguisticQuantifier> absoluteQuantifiers;
 
+
     public void initialize() {
+        getDatabaseInfo();
         loadVariables();
         loadQuantifiers();
         setObjectToAdd();
@@ -242,7 +250,6 @@ public class AdvancedController {
         }
     }
 
-
     public void addQuantifier() {
         String label = labelField.getText();
         String functionName = functionTypes.getSelectionModel().getSelectedItem();
@@ -334,6 +341,25 @@ public class AdvancedController {
     public void numericOnly(TextField field) {
         // TODO
     }
+
+    public void getDatabaseInfo() {
+        dbUrl.setText(DatabaseConnection.DATABASE_URL);
+        dbUser.setText(DatabaseConnection.DATABASE_USERNAME);
+        dbPassword.setText(DatabaseConnection.DATABASE_PASSWORD);
+    }
+
+    public void changeDatabaseInfo() {
+        try {
+            DatabaseConnection.DATABASE_URL = dbUrl.getText();
+            DatabaseConnection.DATABASE_USERNAME = dbUser.getText();
+            DatabaseConnection.DATABASE_PASSWORD = dbPassword.getText();
+            DatabaseConnection.getConnection();
+            info.setText("Accepted");
+        } catch (Exception e) {
+            info.setText("Failed");
+        }
+    }
+
     @FXML
     public void switchToMainView() throws IOException {
         Stage primaryStage = (Stage) submitButton.getScene().getWindow();
