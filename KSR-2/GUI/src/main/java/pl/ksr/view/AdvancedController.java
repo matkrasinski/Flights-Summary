@@ -12,12 +12,17 @@ import pl.ksr.functions.GaussianFunction;
 import pl.ksr.functions.TrapezoidFunction;
 import pl.ksr.functions.TriangleFunction;
 import pl.ksr.lingustic.Label;
-import pl.ksr.lingustic.*;
+import pl.ksr.lingustic.LinguisticQuantifier;
+import pl.ksr.lingustic.LinguisticVariable;
+import pl.ksr.lingustic.QuantifierManager;
+import pl.ksr.lingustic.VariableManager;
 import pl.ksr.sets.FuzzySet;
 import pl.ksr.sets.Universe;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AdvancedController {
 
@@ -97,11 +102,18 @@ public class AdvancedController {
     @FXML
     private TextField dbPassword;
     @FXML
-    private Text info;
+    private Text databaseInfo;
+    @FXML
+    private Text weightInfo;
+
+
     private List<LinguisticVariable> allVariables;
     private List<LinguisticQuantifier> relativeQuantifiers;
     private List<LinguisticQuantifier> absoluteQuantifiers;
 
+
+    public static List<LinguisticQuantifier> newQuantifiers = new ArrayList<>();
+    public static List<Label> newLabels = new ArrayList<>();
 
     public void initialize() {
         getDatabaseInfo();
@@ -109,7 +121,7 @@ public class AdvancedController {
         loadQuantifiers();
         setObjectToAdd();
 
-        setDefault();
+        setDefaultWeights();
         parseWeightsField();
         initFunctionTypes();
 
@@ -117,18 +129,6 @@ public class AdvancedController {
         trapezoidForm.setVisible(false);
         gaussianForm.setVisible(false);
         submitButton.setVisible(false);
-
-        numericOnly(triangleA);
-        numericOnly(triangleB);
-        numericOnly(triangleC);
-
-        numericOnly(trapezoidA);
-        numericOnly(trapezoidB);
-        numericOnly(trapezoidC);
-        numericOnly(trapezoidD);
-
-        numericOnly(gaussianM);
-        numericOnly(gaussianS);
 
         loadVariables();
         loadQuantifiers();
@@ -155,7 +155,7 @@ public class AdvancedController {
         submitButton.setVisible(true);
     }
 
-    public void setDefault() {
+    public void setDefaultWeights() {
         var weights = WeightsContext.getWeights();
         t1Field.setText(String.valueOf(weights.get(0)));
         t2Field.setText(String.valueOf(weights.get(1)));
@@ -171,6 +171,23 @@ public class AdvancedController {
     }
 
     public void parseWeightsField() {
+        List<Double> weights =  List.of(
+                parseTextField(t1Field),
+                parseTextField(t2Field),
+                parseTextField(t3Field),
+                parseTextField(t4Field),
+                parseTextField(t5Field),
+                parseTextField(t6Field),
+                parseTextField(t7Field),
+                parseTextField(t8Field),
+                parseTextField(t9Field),
+                parseTextField(t10Field),
+                parseTextField(t11Field)
+        );
+
+        if (weights.stream().mapToDouble(e -> e).sum() != 1.0)
+            throw new IllegalArgumentException();
+
         WeightsContext.setWeights(List.of(
                 parseTextField(t1Field),
                 parseTextField(t2Field),
@@ -189,19 +206,26 @@ public class AdvancedController {
     public double parseTextField(TextField textField) {
         return Double.parseDouble(textField.getText());
     }
-
     public void initFunctionTypes() {
         functionTypes.getItems().add("TriangleFunction");
         functionTypes.getItems().add("TrapezoidFunction");
         functionTypes.getItems().add("GaussianFunction");
     }
-
     public void loadVariables() {
         allVariables = VariableManager.loadVariables();
-        TreeItem<String> attributes = new CheckBoxTreeItem<>();
 
         for (var variable : allVariables) {
+            String attributeName = variable.getLabels().get(0).getAttributeName();
+            for (var newLabel : newLabels)
+                if (Objects.equals(newLabel.getAttributeName(), attributeName))
+                    variable.getLabels().add(newLabel);
+        }
+
+
+        TreeItem<String> attributes = new CheckBoxTreeItem<>();
+        for (var variable : allVariables) {
             TreeItem<String> newAttribute = new TreeItem<>(variable.getVariableName());
+
             for (var label : variable.getLabels()) {
                 newAttribute.getChildren().add(new TreeItem<>(label.getLabelName()));
             }
@@ -211,13 +235,20 @@ public class AdvancedController {
         TreeView<String> treeView = new TreeView<>(attributes);
         treeView.setShowRoot(false);
 
-
         attributesPane.setContent(treeView);
     }
-
     public void loadQuantifiers() {
         absoluteQuantifiers = QuantifierManager.loadAbsoluteQuantifiers();
         relativeQuantifiers = QuantifierManager.loadRelativeQuantifiers();
+
+        for (var quantifier : newQuantifiers) {
+            if (quantifier.isRelative())
+                relativeQuantifiers.add(quantifier);
+            else
+                absoluteQuantifiers.add(quantifier);
+        }
+
+
         TreeItem<String> quantifiers = new CheckBoxTreeItem<>();
 
         TreeItem<String> relativeItem = new CheckBoxTreeItem<>("Relative quantifiers");
@@ -236,7 +267,6 @@ public class AdvancedController {
 
         quantifiersPane.setContent(treeView);
     }
-
     public void loadVariablesOrQuantifiers() {
         if (objectToAdd.getValue().equals("Quantifier")) {
             attributeQuantifierName.getItems().clear();
@@ -249,87 +279,78 @@ public class AdvancedController {
             }
         }
     }
-
     public void addQuantifier() {
         String label = labelField.getText();
         String functionName = functionTypes.getSelectionModel().getSelectedItem();
         boolean isRelative = attributeQuantifierName.getValue().equals("relative quantifiers");
 
-        Universe newUniverse = null;
+        Universe newUniverse;
+        if (isRelative)
+            newUniverse = relativeQuantifiers.get(0).getFuzzySet().getUniverseOfDiscourse();
+        else
+            newUniverse = absoluteQuantifiers.get(0).getFuzzySet().getUniverseOfDiscourse();
+
 
         FuzzySet newFuzzySet = null;
         switch (functionName) {
-            case "TriangleFunction" -> {
-                newFuzzySet = new FuzzySet(
-                        new TriangleFunction(
-                                Double.parseDouble(triangleA.getText()),
-                                Double.parseDouble(triangleB.getText()),
-                                Double.parseDouble(triangleC.getText()),
-                                newUniverse));
-            }
-            case "TrapezoidFunction" -> {
-                newFuzzySet = new FuzzySet(
-                        new TrapezoidFunction(
-                                Double.parseDouble(trapezoidA.getText()),
-                                Double.parseDouble(trapezoidB.getText()),
-                                Double.parseDouble(trapezoidC.getText()),
-                                Double.parseDouble(trapezoidC.getText()),
-                                newUniverse));
-            }
-            case "GaussianFunction" -> {
-                newFuzzySet = new FuzzySet(
-                        new GaussianFunction(
-                                Double.parseDouble(gaussianM.getText()),
-                                Double.parseDouble(gaussianS.getText()),
-                                newUniverse));
-            }
+            case "TriangleFunction" -> newFuzzySet = new FuzzySet(
+                    new TriangleFunction(
+                            Double.parseDouble(triangleA.getText()),
+                            Double.parseDouble(triangleB.getText()),
+                            Double.parseDouble(triangleC.getText()),
+                            newUniverse));
+            case "TrapezoidFunction" -> newFuzzySet = new FuzzySet(
+                    new TrapezoidFunction(
+                            Double.parseDouble(trapezoidA.getText()),
+                            Double.parseDouble(trapezoidB.getText()),
+                            Double.parseDouble(trapezoidC.getText()),
+                            Double.parseDouble(trapezoidD.getText()),
+                            newUniverse));
+            case "GaussianFunction" -> newFuzzySet = new FuzzySet(
+                    new GaussianFunction(
+                            Double.parseDouble(gaussianM.getText()),
+                            Double.parseDouble(gaussianS.getText()),
+                            newUniverse));
         }
-        if (isRelative) {
-            QuantifierManager.addLabelToRelativeQuantifiers(new LinguisticQuantifier(true, label, newFuzzySet));
-        } else {
-            QuantifierManager.addLabelToAbsoluteQuantifiers(new LinguisticQuantifier(false, label, newFuzzySet));
-        }
+        newQuantifiers.add(new LinguisticQuantifier(isRelative, label, newFuzzySet));
+
         loadQuantifiers();
     }
     public void addLabel() {
         String label = labelField.getText();
         String attributeName = attributeQuantifierName.getValue();
         String functionName = functionTypes.getSelectionModel().getSelectedItem();
-        Universe newUniverse = null;
-        var optionalUniverse = allVariables.stream().filter(e -> e.getVariableName().equals(attributeName)).findFirst();
-        if (optionalUniverse.isPresent()) {
-            newUniverse = optionalUniverse.get().getUniverseOfDiscourse();
-        }
-        FuzzySet newFuzzySet = null;
-        switch (functionName) {
-            case "TriangleFunction" -> {
-                newFuzzySet = new FuzzySet(
-                        new TriangleFunction(Double.parseDouble(triangleA.getText()),
-                        Double.parseDouble(triangleB.getText()),
-                        Double.parseDouble(triangleC.getText()),
-                        newUniverse));
-            }
-            case "TrapezoidFunction" -> {
-                newFuzzySet = new FuzzySet(
-                        new TrapezoidFunction(Double.parseDouble(trapezoidA.getText()),
+
+        var optionalAttribute = allVariables.stream().filter(e -> e.getVariableName().equals(attributeName)).findFirst();
+        if (optionalAttribute.isPresent()) {
+            FuzzySet newFuzzySet = null;
+            switch (functionName) {
+                case "TriangleFunction" -> newFuzzySet = new FuzzySet(
+                        new TriangleFunction(
+                                Double.parseDouble(triangleA.getText()),
+                                Double.parseDouble(triangleB.getText()),
+                                Double.parseDouble(triangleC.getText()),
+                                optionalAttribute.get().getUniverseOfDiscourse()));
+                case "TrapezoidFunction" -> newFuzzySet = new FuzzySet(
+                        new TrapezoidFunction(
+                                Double.parseDouble(trapezoidA.getText()),
                                 Double.parseDouble(trapezoidB.getText()),
                                 Double.parseDouble(trapezoidC.getText()),
-                                Double.parseDouble(trapezoidC.getText()),
-                                newUniverse));
-            }
-            case "GaussianFunction" -> {
-                newFuzzySet = new FuzzySet(
-                        new GaussianFunction(Double.parseDouble(gaussianM.getText()),
+                                Double.parseDouble(trapezoidD.getText()),
+                                optionalAttribute.get().getUniverseOfDiscourse()));
+                case "GaussianFunction" -> newFuzzySet = new FuzzySet(
+                        new GaussianFunction(
+                                Double.parseDouble(gaussianM.getText()),
                                 Double.parseDouble(gaussianS.getText()),
-                                newUniverse));
+                                optionalAttribute.get().getUniverseOfDiscourse()));
             }
+            newLabels.add(new Label(optionalAttribute.get().getLabels().get(0).getAttributeName(), label, newFuzzySet));
+            loadVariables();
         }
 
-        VariableManager.addLabel( new Label(attributeName, label, newFuzzySet));
-        loadVariables();
     }
 
-    public void add() {
+    public void addNewObject() {
         if (objectToAdd.getValue().equals("Quantifier")) {
             addQuantifier();
         } else if (objectToAdd.getValue().equals("Summarizer/Qualifier")) {
@@ -337,26 +358,36 @@ public class AdvancedController {
         }
 
     }
-
-    public void numericOnly(TextField field) {
-        // TODO
-    }
-
     public void getDatabaseInfo() {
         dbUrl.setText(DatabaseConnection.DATABASE_URL);
         dbUser.setText(DatabaseConnection.DATABASE_USERNAME);
         dbPassword.setText(DatabaseConnection.DATABASE_PASSWORD);
     }
-
     public void changeDatabaseInfo() {
         try {
             DatabaseConnection.DATABASE_URL = dbUrl.getText();
             DatabaseConnection.DATABASE_USERNAME = dbUser.getText();
             DatabaseConnection.DATABASE_PASSWORD = dbPassword.getText();
             DatabaseConnection.getConnection();
-            info.setText("Accepted");
+            databaseInfo.setText("Accepted");
         } catch (Exception e) {
-            info.setText("Failed");
+            databaseInfo.setText("Failed");
+        }
+    }
+    public void resetWeights() {
+        WeightsContext.resetWeights();
+        setDefaultWeights();
+        parseWeightsField();
+    }
+    public void updateWeights() {
+        try {
+            parseWeightsField();
+            setDefaultWeights();
+            weightInfo.setText("Accepted");
+            parseWeightsField();
+        } catch (IllegalArgumentException e) {
+            weightInfo.setText("Not correct weights or weights does not sum up to 1.0");
+            resetWeights();
         }
     }
 

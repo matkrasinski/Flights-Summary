@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class MainController {
@@ -76,6 +77,12 @@ public class MainController {
 
         relativeQuantifiers = QuantifierManager.loadRelativeQuantifiers();
         absoluteQuantifiers = QuantifierManager.loadAbsoluteQuantifiers();
+        for (var quantifier : AdvancedController.newQuantifiers) {
+            if (quantifier.isRelative())
+                relativeQuantifiers.add(quantifier);
+            else
+                absoluteQuantifiers.add(quantifier);
+        }
     }
     public void saveSummaries() {
         List<String> selected = summaries.getSelectionModel().getSelectedItems()
@@ -89,6 +96,13 @@ public class MainController {
     }
     public void initVariables()  {
         allVariables = VariableManager.loadVariables();
+        for (var variable : allVariables) {
+            String attributeName = variable.getLabels().get(0).getAttributeName();
+            for (var newLabel : AdvancedController.newLabels)
+                if (Objects.equals(newLabel.getAttributeName(), attributeName))
+                    variable.getLabels().add(newLabel);
+        }
+
         CheckBoxTreeItem<String> attributes = new CheckBoxTreeItem<>();
 
         for (var variable : allVariables) {

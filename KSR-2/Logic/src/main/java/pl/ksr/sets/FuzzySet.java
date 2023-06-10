@@ -144,7 +144,7 @@ public class FuzzySet {
     }
 
     public double getCentroid() {
-        if (getUniverseOfDiscourse().getType() == UniverseType.DISCRETE) {
+        if (getUniverseOfDiscourse() instanceof DiscreteUniverse) {
             double sum = 0;
             double weights = 0;
 

@@ -46,13 +46,13 @@ public class SummaryFactory {
         List<Summary> summaries = new ArrayList<>();
         boolean forthIsGenerated = false;
         for (var quantifier : relativeQuantifiers) {
-            for (List<Integer> i : onlySummarizersCombinations) {
+            for (List<Integer> comb : onlySummarizersCombinations) {
                 //FIRST
                 Summary summary1 = SummaryGenerator.generateMultiSubjectFirstForm(quantifier, selectedSubjects,
-                        i.stream().map(selectedAttributes::get).toList());
+                        comb.stream().map(selectedAttributes::get).toList());
                 Summary summary2 = SummaryGenerator.generateMultiSubjectFirstForm(quantifier,
                         List.of(selectedSubjects.get(1), selectedSubjects.get(0)),
-                        i.stream().map(selectedAttributes::get).toList());
+                        comb.stream().map(selectedAttributes::get).toList());
 
                 summaries.add(summary1);
                 summaries.add(summary2);
@@ -60,10 +60,10 @@ public class SummaryFactory {
                 // FOURTH
                 if (!forthIsGenerated) {
                     Summary summary3 = SummaryGenerator.generateMultiSubjectFourthForm(selectedSubjects,
-                            i.stream().map(selectedAttributes::get).toList());
+                            comb.stream().map(selectedAttributes::get).toList());
                     Summary summary4 = SummaryGenerator.generateMultiSubjectFourthForm(
                             List.of(selectedSubjects.get(1), selectedSubjects.get(0)),
-                            i.stream().map(selectedAttributes::get).toList());
+                            comb.stream().map(selectedAttributes::get).toList());
                     summaries.add(summary3);
                     summaries.add(summary4);
                 }
@@ -127,7 +127,7 @@ public class SummaryFactory {
 
         return combination;
     }
-    private static String sortString(String str) {
+    private static String sortNumbersInString(String str) {
         int[] numbers = new int[str.length()];
         for (int i = 0; i < str.length(); i++) {
             numbers[i] = Character.getNumericValue(str.charAt(i));
@@ -150,7 +150,7 @@ public class SummaryFactory {
                 combinationSequence.append(i);
 
             for (int i = 1; i < combination.size(); i++) {
-                String cut = sortString(combinationSequence.substring(0, i)) +  "," + sortString(combinationSequence.substring(i));
+                String cut = sortNumbersInString(combinationSequence.substring(0, i)) +  "," + sortNumbersInString(combinationSequence.substring(i));
                 unique.add(cut);
             }
         }

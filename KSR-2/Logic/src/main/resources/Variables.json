@@ -277,13 +277,13 @@
       "attributeName": "year_of_manufacture",
       "variableName": "aircraft generation",
       "universeType": "dense",
-      "range": [1980, 2022],
+      "range": [1990, 2022],
       "labels": [
         {
           "label": "4th aircraft generation",
           "function": "TrapezoidFunction",
           "parameters": {
-            "a": 1980,
+            "a": 1989.99,
             "b": 1990,
             "c": 1995,
             "d": 1999

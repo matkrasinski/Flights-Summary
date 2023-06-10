@@ -1,10 +1,8 @@
 package pl.ksr.lingustic;
 
-import pl.ksr.sets.FuzzySet;
 import pl.ksr.sets.Universe;
 
 import java.util.List;
-import java.util.Map;
 
 public class LinguisticVariable {
 
@@ -20,9 +18,6 @@ public class LinguisticVariable {
 
     public List<Label> getLabels() {
         return labels;
-    }
-    public List<String> getLabelsNames() {
-        return labels.stream().map(Label::getLabelName).toList();
     }
 
     public Universe getUniverseOfDiscourse() {

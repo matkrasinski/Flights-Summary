@@ -16,8 +16,6 @@ public class SummaryGenerator {
                 subject.getSubject() + " had/were " +
                 concatLabels(summarizers.stream().map(Label::getLabelName).toList());
 
-        double m = subject.getObject(summarizers.get(0).getAttributeName()).size();
-
 
         QualityMeasures qualityMeasures = new QualityMeasures(
                 DegreeOfTruth.calculateT1forSingleFirstForm(quantifier, subject, summarizers),

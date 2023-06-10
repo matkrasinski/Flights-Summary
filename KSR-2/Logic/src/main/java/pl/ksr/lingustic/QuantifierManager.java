@@ -2,14 +2,11 @@ package pl.ksr.lingustic;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import pl.ksr.functions.*;
 import pl.ksr.sets.ContinuousUniverse;
 import pl.ksr.sets.FuzzySet;
 import pl.ksr.sets.Universe;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -98,7 +95,6 @@ public class QuantifierManager {
             ObjectMapper mapper = new ObjectMapper();
 
             InputStream inputStream = QuantifierManager.class.getResourceAsStream("/AbsoluteQuantifiers.json");
-
             JsonNode jsonNode = mapper.readTree(inputStream);
             JsonNode absoluteQuantifiers = jsonNode.get("absoluteQuantifiers");
 
@@ -147,7 +143,7 @@ public class QuantifierManager {
                                     parameters.get("m2").asDouble(),
                                     parameters.get("s2").asDouble(),
                                     universe
-                            )), universe, false);
+                            )), universe);
 
                     newQuantifier = new LinguisticQuantifier(false,
                             current.get("label").asText(),
@@ -162,61 +158,6 @@ public class QuantifierManager {
         return quantifiers;
     }
 
-    public static void addLabelToRelativeQuantifiers(LinguisticQuantifier quantifier) {
-        addLabel("RelativeQuantifiers.json", quantifier);
-    }
-    public static void addLabelToAbsoluteQuantifiers(LinguisticQuantifier quantifier) {
-        addLabel("AbsoluteQuantifiers.json", quantifier);
-    }
-    private static void addLabel(String fileName, LinguisticQuantifier quantifier) {
-        try {
-            String label = quantifier.getLabel();
-            MembershipFunction function = quantifier.getFuzzySet().getMembershipFunction();
-            String functionName = function.getClass().getSimpleName();
 
-            ObjectMapper mapper = new ObjectMapper();
-
-            File file = new File(Objects.requireNonNull(VariableManager.class.getResource("/" + fileName)).getPath());
-
-            JsonNode jsonNode = mapper.readTree(file);
-
-            ArrayNode array;
-            if (jsonNode.has("relativeQuantifiers")) {
-                array = (ArrayNode) jsonNode.get("relativeQuantifiers");
-            } else {
-                array = (ArrayNode) jsonNode.get("absoluteQuantifiers");
-            }
-
-            ObjectNode newObject = mapper.createObjectNode();
-            newObject.put("label", label);
-            newObject.put("function", functionName);
-            ObjectNode parametersObject = mapper.createObjectNode();
-
-            switch (functionName) {
-                case "TriangleFunction" -> {
-                    parametersObject.put("a", ((TriangleFunction) function).getA());
-                    parametersObject.put("b", ((TriangleFunction) function).getB());
-                    parametersObject.put("c", ((TriangleFunction) function).getC());
-                }
-                case "TrapezoidFunction" -> {
-                    parametersObject.put("a", ((TrapezoidFunction) function).getA());
-                    parametersObject.put("b", ((TrapezoidFunction) function).getB());
-                    parametersObject.put("c", ((TrapezoidFunction) function).getC());
-                    parametersObject.put("d", ((TrapezoidFunction) function).getD());
-                }
-                case "GaussianFunction" -> {
-                    parametersObject.put("m", ((GaussianFunction) function).getM());
-                    parametersObject.put("s", ((GaussianFunction) function).getS());
-                }
-            }
-
-            newObject.putIfAbsent("parameters", parametersObject);
-            array.add(newObject);
-            mapper.writeValue(file, jsonNode);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 }

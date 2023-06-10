@@ -40,8 +40,6 @@ public class Label {
                 if (value < min)
                     min = value;
             }
-//            if (min > 0)
-//                System.out.println(min);
             res.add(min);
         }
         return res;

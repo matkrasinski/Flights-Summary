@@ -3,13 +3,10 @@ package pl.ksr.lingustic;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import pl.ksr.functions.*;
 import pl.ksr.sets.ContinuousUniverse;
 import pl.ksr.sets.FuzzySet;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -74,7 +71,7 @@ public class VariableManager {
                                                 parameters.get("m2").asDouble(),
                                                 parameters.get("s2").asDouble(),
                                                 new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble())
-                                        )), new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()), false);
+                                        )), new ContinuousUniverse(range.get(0).asDouble(), range.get(1).asDouble()));
                     }
                     newLabels.add(new Label(attributeName, label, new FuzzySet(function)));
                 }
@@ -90,69 +87,5 @@ public class VariableManager {
 
         return variables;
     }
-
-    public static void addLabel(Label label) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-
-            File file = new File(Objects.requireNonNull(VariableManager.class.getResource("/Variables.json")).getPath());
-            JsonNode jsonNode = mapper.readTree(file);
-            ArrayNode arrayNode = (ArrayNode) jsonNode.get("linguisticVariables");
-
-            JsonNode node = null;
-            for (var s : arrayNode) {
-                if (s.get("variableName").textValue().equals(label.getAttributeName())) {
-                    node = s;
-                    break;
-                }
-            }
-
-            assert node != null;
-            ArrayNode labelsArrayNode = (ArrayNode) node.get("labels");
-            String functionName = label.getFuzzySet().getMembershipFunction().getClass().getSimpleName();
-
-            var newLabel = mapper.createObjectNode();
-            newLabel.put("label", label.getLabelName());
-            newLabel.put("function", label.getFuzzySet().getMembershipFunction().getClass().getSimpleName());
-
-            var parametersObject = mapper.createObjectNode();
-            switch (functionName) {
-                case "TriangleFunction" -> {
-                    parametersObject.put("a",
-                            ((TriangleFunction) label.getFuzzySet().getMembershipFunction()).getA());
-                    parametersObject.put("b",
-                            ((TriangleFunction) label.getFuzzySet().getMembershipFunction()).getB());
-                    parametersObject.put("c",
-                            ((TriangleFunction) label.getFuzzySet().getMembershipFunction()).getC());
-                }
-                case "TrapezoidFunction" -> {
-                    parametersObject.put("a",
-                            ((TrapezoidFunction) label.getFuzzySet().getMembershipFunction()).getA());
-                    parametersObject.put("b",
-                            ((TrapezoidFunction) label.getFuzzySet().getMembershipFunction()).getB());
-                    parametersObject.put("c",
-                            ((TrapezoidFunction) label.getFuzzySet().getMembershipFunction()).getC());
-                    parametersObject.put("d",
-                            ((TrapezoidFunction) label.getFuzzySet().getMembershipFunction()).getD());
-                }
-                case "GaussianFunction" -> {
-                    parametersObject.put("m",
-                            ((GaussianFunction) label.getFuzzySet().getMembershipFunction()).getM());
-                    parametersObject.put("s",
-                            ((GaussianFunction) label.getFuzzySet().getMembershipFunction()).getS());
-                }
-            }
-
-            newLabel.putIfAbsent("parameters", parametersObject);
-            labelsArrayNode.add(newLabel);
-            FileWriter fileWriter = new FileWriter(file);
-            mapper.writeValue(fileWriter, jsonNode);
-
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }

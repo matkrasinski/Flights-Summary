@@ -27,11 +27,6 @@ public class ContinuousUniverse implements Universe {
     }
 
     @Override
-    public UniverseType getType() {
-        return UniverseType.CONTINUOUS;
-    }
-
-    @Override
     public List<List<Double>> getRange() {
         return ranges;
     }

@@ -28,6 +28,6 @@
       <Text layoutX="124.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Summary subject properties:" wrappingWidth="215.21630859375" />
       <Text layoutX="464.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Summary subjects:" wrappingWidth="215.21630859375" />
       <Text fx:id="summaryCounterText" layoutX="390.0" layoutY="631.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="231.21630859375" />
-      <Button layoutX="801.0" layoutY="230.0" mnemonicParsing="false" onAction="#saveToLatexTable" prefHeight="25.0" prefWidth="162.0" text="Save to latex table" />
-      <Button layoutX="801.0" layoutY="194.0" mnemonicParsing="false" onAction="#saveToLatexEnumerate" prefHeight="25.0" prefWidth="162.0" text="Save to latex enumerate" />
+      <Button layoutX="801.0" layoutY="230.0" mnemonicParsing="false" onAction="#saveToLatexTable" prefHeight="25.0" prefWidth="162.0" text="Save to LaTeX table" />
+      <Button layoutX="801.0" layoutY="194.0" mnemonicParsing="false" onAction="#saveToLatexEnumerate" prefHeight="25.0" prefWidth="162.0" text="Save to LaTeX enumerate" />
 </children></AnchorPane>

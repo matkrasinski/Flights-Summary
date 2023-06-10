@@ -18,10 +18,6 @@ public class DiscreteUniverse implements Universe {
         return X.contains(x);
     }
     @Override
-    public UniverseType getType() {
-        return UniverseType.DISCRETE;
-    }
-    @Override
     public List<List<Double>> getRange() {
         return List.of(X);
     }

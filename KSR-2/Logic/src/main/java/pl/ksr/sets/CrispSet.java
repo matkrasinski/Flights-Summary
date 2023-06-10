@@ -25,7 +25,7 @@ public class CrispSet {
     }
 
     public CrispSet complement() {
-        if (universeOfDiscourse.getType() == UniverseType.CONTINUOUS) {
+        if (universeOfDiscourse instanceof ContinuousUniverse) {
             List<List<Double>> ranges = universeOfDiscourse.getRange();
             List<List<Double>> complement = new ArrayList<>();
 
@@ -53,7 +53,7 @@ public class CrispSet {
                         this.getElements().stream(),
                         set.getElements().stream())
                 .collect(Collectors.toSet());
-        if (universeOfDiscourse.getType() == UniverseType.CONTINUOUS) {
+        if (universeOfDiscourse instanceof ContinuousUniverse) {
             unique.removeIf(x -> !this.universeOfDiscourse.contains(x) && !set.universeOfDiscourse.contains(x));
             Universe universe = new ContinuousUniverse(
                     Stream.concat(this.getUniverseOfDiscourse().getRange().stream(),
@@ -79,12 +79,12 @@ public class CrispSet {
                         this.getElements().stream(),
                         set.getElements().stream())
                 .collect(Collectors.toSet());
-        if (universeOfDiscourse.getType() == UniverseType.CONTINUOUS) {
+        if (universeOfDiscourse instanceof ContinuousUniverse) {
             List<List<Double>> ranges = Stream.concat(
                     this.universeOfDiscourse.getRange().stream(),
                     set.universeOfDiscourse.getRange().stream()
             ).toList();
-            double[] intersection = ranges.get(0).stream().mapToDouble(e -> e).toArray(); // Start with the first range
+            double[] intersection = ranges.get(0).stream().mapToDouble(e -> e).toArray();
 
             for (int i = 1; i < ranges.size(); i++) {
                 double[] currentRange = ranges.get(i).stream().mapToDouble(e -> e).toArray();
