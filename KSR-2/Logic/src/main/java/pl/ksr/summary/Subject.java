@@ -76,7 +76,6 @@ public class Subject implements Serializable {
     public List<Subject> deserializeSubjects() {
         File file = new File(Subject.class.getProtectionDomain().getCodeSource().getLocation().getPath());
         File newFile = new File(file.getParent() + "/subjects.ser");
-        System.out.println(newFile.getAbsoluteFile());
 
         try (FileInputStream fileInputStream = new FileInputStream(newFile.getAbsoluteFile());
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
