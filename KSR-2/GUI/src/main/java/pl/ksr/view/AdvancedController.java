@@ -14,8 +14,8 @@ import pl.ksr.functions.TriangleFunction;
 import pl.ksr.lingustic.Label;
 import pl.ksr.lingustic.LinguisticQuantifier;
 import pl.ksr.lingustic.LinguisticVariable;
-import pl.ksr.lingustic.QuantifierManager;
-import pl.ksr.lingustic.VariableManager;
+import pl.ksr.lingustic.QuantifierReader;
+import pl.ksr.lingustic.VariableReader;
 import pl.ksr.sets.FuzzySet;
 import pl.ksr.sets.Universe;
 
@@ -212,7 +212,7 @@ public class AdvancedController {
         functionTypes.getItems().add("GaussianFunction");
     }
     public void loadVariables() {
-        allVariables = VariableManager.loadVariables();
+        allVariables = VariableReader.loadVariables();
 
         for (var variable : allVariables) {
             String attributeName = variable.getLabels().get(0).getAttributeName();
@@ -238,8 +238,8 @@ public class AdvancedController {
         attributesPane.setContent(treeView);
     }
     public void loadQuantifiers() {
-        absoluteQuantifiers = QuantifierManager.loadAbsoluteQuantifiers();
-        relativeQuantifiers = QuantifierManager.loadRelativeQuantifiers();
+        absoluteQuantifiers = QuantifierReader.loadAbsoluteQuantifiers();
+        relativeQuantifiers = QuantifierReader.loadRelativeQuantifiers();
 
         for (var quantifier : newQuantifiers) {
             if (quantifier.isRelative())

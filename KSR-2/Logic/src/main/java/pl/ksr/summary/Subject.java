@@ -23,14 +23,10 @@ public class Subject {
         initializeAttributes(this.subject);
     }
 
-    public static List<String> allSubjects() {
-        return FlightsRepository.getAllSubjects();
-    }
-
     private void initializeAttributes(String subject) {
         try {
             List<String> attributesNames = FlightsRepository.getAttributesNames();
-            if (allSubjects().contains(subject)) {
+            if (FlightsRepository.getAllSubjects().contains(subject)) {
                 for (String attribute : attributesNames) {
                     objects.put(attribute, FlightsRepository.findAllByNameAndSubject(attribute, subject));
                 }

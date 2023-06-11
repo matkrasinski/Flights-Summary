@@ -75,8 +75,8 @@ public class MainController {
         initVariables();
         initSubjects();
 
-        relativeQuantifiers = QuantifierManager.loadRelativeQuantifiers();
-        absoluteQuantifiers = QuantifierManager.loadAbsoluteQuantifiers();
+        relativeQuantifiers = QuantifierReader.loadRelativeQuantifiers();
+        absoluteQuantifiers = QuantifierReader.loadAbsoluteQuantifiers();
         for (var quantifier : AdvancedController.newQuantifiers) {
             if (quantifier.isRelative())
                 relativeQuantifiers.add(quantifier);
@@ -95,7 +95,7 @@ public class MainController {
             FileManager.writeToFile(file.getAbsolutePath(), selected);
     }
     public void initVariables()  {
-        allVariables = VariableManager.loadVariables();
+        allVariables = VariableReader.loadVariables();
         for (var variable : allVariables) {
             String attributeName = variable.getLabels().get(0).getAttributeName();
             for (var newLabel : AdvancedController.newLabels)
@@ -303,6 +303,7 @@ public class MainController {
             table.add(index +" & " + s.getT() + " & " + s.getT1() + " & " + s.getT2() + " & " + s.getT3() +
                     " & " + s.getT4() + " & " + s.getT5() + " & " + s.getT6() + " & " + s.getT7() + " & " + s.getT8() +
                     " & " + s.getT9() + " & " + s.getT10() + " & " + s.getT11() + "\\\\ \\hline");
+            index++;
         }
         table.add("\\end{tabular}");
         table.add("\\end{center}");
@@ -314,7 +315,7 @@ public class MainController {
         List<String> enumerate = new ArrayList<>();
         enumerate.add("\\begin{enumerate}");
         for (SummaryRow s : summaries.getSelectionModel().getSelectedItems().stream().toList()) {
-            enumerate.add("\\item " + s.getSummary() + ", " + s.getT() + "\\\\");
+            enumerate.add("\\item " + s.getSummary() + ", " + s.getT1() + "\\\\");
         }
         enumerate.add("\\end{enumerate}");
 

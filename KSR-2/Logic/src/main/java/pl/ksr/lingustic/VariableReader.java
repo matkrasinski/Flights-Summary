@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class VariableManager {
+public class VariableReader {
 
     public static List<LinguisticVariable> loadVariables() {
         List<LinguisticVariable> variables = new ArrayList<>();
@@ -21,7 +21,7 @@ public class VariableManager {
         try {
             ObjectMapper mapper = new ObjectMapper();
 
-            InputStream inputStream = VariableManager.class.getResourceAsStream("/Variables.json");
+            InputStream inputStream = VariableReader.class.getResourceAsStream("/Variables.json");
 
             JsonNode jsonNode = mapper.readTree(inputStream);
             JsonNode linguisticVariables = jsonNode.get("linguisticVariables");

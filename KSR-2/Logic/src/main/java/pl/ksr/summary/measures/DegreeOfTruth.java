@@ -124,26 +124,22 @@ public class DegreeOfTruth {
     }
 
     public static double calculateT1forMultiFourthForm(List<Subject> subjects, List<Label> summarizers) {
-        List<List<Double>> p1 = new ArrayList<>();
-        List<List<Double>> p2 = new ArrayList<>();
+        List<List<Double>> p1Objects = new ArrayList<>();
+        List<List<Double>> p2Objects = new ArrayList<>();
 
         for (Label label : summarizers) {
-            p1.add(subjects.get(0).getObject(label.getAttributeName()));
-            p2.add(subjects.get(1).getObject(label.getAttributeName()));
+            p1Objects.add(subjects.get(0).getObject(label.getAttributeName()));
+            p2Objects.add(subjects.get(1).getObject(label.getAttributeName()));
         }
 
-        List<Double> sp1 = Label.andConnective(p1, summarizers).stream().mapToDouble(e -> e).boxed().toList();
-        List<Double> sp2 = Label.andConnective(p2, summarizers).stream().mapToDouble(e -> e).boxed().toList();
+        List<Double> sp1 = Label.andConnective(p1Objects, summarizers).stream().mapToDouble(e -> e).boxed().toList();
+        List<Double> sp2 = Label.andConnective(p2Objects, summarizers).stream().mapToDouble(e -> e).boxed().toList();
 
         double m1 = sp1.size();
         double m2 = sp2.size();
-        double sum1 = 0;
-        double sum2 = 0;
+        double sum1 = sp1.stream().mapToDouble(e -> e).sum();
+        double sum2 = sp2.stream().mapToDouble(e -> e).sum();
 
-        for (var i : sp1)
-            sum1 += i;
-        for (var i : sp2)
-            sum2 += i;
 
         return 1 - implication(sum2 / m2, sum1 / m1);
     }

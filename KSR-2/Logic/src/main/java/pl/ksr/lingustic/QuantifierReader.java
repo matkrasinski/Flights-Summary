@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class QuantifierManager {
+public class QuantifierReader {
 
     public static List<LinguisticQuantifier> loadRelativeQuantifiers() {
         List<LinguisticQuantifier> quantifiers = new ArrayList<>();
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            InputStream inputStream = QuantifierManager.class.getResourceAsStream("/RelativeQuantifiers.json");
+            InputStream inputStream = QuantifierReader.class.getResourceAsStream("/RelativeQuantifiers.json");
 
             JsonNode jsonNode = mapper.readTree(inputStream);
             JsonNode relativeQuantifiers = jsonNode.get("relativeQuantifiers");
@@ -94,7 +94,7 @@ public class QuantifierManager {
         try {
             ObjectMapper mapper = new ObjectMapper();
 
-            InputStream inputStream = QuantifierManager.class.getResourceAsStream("/AbsoluteQuantifiers.json");
+            InputStream inputStream = QuantifierReader.class.getResourceAsStream("/AbsoluteQuantifiers.json");
             JsonNode jsonNode = mapper.readTree(inputStream);
             JsonNode absoluteQuantifiers = jsonNode.get("absoluteQuantifiers");
 
